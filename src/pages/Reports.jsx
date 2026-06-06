@@ -171,6 +171,22 @@ const Reports = ({ token }) => {
           <h2 style={styles.chartTitle}>Desempenho por Campanha</h2>
           <p style={styles.chartSubtitle}>Volume comparativo de Envios, Entregas e Leituras por campanha ativa.</p>
           
+          {/* Legenda das barras */}
+          <div style={{ display: 'flex', gap: '1.25rem', marginBottom: '1.5rem', fontSize: '0.8rem', fontWeight: '600', color: 'var(--text-secondary)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'help' }} title="Total de mensagens enviadas pela campanha">
+              <div style={{ width: '14px', height: '6px', borderRadius: '3px', background: '#E5E7EB' }}></div>
+              <span>Enviados</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'help' }} title="Mensagens que chegaram ao aparelho do destinatário">
+              <div style={{ width: '14px', height: '6px', borderRadius: '3px', background: 'linear-gradient(90deg, #7E22CE, #A855F7)' }}></div>
+              <span>Entregues</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'help' }} title="Mensagens que foram abertas/lidas pelo destinatário">
+              <div style={{ width: '14px', height: '6px', borderRadius: '3px', background: 'linear-gradient(90deg, #10b981, #34d399)' }}></div>
+              <span>Lidos</span>
+            </div>
+          </div>
+          
           <div style={styles.barChartContainer}>
             {campaigns.slice(0, 4).map(c => {
               const maxVal = Math.max(...campaigns.map(x => x.total_sent || 1), 100);

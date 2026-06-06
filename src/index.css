@@ -657,8 +657,8 @@ th {
   font-size: 0.88rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  background: rgba(10, 15, 30, 0.4);
-}
+  background: #F9FAFB;
+  border-bottom: 2px solid var(--border-glass);
 
 .light-mode th {
   background: #F9FAFB;
