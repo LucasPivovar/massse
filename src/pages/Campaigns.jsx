@@ -474,7 +474,7 @@ const Campaigns = ({ token }) => {
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', width: '100%' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', fontWeight: '700' }}>
                         <span style={{ color: '#A855F7' }}>{Math.round((c.total_read / c.total_sent) * 100) || 0}%</span>
-                        <span style={{ color: 'var(--text-secondary)' }}>Lidos</span>
+                        <span style={{ color: 'var(--text-secondary)' }}>{c.total_read} lidos / {c.total_sent} envios</span>
                       </div>
                       <div style={{ height: '6px', width: '100%', background: '#F3F4F6', borderRadius: '99px', overflow: 'hidden' }}>
                         <div style={{ 
