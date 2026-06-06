@@ -21,7 +21,7 @@ import { Toaster } from 'react-hot-toast';
 import logoImage from './assets/logo_massflow.png';
 
 function App() {
-  const [token, setToken] = useState('dummy_token' || localStorage.getItem('token'));
+  const [token, setToken] = useState(localStorage.getItem('token'));
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
 
   useEffect(() => {
