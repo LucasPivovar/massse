@@ -659,6 +659,7 @@ th {
   letter-spacing: 0.04em;
   background: #F9FAFB;
   border-bottom: 2px solid var(--border-glass);
+}
 
 .light-mode th {
   background: #F9FAFB;
