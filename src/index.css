@@ -1507,3 +1507,17 @@ input:focus, select:focus, textarea:focus, .input-group input:focus {
     padding: 1.5rem 0.5rem;
   }
 }
+
+/* Custom tooltips */
+.custom-bar-tooltip {
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease;
+  pointer-events: none;
+  transform: translateY(5px);
+}
+.campaign-bar-container:hover .custom-bar-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}

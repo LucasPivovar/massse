@@ -195,7 +195,32 @@ const Reports = ({ token }) => {
               const pctRead = ((c.total_read || 0) / maxVal) * 100;
               
               return (
-                <div key={c.id} style={styles.campaignBarRow}>
+                <div key={c.id} className="campaign-bar-container" style={{...styles.campaignBarRow, position: 'relative'}}>
+                  
+                  {/* Custom Hover Tooltip */}
+                  <div 
+                    className="custom-bar-tooltip"
+                    style={{
+                      position: 'absolute',
+                      right: '0',
+                      top: '-10px',
+                      background: 'var(--bg-card)',
+                      border: '1px solid var(--border-glass)',
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+                      padding: '6px 12px',
+                      borderRadius: '8px',
+                      fontSize: '0.75rem',
+                      fontWeight: '700',
+                      display: 'flex',
+                      gap: '12px',
+                      zIndex: 20
+                    }}
+                  >
+                    <span style={{ color: 'var(--text-secondary)' }}>{c.total_sent} enviados</span>
+                    <span style={{ color: '#A855F7' }}>{c.total_delivered} entregues</span>
+                    <span style={{ color: '#10b981' }}>{c.total_read} lidos</span>
+                  </div>
+
                   <div style={styles.campaignBarLabel}>
                     <span style={styles.campaignBarName} title={c.name}>{c.name}</span>
                     <span style={styles.campaignBarMeta}>{c.total_sent} envios</span>
@@ -203,16 +228,16 @@ const Reports = ({ token }) => {
                   
                   <div style={styles.barTracksContainer}>
                     {/* Sent bar */}
-                    <div style={styles.barTrackOuter} title={`Enviados: ${c.total_sent}`}>
+                    <div style={styles.barTrackOuter}>
                       <div style={{ ...styles.barTrackFill, width: `${pctSent}%`, background: '#E5E7EB', border: '1px solid #F3F4F6' }} />
                     </div>
                     {/* Delivered bar */}
-                    <div style={styles.barTrackOuter} title={`Entregues: ${c.total_delivered}`}>
-                      <div style={{ ...styles.barTrackFill, width: `${pctDelivered}%`, background: 'linear-gradient(90deg, #7E22CE, #A855F7)', boxShadow: '0 0 10px rgba(168, 85, 247, 0.15)' }} />
+                    <div style={styles.barTrackOuter}>
+                      <div style={{ ...styles.barTrackFill, width: `${pctDelivered}%`, background: 'linear-gradient(90deg, #7E22CE, #A855F7)' }} />
                     </div>
                     {/* Read bar */}
-                    <div style={styles.barTrackOuter} title={`Lidos: ${c.total_read}`}>
-                      <div style={{ ...styles.barTrackFill, width: `${pctRead}%`, background: 'linear-gradient(90deg, #10b981, #34d399)', boxShadow: '0 0 10px rgba(52, 211, 153, 0.15)' }} />
+                    <div style={styles.barTrackOuter}>
+                      <div style={{ ...styles.barTrackFill, width: `${pctRead}%`, background: 'linear-gradient(90deg, #10b981, #34d399)' }} />
                     </div>
                   </div>
                 </div>
