@@ -218,10 +218,7 @@ const Campaigns = ({ token }) => {
         );
       case 'sending':
         return (
-          <span className="badge" style={{ 
-            background: 'rgba(168, 85, 247, 0.15)', 
-            color: 'var(--accent-primary)', 
-            border: '1px solid rgba(168, 85, 247, 0.3)',
+          <span className="badge sending" style={{ 
             animation: 'pulseGlow 2s infinite ease-in-out',
             whiteSpace: 'nowrap'
           }}>
@@ -233,10 +230,7 @@ const Campaigns = ({ token }) => {
         );
       case 'scheduled':
         return (
-          <span className="badge" style={{ 
-            background: 'rgba(6, 182, 212, 0.15)', 
-            color: '#06b6d4', 
-            border: '1px solid rgba(6, 182, 212, 0.3)',
+          <span className="badge scheduled" style={{ 
             whiteSpace: 'nowrap'
           }} title={`Agendado para ${date} às ${time}`}>
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '6px' }}>
@@ -250,7 +244,7 @@ const Campaigns = ({ token }) => {
         );
       case 'paused':
         return (
-          <span className="badge" style={{ background: 'rgba(245, 158, 11, 0.15)', color: '#f59e0b', border: '1px solid rgba(245, 158, 11, 0.3)', whiteSpace: 'nowrap' }}>
+          <span className="badge paused" style={{ whiteSpace: 'nowrap' }}>
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '6px' }}>
               <rect x="6" y="4" width="4" height="16"></rect>
               <rect x="14" y="4" width="4" height="16"></rect>
@@ -260,7 +254,7 @@ const Campaigns = ({ token }) => {
         );
       case 'stopped':
         return (
-          <span className="badge" style={{ background: 'rgba(239, 68, 68, 0.15)', color: '#f87171', border: '1px solid rgba(239, 68, 68, 0.3)', whiteSpace: 'nowrap' }}>
+          <span className="badge stopped" style={{ whiteSpace: 'nowrap' }}>
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '6px' }}>
               <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
             </svg>
@@ -309,8 +303,8 @@ const Campaigns = ({ token }) => {
             <span style={styles.statLabel}>Total de Campanhas</span>
             <h2 style={styles.statVal}>{campaigns.length}</h2>
           </div>
-          <div style={styles.statIconContainer}>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <div style={{ ...styles.statIconContainer, background: 'rgba(168, 85, 247, 0.22)' }}>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#A855F7" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
             </svg>
           </div>
@@ -323,8 +317,8 @@ const Campaigns = ({ token }) => {
               {campaigns.filter(c => c.status === 'sending').length}
             </h2>
           </div>
-          <div style={styles.statIconContainer}>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <div style={{ ...styles.statIconContainer, background: 'rgba(16, 185, 129, 0.22)' }}>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <polygon points="5 3 19 12 5 21 5 3"></polygon>
             </svg>
           </div>
@@ -337,8 +331,8 @@ const Campaigns = ({ token }) => {
               {campaigns.filter(c => c.status === 'scheduled').length}
             </h2>
           </div>
-          <div style={styles.statIconContainer}>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <div style={{ ...styles.statIconContainer, background: 'rgba(6, 182, 212, 0.22)' }}>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
               <line x1="16" y1="2" x2="16" y2="6"></line>
               <line x1="8" y1="2" x2="8" y2="6"></line>
@@ -556,12 +550,13 @@ const Campaigns = ({ token }) => {
       {actionMenuCampaign && createPortal(
         <div className="modal-overlay" style={styles.modalOverlay} onClick={() => setActionMenuCampaign(null)}>
           <div className="modal-content-box" style={styles.actionModalContent} onClick={(e) => e.stopPropagation()}>
-            <button 
+            <span 
               onClick={() => setActionMenuCampaign(null)}
-              style={styles.closeBtn}
+              style={{ ...styles.closeBtn, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              role="button"
             >
               ✕
-            </button>
+            </span>
             
             <h2 style={{ marginTop: 0, fontSize: '1.4rem', borderBottom: '1px solid var(--border-glass)', paddingBottom: '0.75rem', marginBottom: '1.5rem' }}>
               Ações da Campanha
@@ -600,7 +595,7 @@ const Campaigns = ({ token }) => {
                 <button 
                   onClick={() => handleEditableResend(actionMenuCampaign)}
                   className="secondary"
-                  style={{ ...styles.modalActionBtn, margin: 0, borderColor: 'rgba(168, 85, 247, 0.5)', color: '#34d399' }}
+                  style={{ ...styles.modalActionBtn, margin: 0, background: '#10B981', color: '#ffffff', borderColor: '#10B981', fontWeight: '700' }}
                   title="Abre a tela de Nova Campanha preenchida"
                   disabled={loadingResendContacts}
                 >
@@ -669,12 +664,13 @@ const Campaigns = ({ token }) => {
       {rescheduleCampaign && createPortal(
         <div className="modal-overlay" style={styles.modalOverlay} onClick={() => setRescheduleCampaign(null)}>
           <div className="modal-content-box" style={styles.actionModalContent} onClick={(e) => e.stopPropagation()}>
-            <button 
+            <span 
               onClick={() => setRescheduleCampaign(null)}
-              style={styles.closeBtn}
+              style={{ ...styles.closeBtn, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              role="button"
             >
               ✕
-            </button>
+            </span>
             
             <h2 style={{ marginTop: 0, fontSize: '1.4rem', borderBottom: '1px solid var(--border-glass)', paddingBottom: '0.75rem', marginBottom: '1.5rem' }}>
               Visualizar Agendamento
@@ -863,13 +859,14 @@ const styles = {
     position: 'absolute',
     top: '20px',
     right: '20px',
-    background: '#F3F4F6',
-    border: '1px solid var(--border-glass)',
-    color: 'var(--text-secondary)',
+    background: 'transparent',
+    border: 'none',
+    color: '#000000',
     padding: '6px 10px',
     boxShadow: 'none',
     borderRadius: '8px',
-    fontSize: '0.85rem'
+    fontSize: '1.25rem',
+    fontWeight: 'bold'
   },
   detailLabel: {
     color: 'var(--text-tertiary)',
@@ -1083,11 +1080,11 @@ const styles = {
     width: '100%',
     padding: '0.8rem 1.5rem',
     fontSize: '0.95rem',
-    fontWeight: '600',
+    fontWeight: '700',
     borderRadius: '10px',
-    border: '1px solid rgba(245, 158, 11, 0.3)',
-    background: 'rgba(245, 158, 11, 0.08)',
-    color: '#f59e0b',
+    border: 'none',
+    background: '#f59e0b',
+    color: '#ffffff',
     cursor: 'pointer',
     transition: 'all 0.25s ease',
     textAlign: 'center',
@@ -1098,11 +1095,11 @@ const styles = {
     width: '100%',
     padding: '0.8rem 1.5rem',
     fontSize: '0.95rem',
-    fontWeight: '600',
+    fontWeight: '700',
     borderRadius: '10px',
-    border: '1px solid rgba(168, 85, 247, 0.3)',
-    background: 'rgba(168, 85, 247, 0.08)',
-    color: '#34d399',
+    border: 'none',
+    background: '#10B981',
+    color: '#ffffff',
     cursor: 'pointer',
     transition: 'all 0.25s ease',
     textAlign: 'center',
@@ -1113,11 +1110,11 @@ const styles = {
     width: '100%',
     padding: '0.8rem 1.5rem',
     fontSize: '0.95rem',
-    fontWeight: '600',
+    fontWeight: '700',
     borderRadius: '10px',
-    border: '1px solid rgba(239, 68, 68, 0.3)',
-    background: 'rgba(239, 68, 68, 0.1)',
-    color: '#f87171',
+    border: 'none',
+    background: '#ef4444',
+    color: '#ffffff',
     cursor: 'pointer',
     transition: 'all 0.25s ease',
     textAlign: 'center',
@@ -1128,11 +1125,11 @@ const styles = {
     width: '100%',
     padding: '0.8rem 1.5rem',
     fontSize: '0.95rem',
-    fontWeight: '600',
+    fontWeight: '700',
     borderRadius: '10px',
-    border: '1px solid rgba(6, 182, 212, 0.3)',
-    background: 'rgba(6, 182, 212, 0.08)',
-    color: '#06b6d4',
+    border: 'none',
+    background: '#0ea5e9',
+    color: '#ffffff',
     cursor: 'pointer',
     transition: 'all 0.25s ease',
     textAlign: 'center',

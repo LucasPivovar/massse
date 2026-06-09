@@ -72,8 +72,8 @@ const Reports = ({ token }) => {
             <span style={styles.statLabel}>Total de Campanhas</span>
             <h2 style={styles.statVal}>{totalCampaigns}</h2>
           </div>
-          <div style={styles.statIconContainer}>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <div style={{ ...styles.statIconContainer, background: 'rgba(168, 85, 247, 0.22)', color: '#A855F7' }}>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#A855F7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <line x1="18" y1="20" x2="18" y2="10"></line>
               <line x1="12" y1="20" x2="12" y2="4"></line>
               <line x1="6" y1="20" x2="6" y2="14"></line>
@@ -86,8 +86,8 @@ const Reports = ({ token }) => {
             <span style={styles.statLabel}>Mensagens Disparadas</span>
             <h2 style={styles.statVal}>{totalSent}</h2>
           </div>
-          <div style={styles.statIconContainer}>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <div style={{ ...styles.statIconContainer, background: 'rgba(16, 185, 129, 0.22)', color: '#10b981' }}>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M22 2L11 13"></path>
               <path d="M22 2l-7 20-4-9-9-4 20-7z"></path>
             </svg>
@@ -99,8 +99,8 @@ const Reports = ({ token }) => {
             <span style={styles.statLabel}>Taxa Média de Entrega</span>
             <h2 style={styles.statVal}>{avgDeliveryRate}%</h2>
           </div>
-          <div style={styles.statIconContainer}>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <div style={{ ...styles.statIconContainer, background: 'rgba(6, 182, 212, 0.22)', color: '#06b6d4' }}>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
               <polyline points="22 4 12 14.01 9 11.01"></polyline>
             </svg>
@@ -112,8 +112,8 @@ const Reports = ({ token }) => {
             <span style={styles.statLabel}>Taxa Média de Leitura</span>
             <h2 style={styles.statVal}>{avgReadRate}%</h2>
           </div>
-          <div style={styles.statIconContainer}>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <div style={{ ...styles.statIconContainer, background: 'rgba(245, 158, 11, 0.22)', color: '#f59e0b' }}>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
               <circle cx="12" cy="12" r="3"></circle>
             </svg>
@@ -305,7 +305,7 @@ const Reports = ({ token }) => {
                 <th>ID</th>
                 <th>Campanha</th>
                 <th>Público Alvo (Tag)</th>
-                <th>Provedor</th>
+                <th>Grupo</th>
                 <th>Envios</th>
                 <th>Visualizado (Rate)</th>
                 <th>Status</th>
@@ -320,14 +320,10 @@ const Reports = ({ token }) => {
                     <td style={{ fontFamily: 'monospace', fontSize: '0.85rem', color: 'var(--text-tertiary)' }}>
                       #{String(c.id).substring(0, 6)}
                     </td>
-                    <td style={{ fontWeight: '700', color: 'var(--text-primary)' }}>{c.name}</td>
+                    <td style={{ fontWeight: '600', color: 'var(--text-primary)' }}>{c.name}</td>
                     <td>
-                      <span className="badge" style={{ background: 'rgba(168, 85, 247, 0.08)', color: '#34d399', border: '1px solid rgba(168, 85, 247, 0.2)' }}>
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '4px' }}>
-                          <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
-                          <line x1="7" y1="7" x2="7.01" y2="7"></line>
-                        </svg>
-                        {c.contact_flag || 'Geral'}
+                      <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                        {c.contact_flag}
                       </span>
                     </td>
                     <td style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>

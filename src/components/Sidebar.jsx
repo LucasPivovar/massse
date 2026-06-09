@@ -101,7 +101,7 @@ const Sidebar = ({ onLogout, isOpen, setIsOpen }) => {
     { path: '/contacts',  label: 'Contatos',    icon: <Icons.Contacts /> },
     { path: '/campaigns', label: 'Campanhas',   icon: <Icons.Campaigns /> },
     { path: '/chat',      label: 'Bate-papo',   icon: <Icons.Chat /> },
-    { path: '/bot-builder', label: 'Criador de Bots', icon: <Icons.Bot /> },
+    { path: '/bot-builder', label: 'Meus Fluxos', icon: <Icons.Bot /> },
   ];
 
   return (

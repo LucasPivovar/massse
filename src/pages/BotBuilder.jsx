@@ -54,7 +54,7 @@ export default function BotBuilder() {
     <div className="page-container pulse-glow" style={{ width: '100%', maxWidth: '100%', margin: '0 auto' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem', flexWrap: 'wrap', gap: 12 }}>
         <div>
-          <h1 style={{ color: B.text, fontSize: '1.75rem', fontWeight: 800, margin: 0 }}>Criador de Bots</h1>
+          <h1 style={{ color: B.text, fontSize: '1.75rem', fontWeight: 800, margin: 0 }}>Meus Fluxos</h1>
           <p style={{ color: B.muted, marginTop: 8 }}>
             Monte fluxos automáticos e conecte WhatsApp ou Telegram.
           </p>

@@ -75,7 +75,7 @@ const TopBar = ({ onLogout }) => {
     { path: '/contacts',         label: 'Contatos',    icon: <Icons.Contacts /> },
     { path: '/campaigns',        label: 'Campanhas',   icon: <Icons.Campaigns /> },
     { path: '/chat',             label: 'Bate-papo',   icon: <Icons.Chat /> },
-    { path: '/bot-builder',      label: 'Criador de Bots', icon: <Icons.Bot /> },
+    { path: '/bot-builder',      label: 'Meus Fluxos', icon: <Icons.Bot /> },
     { path: '/reports',          label: 'Relatórios',  icon: <Icons.Reports /> },
     { path: '/settings',         label: 'Configurações', icon: <Icons.Settings /> },
   ];

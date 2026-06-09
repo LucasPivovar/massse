@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import logoImage from '../assets/logo_massflow.png';
+import authBgImage from '../assets/auth_background.png';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
@@ -97,258 +98,268 @@ const Login = ({ onLogin }) => {
   };
 
   return (
-    <div className="auth-outer" style={styles.outerContainer}>
-      {/* Decorative dark glowing background blobs */}
-      <div style={styles.glowBlob1} />
-      <div style={styles.glowBlob2} />
-
-      <div className="auth-container" style={styles.authContainer}>
-        {/* Brand Header */}
-        <div style={styles.brandHeader}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <img 
-              src={logoImage} 
-              alt="MassFlow Logo" 
-              style={{ height: '60px', width: 'auto', objectFit: 'contain' }} 
-            />
+    <div className="auth-outer">
+      <div className="auth-container">
+        {/* Left Side: Form Container */}
+        <div className="auth-form-side">
+          {/* Brand Header */}
+          <div style={styles.brandHeader}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <img 
+                src={logoImage} 
+                alt="MassFlow Logo" 
+                style={{ height: '50px', width: 'auto', objectFit: 'contain' }} 
+              />
+            </div>
           </div>
-        </div>
 
-        {view === 'login' && (
-          <form onSubmit={handleSubmit} style={styles.form}>
-            <div className="input-group">
-              <label style={styles.label}>Usuário</label>
-              <div style={{ position: 'relative' }}>
-                <span style={styles.inputIcon}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="12" cy="7" r="4"></circle>
-                  </svg>
-                </span>
-                <input 
-                  type="text" 
-                  value={username} 
-                  onChange={(e) => setUsername(e.target.value)} 
-                  placeholder="Qualquer usuário"
-                  style={{ ...styles.input, paddingLeft: '2.8rem' }}
-                  required 
-                />
-              </div>
-            </div>
-            <div className="input-group" style={{ marginBottom: '1.5rem' }}>
-              <label style={styles.label}>Senha</label>
-              <div style={{ position: 'relative' }}>
-                <span style={styles.inputIcon}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                  </svg>
-                </span>
-                <input 
-                  type={showPassword ? 'text' : 'password'} 
-                  value={password} 
-                  onChange={(e) => setPassword(e.target.value)} 
-                  placeholder="Qualquer senha"
-                  style={{ ...styles.input, paddingLeft: '2.8rem', paddingRight: '2.8rem' }}
-                  required 
-                />
-                <button 
-                  type="button" 
-                  className="eye-btn"
-                  onClick={() => setShowPassword(!showPassword)}
-                  style={styles.eyeToggleBtn}
-                  title={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
-                >
-                  {showPassword ? (
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-                      <line x1="1" y1="1" x2="23" y2="23"></line>
+          {view === 'login' && (
+            <form onSubmit={handleSubmit} style={styles.form}>
+              <h2 style={{ fontSize: '1.75rem', fontWeight: '800', margin: '0 0 1.5rem 0', textAlign: 'center' }}>Faça o seu login <span style={{ color: '#A855F7' }}>•</span></h2>
+              
+              <div className="input-group">
+                <label style={styles.label}>usuário</label>
+                <div style={{ position: 'relative' }}>
+                  <span style={styles.inputIcon}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                      <circle cx="12" cy="7" r="4"></circle>
                     </svg>
-                  ) : (
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                      <circle cx="12" cy="12" r="3"></circle>
+                  </span>
+                  <input 
+                    type="text" 
+                    value={username} 
+                    onChange={(e) => setUsername(e.target.value)} 
+                    placeholder="Qualquer usuário"
+                    style={{ ...styles.input, paddingLeft: '2.8rem' }}
+                    required 
+                  />
+                </div>
+              </div>
+              <div className="input-group" style={{ marginBottom: '1.5rem' }}>
+                <label style={styles.label}>senha</label>
+                <div style={{ position: 'relative' }}>
+                  <span style={styles.inputIcon}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                      <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                     </svg>
-                  )}
-                </button>
+                  </span>
+                  <input 
+                    type={showPassword ? 'text' : 'password'} 
+                    value={password} 
+                    onChange={(e) => setPassword(e.target.value)} 
+                    placeholder="Qualquer senha"
+                    style={{ ...styles.input, paddingLeft: '2.8rem', paddingRight: '2.8rem' }}
+                    required 
+                  />
+                  <button 
+                    type="button" 
+                    className="eye-btn"
+                    onClick={() => setShowPassword(!showPassword)}
+                    style={styles.eyeToggleBtn}
+                    title={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
+                  >
+                    {showPassword ? (
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                        <line x1="1" y1="1" x2="23" y2="23"></line>
+                      </svg>
+                    ) : (
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                      </svg>
+                    )}
+                  </button>
+                </div>
               </div>
-            </div>
 
-            {/* Remember me & Forgot password simulation row */}
-            <div style={styles.extraRow}>
-              <label style={styles.checkboxLabel}>
-                <input 
-                  type="checkbox" 
-                  checked={rememberMe} 
-                  onChange={(e) => setRememberMe(e.target.checked)}
-                  style={styles.checkboxInput}
-                />
-                <span>Lembrar meu acesso</span>
-              </label>
-              <a href="#forgot" onClick={(e) => { e.preventDefault(); setView('forgot'); setError(''); }} style={styles.forgotLink}>
-                Esqueci minha senha
-              </a>
-            </div>
-            
-            {error && <p className="error-message" style={styles.error}>{error}</p>}
-            {success && <p className="success-message" style={styles.success}>{success}</p>}
-            
-            <button type="submit" disabled={loading} style={styles.button}>
-              {loading ? 'Autenticando...' : 'Acessar Painel'}
-              {!loading && (
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                  <polyline points="12 5 19 12 12 19"></polyline>
-                </svg>
-              )}
-            </button>
-
-            <div style={{ marginTop: '1.75rem', textAlign: 'center' }}>
-              <span style={{ color: 'var(--text-primary)', fontSize: '0.85rem' }}>Ainda não possui uma conta? </span>
-              <a href="/register" onClick={(e) => { e.preventDefault(); window.location.href = '/register'; }} style={{...styles.forgotLink, textDecoration: 'underline'}}>
-                Cadastre-se
-              </a>
-            </div>
-          </form>
-        )}
-
-        {view === 'login_2fa' && (
-          <form onSubmit={handle2FASubmit} style={styles.form}>
-            <div className="input-group" style={{ marginBottom: '2rem', textAlign: 'center' }}>
-              <label style={{ ...styles.label, textAlign: 'center' }}>Código 2FA</label>
-              <div style={{ position: 'relative' }}>
-                <input 
-                  type="text" 
-                  className="input-2fa"
-                  value={code2fa} 
-                  onChange={(e) => setCode2fa(e.target.value.replace(/\D/g, '').slice(0, 6))} 
-                  placeholder="000000"
-                  required 
-                />
+              {/* Remember me & Forgot password simulation row */}
+              <div style={styles.extraRow}>
+                <label style={styles.checkboxLabel}>
+                  <input 
+                    type="checkbox" 
+                    checked={rememberMe} 
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    style={styles.checkboxInput}
+                  />
+                  <span>Lembrar meu acesso</span>
+                </label>
+                <a href="#forgot" onClick={(e) => { e.preventDefault(); setView('forgot'); setError(''); }} style={styles.forgotLink}>
+                  esqueci minha senha
+                </a>
               </div>
-              <small style={{ color: 'var(--text-tertiary)', display: 'block', marginTop: '10px', textAlign: 'center' }}>
-                Insira o código enviado para seu dispositivo.
-              </small>
-            </div>
-            
-            {error && <p className="error-message" style={styles.error}>{error}</p>}
-            
-            <button type="submit" disabled={loading} style={styles.button}>
-              {loading ? 'Verificando...' : 'Confirmar Acesso'}
-            </button>
-            <div style={{ marginTop: '1.75rem', textAlign: 'center' }}>
-              <a href="#login" onClick={(e) => { e.preventDefault(); setView('login'); setError(''); setCode2fa(''); }} style={styles.forgotLink}>
-                Voltar
-              </a>
-            </div>
-          </form>
-        )}
-
-        {view === 'forgot' && (
-          <form onSubmit={handleForgotSubmit} style={styles.form}>
-            <div className="input-group" style={{ marginBottom: '2rem' }}>
-              <label style={styles.label}>E-mail Cadastrado</label>
-              <div style={{ position: 'relative' }}>
-                <span style={styles.inputIcon}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                    <polyline points="22,6 12,13 2,6"></polyline>
+              
+              {error && <p className="error-message" style={styles.error}>{error}</p>}
+              {success && <p className="success-message" style={styles.success}>{success}</p>}
+              
+              <button type="submit" disabled={loading} style={styles.button}>
+                {loading ? 'Autenticando...' : 'Entrar'}
+                {!loading && (
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
                   </svg>
-                </span>
-                <input 
-                  type="email" 
-                  value={forgotEmail} 
-                  onChange={(e) => setForgotEmail(e.target.value)} 
-                  placeholder="seu-email@dominio.com"
-                  style={{ ...styles.input, paddingLeft: '2.8rem' }}
-                  required 
-                />
-              </div>
-            </div>
-            
-            {error && <p className="error-message" style={styles.error}>{error}</p>}
-            
-            <button type="submit" disabled={forgotLoading} style={{ ...styles.button, whiteSpace: 'nowrap' }}>
-              {forgotLoading ? 'Enviando Instruções...' : 'Enviar Link de Redefinição'}
-              {!forgotLoading && (
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                  <polyline points="12 5 19 12 12 19"></polyline>
-                </svg>
-              )}
-            </button>
+                )}
+              </button>
 
-            <div style={{ marginTop: '1.75rem', textAlign: 'center' }}>
-              <a href="#login" onClick={(e) => { e.preventDefault(); setView('login'); setError(''); }} style={styles.forgotLink}>
+              <div style={{ marginTop: '1.75rem', textAlign: 'center' }}>
+                <span style={{ color: 'var(--text-primary)', fontSize: '0.85rem' }}>Ainda não possui uma conta? </span>
+                <a href="/register" onClick={(e) => { e.preventDefault(); window.location.href = '/register'; }} style={{...styles.forgotLink, textDecoration: 'underline'}}>
+                  Cadastre-se
+                </a>
+              </div>
+            </form>
+          )}
+
+          {view === 'login_2fa' && (
+            <form onSubmit={handle2FASubmit} style={styles.form}>
+              <h2 style={{ fontSize: '1.75rem', fontWeight: '800', margin: '0 0 1.5rem 0', textAlign: 'center' }}>autenticação <span style={{ color: '#A855F7' }}>•</span></h2>
+              
+              <div className="input-group" style={{ marginBottom: '2rem', textAlign: 'center' }}>
+                <label style={{ ...styles.label, textAlign: 'center' }}>código 2fa</label>
+                <div style={{ position: 'relative' }}>
+                  <input 
+                    type="text" 
+                    className="input-2fa"
+                    value={code2fa} 
+                    onChange={(e) => setCode2fa(e.target.value.replace(/\D/g, '').slice(0, 6))} 
+                    placeholder="000000"
+                    required 
+                  />
+                </div>
+                <small style={{ color: 'var(--text-tertiary)', display: 'block', marginTop: '10px', textAlign: 'center' }}>
+                  Insira o código enviado para seu dispositivo.
+                </small>
+              </div>
+              
+              {error && <p className="error-message" style={styles.error}>{error}</p>}
+              
+              <button type="submit" disabled={loading} style={styles.button}>
+                {loading ? 'Verificando...' : 'Confirmar Acesso'}
+              </button>
+              <div style={{ marginTop: '1.75rem', textAlign: 'center' }}>
+                <a href="#login" onClick={(e) => { e.preventDefault(); setView('login'); setError(''); setCode2fa(''); }} style={styles.forgotLink}>
+                  Voltar
+                </a>
+              </div>
+            </form>
+          )}
+
+          {view === 'forgot' && (
+            <form onSubmit={handleForgotSubmit} style={styles.form}>
+              <h2 style={{ fontSize: '1.75rem', fontWeight: '800', margin: '0 0 1.5rem 0', textAlign: 'center' }}>recuperar senha <span style={{ color: '#A855F7' }}>•</span></h2>
+              
+              <div className="input-group" style={{ marginBottom: '2rem' }}>
+                <label style={styles.label}>e-mail cadastrado</label>
+                <div style={{ position: 'relative' }}>
+                  <span style={styles.inputIcon}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                      <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                  </span>
+                  <input 
+                    type="email" 
+                    value={forgotEmail} 
+                    onChange={(e) => setForgotEmail(e.target.value)} 
+                    placeholder="seu-email@dominio.com"
+                    style={{ ...styles.input, paddingLeft: '2.8rem' }}
+                    required 
+                  />
+                </div>
+              </div>
+              
+              {error && <p className="error-message" style={styles.error}>{error}</p>}
+              
+              <button type="submit" disabled={forgotLoading} style={{ ...styles.button, whiteSpace: 'nowrap' }}>
+                {forgotLoading ? 'Enviando Instruções...' : 'Enviar Link de Redefinição'}
+                {!forgotLoading && (
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
+                )}
+              </button>
+
+              <div style={{ marginTop: '1.75rem', textAlign: 'center' }}>
+                <a href="#login" onClick={(e) => { e.preventDefault(); setView('login'); setError(''); }} style={styles.forgotLink}>
+                  Voltar para o Login
+                </a>
+              </div>
+            </form>
+          )}
+
+          {view === 'forgot_2fa' && (
+            <form onSubmit={handleForgot2FASubmit} style={styles.form}>
+              <h2 style={{ fontSize: '1.75rem', fontWeight: '800', margin: '0 0 1.5rem 0', textAlign: 'center' }}>autenticação <span style={{ color: '#A855F7' }}>•</span></h2>
+              
+              <div className="input-group" style={{ marginBottom: '2rem', textAlign: 'center' }}>
+                <label style={{ ...styles.label, textAlign: 'center' }}>código de recuperação</label>
+                <div style={{ position: 'relative' }}>
+                  <input 
+                    type="text" 
+                    className="input-2fa"
+                    value={code2fa} 
+                    onChange={(e) => setCode2fa(e.target.value.replace(/\D/g, '').slice(0, 6))} 
+                    placeholder="000000"
+                    required 
+                  />
+                </div>
+                <small style={{ color: 'var(--text-tertiary)', display: 'block', marginTop: '10px', textAlign: 'center' }}>
+                  Insira o código de 6 dígitos enviado para o seu e-mail.
+                </small>
+              </div>
+              
+              {error && <p className="error-message" style={styles.error}>{error}</p>}
+              
+              <button type="submit" disabled={forgotLoading} style={styles.button}>
+                {forgotLoading ? 'Verificando...' : 'Verificar Código'}
+              </button>
+              <div style={{ marginTop: '1.75rem', textAlign: 'center' }}>
+                <a href="#forgot" onClick={(e) => { e.preventDefault(); setView('forgot'); setError(''); setCode2fa(''); }} style={styles.forgotLink}>
+                  Voltar
+                </a>
+              </div>
+            </form>
+          )}
+
+          {view === 'forgot_success' && (
+            <div style={{ textAlign: 'center', padding: '1rem 0' }}>
+              <div style={{
+                width: '64px',
+                height: '64px',
+                borderRadius: '50%',
+                background: 'rgba(168, 85, 247,0.1)',
+                color: '#A855F7',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                margin: '0 auto 1.5rem auto',
+                boxShadow: '0 0 22px rgba(168, 85, 247,0.18)',
+                border: '1px solid rgba(168, 85, 247,0.2)'
+              }}>
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </div>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: '800', marginBottom: '0.75rem', letterSpacing: '-0.01em' }}>Instruções Enviadas!</h3>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: '1.6', margin: '0 0 2rem 0' }}>
+                Enviamos um link seguro de redefinição de senha para o endereço de e-mail informado. Por favor, verifique sua caixa de entrada e spam.
+              </p>
+              <button type="button" onClick={() => { setView('login'); setForgotEmail(''); }} style={{ ...styles.button, width: '100%' }}>
                 Voltar para o Login
-              </a>
+              </button>
             </div>
-          </form>
-        )}
+          )}
 
-        {view === 'forgot_2fa' && (
-          <form onSubmit={handleForgot2FASubmit} style={styles.form}>
-            <div className="input-group" style={{ marginBottom: '2rem', textAlign: 'center' }}>
-              <label style={{ ...styles.label, textAlign: 'center' }}>Código de Recuperação</label>
-              <div style={{ position: 'relative' }}>
-                <input 
-                  type="text" 
-                  className="input-2fa"
-                  value={code2fa} 
-                  onChange={(e) => setCode2fa(e.target.value.replace(/\D/g, '').slice(0, 6))} 
-                  placeholder="000000"
-                  required 
-                />
-              </div>
-              <small style={{ color: 'var(--text-tertiary)', display: 'block', marginTop: '10px', textAlign: 'center' }}>
-                Insira o código de 6 dígitos enviado para o seu e-mail.
-              </small>
-            </div>
-            
-            {error && <p className="error-message" style={styles.error}>{error}</p>}
-            
-            <button type="submit" disabled={forgotLoading} style={styles.button}>
-              {forgotLoading ? 'Verificando...' : 'Verificar Código'}
-            </button>
-            <div style={{ marginTop: '1.75rem', textAlign: 'center' }}>
-              <a href="#forgot" onClick={(e) => { e.preventDefault(); setView('forgot'); setError(''); setCode2fa(''); }} style={styles.forgotLink}>
-                Voltar
-              </a>
-            </div>
-          </form>
-        )}
-
-        {view === 'forgot_success' && (
-          <div style={{ textAlign: 'center', padding: '1rem 0' }}>
-            <div style={{
-              width: '64px',
-              height: '64px',
-              borderRadius: '50%',
-              background: 'rgba(168, 85, 247,0.1)',
-              color: '#A855F7',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              margin: '0 auto 1.5rem auto',
-              boxShadow: '0 0 22px rgba(168, 85, 247,0.18)',
-              border: '1px solid rgba(168, 85, 247,0.2)'
-            }}>
-              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="20 6 9 17 4 12"></polyline>
-              </svg>
-            </div>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: '800', marginBottom: '0.75rem', color: 'white', letterSpacing: '-0.01em' }}>Instruções Enviadas!</h3>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: '1.6', margin: '0 0 2rem 0' }}>
-              Enviamos um link seguro de redefinição de senha para o endereço de e-mail informado. Por favor, verifique sua caixa de entrada e spam.
-            </p>
-            <button type="button" onClick={() => { setView('login'); setForgotEmail(''); }} style={{ ...styles.button, width: '100%' }}>
-              Voltar para o Login
-            </button>
+          <div style={styles.footer}>
           </div>
-        )}
-
-        <div style={styles.footer}>
         </div>
+
+        {/* Right Side: Image Sidebar */}
+        <div className="auth-image-side" style={{ backgroundImage: `url(${authBgImage})` }} />
       </div>
     </div>
   );
@@ -446,12 +457,14 @@ const styles = {
     textAlign: 'left'
   },
   label: {
+    fontFamily: 'Inter, sans-serif',
     color: 'var(--text-primary)',
     fontSize: '0.8rem',
     fontWeight: '700',
     letterSpacing: '0.05em'
   },
   input: {
+    fontFamily: 'Inter, sans-serif',
     width: '100%',
     boxSizing: 'border-box',
     backgroundColor: 'transparent',
@@ -465,11 +478,12 @@ const styles = {
     margin: '0 0 1.5rem 0'
   },
   button: {
+    fontFamily: 'Inter, sans-serif',
     width: '100%',
     borderRadius: 'var(--radius-sm)',
     padding: '1rem 2rem',
     fontSize: '0.95rem',
-    fontWeight: '700',
+    fontWeight: '400',
     background: 'var(--accent-primary)',
     color: '#ffffff',
     border: 'none',
@@ -517,6 +531,7 @@ const styles = {
     fontSize: '0.88rem'
   },
   checkboxLabel: {
+    fontFamily: 'Inter, sans-serif',
     display: 'inline-flex',
     alignItems: 'center',
     gap: '8px',
@@ -532,6 +547,7 @@ const styles = {
     margin: 0
   },
   forgotLink: {
+    fontFamily: 'Inter, sans-serif',
     color: 'var(--text-primary)',
     textDecoration: 'none',
     fontWeight: '600',

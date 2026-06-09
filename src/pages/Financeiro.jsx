@@ -26,8 +26,8 @@ const Financeiro = () => {
       <div style={styles.statsGrid}>
         {/* Balance Card */}
         <div style={styles.statCard}>
-          <div style={styles.statIconContainer}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <div style={{ ...styles.statIconContainer, background: 'rgba(168, 85, 247, 0.22)' }}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#A855F7" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <line x1="12" y1="1" x2="12" y2="23"></line>
               <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
             </svg>
@@ -40,8 +40,8 @@ const Financeiro = () => {
 
         {/* Spent Card */}
         <div style={styles.statCard}>
-          <div style={styles.statIconContainer}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <div style={{ ...styles.statIconContainer, background: 'rgba(239, 68, 68, 0.22)' }}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
               <polyline points="17 6 23 6 23 12"></polyline>
             </svg>
@@ -54,8 +54,8 @@ const Financeiro = () => {
 
         {/* Subscription Card */}
         <div style={styles.statCard}>
-          <div style={styles.statIconContainer}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <div style={{ ...styles.statIconContainer, background: 'rgba(6, 182, 212, 0.22)' }}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
               <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
             </svg>
@@ -69,15 +69,15 @@ const Financeiro = () => {
 
         {/* Avg Cost Card */}
         <div style={styles.statCard}>
-          <div style={styles.statIconContainer}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <div style={{ ...styles.statIconContainer, background: 'rgba(16, 185, 129, 0.22)' }}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 2v20"></path>
               <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
             </svg>
           </div>
           <div>
             <span style={styles.statLabel}>Custo por Disparo (Média)</span>
-            <h2 style={{ ...styles.statVal, color: '#a855f7' }}>R$ 0,08</h2>
+            <h2 style={{ ...styles.statVal, color: '#10b981' }}>R$ 0,08</h2>
             <span style={{ fontSize: '0.8rem', color: 'var(--text-tertiary)' }}>Baseado no último ciclo</span>
           </div>
         </div>
@@ -137,11 +137,7 @@ const Financeiro = () => {
                   {t.amount > 0 ? '+' : ''}R$ {Math.abs(t.amount).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                 </td>
                 <td>
-                  <span className="badge" style={{ 
-                    background: t.status === 'Concluído' ? 'rgba(168, 85, 247, 0.15)' : 'rgba(59, 130, 246, 0.15)',
-                    color: t.status === 'Concluído' ? '#34d399' : '#60a5fa',
-                    border: t.status === 'Concluído' ? '1px solid rgba(168, 85, 247, 0.3)' : '1px solid rgba(59, 130, 246, 0.3)'
-                  }}>
+                  <span className={`badge ${t.status === 'Concluído' ? 'delivered' : 'scheduled'}`}>
                     {t.status}
                   </span>
                 </td>
@@ -196,7 +192,7 @@ const styles = {
     margin: 0,
     fontSize: '1.8rem',
     fontWeight: '800',
-    color: 'white',
+    color: 'var(--text-primary)',
     letterSpacing: '-0.02em'
   }
 };

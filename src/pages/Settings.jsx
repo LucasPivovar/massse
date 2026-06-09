@@ -27,6 +27,7 @@ const Settings = ({ token, theme, setTheme }) => {
     twilio_phone_number: '',
     twilio_conversation_service_sid: ''
   });
+  const [activeSection, setActiveSection] = useState('general');
 
   const fetchSettings = async () => {
     try {
@@ -224,337 +225,419 @@ const Settings = ({ token, theme, setTheme }) => {
         </p>
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-          
-          {/* Main Twilio Settings (Provider & Webhook url) */}
-          <form onSubmit={handleSubmit} style={styles.formContainer}>
-            <h2 style={styles.sectionHeader}>Configurações Gerais Twilio</h2>
-            
-            <div className="input-group">
-              <label>URL Base da API (Hospedagem & Webhooks)</label>
-              <input 
-                type="text" 
-                name="base_url"
-                value={settings.base_url} 
-                onChange={handleChange} 
-                placeholder="https://seu-dominio.com.br"
-              />
-              <small style={{ color: 'var(--text-tertiary)', display: 'block', marginTop: '6px' }}>
-                URL de callbacks e hospedagem de mídias anexadas nas mensagens enviadas.
-              </small>
-            </div>
+      {/* Main Split Container Card */}
+      <div className="settings-split-card">
+        {/* Left Sidebar Menu (30% approx, width: 280px) */}
+        <div className="settings-sidebar">
+          <button 
+            type="button"
+            onClick={() => {
+              setActiveSection('general');
+              setMessage('');
+              setError('');
+            }}
+            className={`settings-sidebar-btn ${activeSection === 'general' ? 'active' : ''}`}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+            Geral Twilio
+          </button>
 
-            {error && !showTwilioForm && <p className="error-message">{error}</p>}
-            {message && !showTwilioForm && <p className="success-message">{message}</p>}
+          <button 
+            type="button"
+            onClick={() => {
+              setActiveSection('profiles');
+              setMessage('');
+              setError('');
+            }}
+            className={`settings-sidebar-btn ${activeSection === 'profiles' ? 'active' : ''}`}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+            Perfis Twilio
+          </button>
 
-            <button type="submit" style={{ marginTop: '1.5rem', width: 'fit-content', padding: '0.75rem 2.5rem', borderRadius: 'var(--radius-sm)' }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '6px' }}><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
-              Salvar
-            </button>
-          </form>
+          <button 
+            type="button"
+            onClick={() => {
+              setActiveSection('gemini');
+              setMessage('');
+              setError('');
+            }}
+            className={`settings-sidebar-btn ${activeSection === 'gemini' ? 'active' : ''}`}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
+            </svg>
+            Google Gemini
+          </button>
 
-          {/* Gemini — Criador de Bots */}
-          <form onSubmit={handleGeminiSubmit} style={styles.formContainer}>
-            <h2 style={styles.sectionHeader}>Google Gemini — Criador de Bots</h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: 0, marginBottom: '1.25rem' }}>
-              Chave e modelo usados nos fluxos de bot para respostas com IA e avaliação de condições.
-            </p>
+          <button 
+            type="button"
+            onClick={() => {
+              setActiveSection('preferences');
+              setMessage('');
+              setError('');
+            }}
+            className={`settings-sidebar-btn ${activeSection === 'preferences' ? 'active' : ''}`}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            Preferências
+          </button>
+        </div>
 
-            <div className="input-group">
-              <label>API Key</label>
-              <div style={{ position: 'relative' }}>
-                <input
-                  type={showGeminiKey ? 'text' : 'password'}
-                  name="gemini_api_key"
-                  value={settings.gemini_api_key}
-                  onChange={handleChange}
-                  placeholder="AIza..."
-                  autoComplete="off"
-                  style={{ fontFamily: 'monospace', paddingRight: '2.75rem' }}
+        {/* Right Content Area (70% approx, flex: 1) */}
+        <div className="settings-content">
+          {activeSection === 'general' && (
+            <form onSubmit={handleSubmit} style={styles.formContainer}>
+              <h2 style={styles.sectionHeader}>Configurações Gerais Twilio</h2>
+              
+              <div className="input-group">
+                <label>URL Base da API (Hospedagem & Webhooks)</label>
+                <input 
+                  type="text" 
+                  name="base_url"
+                  value={settings.base_url} 
+                  onChange={handleChange} 
+                  placeholder="https://seu-dominio.com.br"
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowGeminiKey(!showGeminiKey)}
-                  style={{
-                    position: 'absolute',
-                    right: 10,
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    background: 'none',
-                    border: 'none',
-                    color: 'var(--text-tertiary)',
-                    cursor: 'pointer',
-                    fontSize: '0.75rem',
-                    minWidth: 'auto',
-                    padding: '4px 8px',
-                  }}
-                >
-                  {showGeminiKey ? 'Ocultar' : 'Mostrar'}
-                </button>
-              </div>
-              <small style={{ color: 'var(--text-tertiary)', display: 'block', marginTop: '6px' }}>
-                Obtenha em{' '}
-                <a href="https://aistudio.google.com/apikey" target="_blank" rel="noreferrer" style={{ color: 'var(--accent-flow)' }}>
-                  Google AI Studio
-                </a>
-                . Nos nós de mensagem do Criador de Bots, marque &quot;Gerar com IA&quot;.
-                {settings.has_gemini_api_key && settings.gemini_api_key === '********' && (
-                  <> Deixe <strong>********</strong> para manter a chave atual.</>
-                )}
-              </small>
-            </div>
-
-            <div className="input-group" style={{ marginTop: '1rem' }}>
-              <label>Modelo</label>
-              <input
-                type="text"
-                name="gemini_model"
-                value={settings.gemini_model}
-                onChange={handleChange}
-                placeholder="gemini-2.0-flash"
-                style={{ fontFamily: 'monospace', maxWidth: 360 }}
-              />
-              <small style={{ color: 'var(--text-tertiary)', display: 'block', marginTop: '6px' }}>
-                Exemplos: gemini-2.0-flash, gemini-1.5-flash, gemini-1.5-pro
-              </small>
-            </div>
-
-            {error && <p className="error-message">{error}</p>}
-            {message && <p className="success-message">{message}</p>}
-
-            <button type="submit" style={{ marginTop: '1.5rem', width: 'fit-content', padding: '0.75rem 2.5rem', borderRadius: 'var(--radius-sm)' }}>
-              Salvar Gemini
-            </button>
-          </form>
-
-          {/* New Preferences Sections */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2rem' }}>
-            {/* Security Settings */}
-            <div style={styles.formContainer}>
-              <h2 style={{ ...styles.sectionHeader, fontSize: '1.15rem', marginBottom: '1.5rem' }}>Segurança</h2>
-              
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '1rem', borderBottom: '1px solid var(--border-glass)', marginBottom: '1rem' }}>
-                <div>
-                  <h4 style={{ margin: 0, color: 'var(--text-primary)', fontSize: '0.95rem' }}>Autenticação 2FA</h4>
-                  <p style={{ margin: 0, color: 'var(--text-tertiary)', fontSize: '0.8rem' }}>Exigir código por SMS/E-mail no login</p>
-                </div>
-                <label className="toggle-switch">
-                  <input type="checkbox" defaultChecked />
-                  <span className="slider round"></span>
-                </label>
-              </div>
-
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <div>
-                  <h4 style={{ margin: 0, color: 'var(--text-primary)', fontSize: '0.95rem' }}>Alerta de Novo Dispositivo</h4>
-                  <p style={{ margin: 0, color: 'var(--text-tertiary)', fontSize: '0.8rem' }}>Notificar quando logar de outro IP</p>
-                </div>
-                <label className="toggle-switch">
-                  <input type="checkbox" defaultChecked />
-                  <span className="slider round"></span>
-                </label>
-              </div>
-            </div>
-
-            {/* Notifications Settings */}
-            <div style={styles.formContainer}>
-              <h2 style={{ ...styles.sectionHeader, fontSize: '1.15rem', marginBottom: '1.5rem' }}>Alertas & Notificações</h2>
-              
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '1rem', borderBottom: '1px solid var(--border-glass)', marginBottom: '1rem' }}>
-                <div>
-                  <h4 style={{ margin: 0, color: 'var(--text-primary)', fontSize: '0.95rem' }}>Fim de Campanha</h4>
-                  <p style={{ margin: 0, color: 'var(--text-tertiary)', fontSize: '0.8rem' }}>E-mail ao terminar lote de disparos</p>
-                </div>
-                <label className="toggle-switch">
-                  <input type="checkbox" defaultChecked />
-                  <span className="slider round"></span>
-                </label>
-              </div>
-
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <div>
-                  <h4 style={{ margin: 0, color: 'var(--text-primary)', fontSize: '0.95rem' }}>Alerta de Saldo Baixo</h4>
-                  <p style={{ margin: 0, color: 'var(--text-tertiary)', fontSize: '0.8rem' }}>Avisar quando saldo for &lt; R$ 50,00</p>
-                </div>
-                <label className="toggle-switch">
-                  <input type="checkbox" defaultChecked />
-                  <span className="slider round"></span>
-                </label>
-              </div>
-            </div>
-
-            {/* Theme Settings */}
-            <div style={styles.formContainer}>
-              <h2 style={{ ...styles.sectionHeader, fontSize: '1.15rem', marginBottom: '1.5rem' }}>Aparência</h2>
-              
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '1rem', borderBottom: '1px solid var(--border-glass)', marginBottom: '1rem' }}>
-                <div>
-                  <h4 style={{ margin: 0, color: 'var(--text-primary)', fontSize: '0.95rem' }}>Modo Claro</h4>
-                  <p style={{ margin: 0, color: 'var(--text-tertiary)', fontSize: '0.8rem' }}>Cores chapadas e menos efeitos</p>
-                </div>
-                <label className="toggle-switch">
-                  <input 
-                    type="checkbox" 
-                    checked={theme === 'light'}
-                    onChange={(e) => setTheme?.(e.target.checked ? 'light' : 'dark')}
-                  />
-                  <span className="slider round"></span>
-                </label>
-              </div>
-            </div>
-          </div>
-
-          {/* Twilio Add/Edit Card Form */}
-          {showTwilioForm && (
-            <form onSubmit={handleSaveTwilioAccount} style={{ ...styles.formContainer, border: '1px solid rgba(168, 85, 247, 0.4)', boxShadow: '0 0 20px rgba(168, 85, 247,0.1)' }}>
-              <h2 style={{ ...styles.sectionHeader, background: 'var(--accent-flow)', padding: '0.2rem 0' }}>
-                {editingAccount ? `Editar Perfil: ${editingAccount.friendly_name}` : 'Cadastrar Novo Perfil Twilio'}
-              </h2>
-
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem', marginBottom: '1.5rem' }}>
-                <div className="input-group" style={{ margin: 0 }}>
-                  <label>Nome Amigável do Perfil</label>
-                  <input 
-                    type="text" 
-                    name="friendly_name"
-                    value={twilioForm.friendly_name} 
-                    onChange={handleTwilioFormChange} 
-                    placeholder="Ex: Suporte Principal, Canal Vendas"
-                    required
-                  />
-                </div>
-
-                <div className="input-group" style={{ margin: 0 }}>
-                  <label>Account SID</label>
-                  <input 
-                    type="text" 
-                    name="twilio_account_sid"
-                    value={twilioForm.twilio_account_sid} 
-                    onChange={handleTwilioFormChange} 
-                    placeholder="ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem', marginBottom: '1.5rem' }}>
-                <div className="input-group" style={{ margin: 0 }}>
-                  <label>Auth Token</label>
-                  <input 
-                    type="password" 
-                    name="twilio_auth_token"
-                    value={twilioForm.twilio_auth_token} 
-                    onChange={handleTwilioFormChange} 
-                    placeholder={editingAccount ? "Preencha para alterar o token" : "Seu Twilio Auth Token"}
-                    required
-                  />
-                </div>
-
-                <div className="input-group" style={{ margin: 0 }}>
-                  <label>Número do WhatsApp Twilio</label>
-                  <input 
-                    type="text" 
-                    name="twilio_phone_number"
-                    value={twilioForm.twilio_phone_number} 
-                    onChange={handleTwilioFormChange} 
-                    placeholder="Ex: +14155238886"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="input-group" style={{ margin: '0 0 1.5rem' }}>
-                <label>Conversation Service SID (Bate-papo)</label>
-                <input
-                  type="text"
-                  name="twilio_conversation_service_sid"
-                  value={twilioForm.twilio_conversation_service_sid}
-                  onChange={handleTwilioFormChange}
-                  placeholder="ISxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx (opcional)"
-                />
-                <p style={{ margin: '0.5rem 0 0', fontSize: '0.82rem', color: 'var(--text-secondary)' }}>
-                  No console Twilio: Conversations → Services → copie o SID (começa com IS). Se vazio, o sistema busca em todos os services da conta.
-                </p>
+                <small style={{ color: 'var(--text-secondary)', display: 'block', marginTop: '6px' }}>
+                  URL de callbacks e hospedagem de mídias anexadas nas mensagens enviadas.
+                </small>
               </div>
 
               {error && <p className="error-message">{error}</p>}
+              {message && <p className="success-message">{message}</p>}
 
-              <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
-                <button type="submit" style={{ flex: 1, borderRadius: 'var(--radius-sm)' }}>
-                  Salvar Perfil
-                </button>
-                <button type="button" onClick={handleCancelTwilioForm} className="secondary" style={{ flex: 1, borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-glass)' }}>
-                  Cancelar
-                </button>
-              </div>
+              <button type="submit" style={{ marginTop: '1.5rem', width: 'fit-content', padding: '0.75rem 2.5rem', borderRadius: 'var(--radius-sm)' }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '6px' }}><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                Salvar Geral
+              </button>
             </form>
           )}
 
-          {/* Twilio Profiles List */}
-          <div style={styles.formContainer}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
-              <h2 style={{ margin: 0, fontSize: '1.3rem', fontWeight: '800', background: 'var(--accent-flow)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-                Perfis do Twilio Cadastrados
-              </h2>
-              {!showTwilioForm && (
-                <button type="button" onClick={handleOpenNewForm} style={{ padding: '0.7rem 1.4rem', borderRadius: '8px', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                  Novo Perfil Twilio
-                </button>
+          {activeSection === 'profiles' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+              {/* Twilio Add/Edit Card Form */}
+              {showTwilioForm && (
+                <form onSubmit={handleSaveTwilioAccount} style={{ ...styles.formContainer, border: '1px solid var(--border-glass)', padding: '1.5rem', borderRadius: '12px', background: 'var(--bg-input)' }}>
+                  <h2 style={{ ...styles.sectionHeader, marginBottom: '1.5rem' }}>
+                    {editingAccount ? `Editar Perfil: ${editingAccount.friendly_name}` : 'Cadastrar Novo Perfil Twilio'}
+                  </h2>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem', marginBottom: '1.5rem' }}>
+                    <div className="input-group" style={{ margin: 0 }}>
+                      <label>Nome Amigável do Perfil</label>
+                      <input 
+                        type="text" 
+                        name="friendly_name"
+                        value={twilioForm.friendly_name} 
+                        onChange={handleTwilioFormChange} 
+                        placeholder="Ex: Suporte Principal, Canal Vendas"
+                        required
+                      />
+                    </div>
+
+                    <div className="input-group" style={{ margin: 0 }}>
+                      <label>Account SID</label>
+                      <input 
+                        type="text" 
+                        name="twilio_account_sid"
+                        value={twilioForm.twilio_account_sid} 
+                        onChange={handleTwilioFormChange} 
+                        placeholder="ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem', marginBottom: '1.5rem' }}>
+                    <div className="input-group" style={{ margin: 0 }}>
+                      <label>Auth Token</label>
+                      <input 
+                        type="password" 
+                        name="twilio_auth_token"
+                        value={twilioForm.twilio_auth_token} 
+                        onChange={handleTwilioFormChange} 
+                        placeholder={editingAccount ? "Preencha para alterar o token" : "Seu Twilio Auth Token"}
+                        required
+                      />
+                    </div>
+
+                    <div className="input-group" style={{ margin: 0 }}>
+                      <label>Número do WhatsApp Twilio</label>
+                      <input 
+                        type="text" 
+                        name="twilio_phone_number"
+                        value={twilioForm.twilio_phone_number} 
+                        onChange={handleTwilioFormChange} 
+                        placeholder="Ex: +14155238886"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="input-group" style={{ margin: '0 0 1.5rem' }}>
+                    <label>Conversation Service SID (Bate-papo)</label>
+                    <input
+                      type="text"
+                      name="twilio_conversation_service_sid"
+                      value={twilioForm.twilio_conversation_service_sid}
+                      onChange={handleTwilioFormChange}
+                      placeholder="ISxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx (opcional)"
+                    />
+                    <p style={{ margin: '0.5rem 0 0', fontSize: '0.82rem', color: 'var(--text-secondary)' }}>
+                      No console Twilio: Conversations → Services → copie o SID (começa com IS). Se vazio, o sistema busca em todos os services da conta.
+                    </p>
+                  </div>
+
+                  {error && <p className="error-message">{error}</p>}
+
+                  <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+                    <button type="submit" style={{ flex: 1 }}>
+                      Salvar Perfil
+                    </button>
+                    <button type="button" onClick={handleCancelTwilioForm} className="secondary" style={{ flex: 1 }}>
+                      Cancelar
+                    </button>
+                  </div>
+                </form>
               )}
-            </div>
 
-            <div className="table-container">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Nome Amigável</th>
-                    <th>Account SID</th>
-                    <th>Telefone / WhatsApp</th>
-                    <th style={{ width: '120px', textAlign: 'center' }}>Ações</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {twilioAccounts.map(acc => (
-                    <tr key={acc.id}>
-                      <td style={{ fontWeight: '700', color: 'var(--text-primary)' }}>{acc.friendly_name}</td>
-                      <td style={{ fontFamily: 'monospace', color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
-                        {acc.twilio_account_sid.substring(0, 12)}...
-                      </td>
-                      <td style={{ fontFamily: 'monospace', color: 'var(--accent-secondary)' }}>
-                        {acc.twilio_phone_number}
-                      </td>
-                      <td style={{ textAlign: 'center', display: 'flex', justifyContent: 'center', gap: '8px' }}>
-                        <button 
-                          onClick={() => handleOpenEditForm(acc)}
-                          style={styles.actionBtn}
-                          title="Editar Perfil"
-                        >
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                        </button>
-                        <button 
-                          onClick={() => handleDeleteTwilioAccount(acc.id, acc.friendly_name)}
-                          style={{ ...styles.actionBtn, color: '#ef4444' }}
-                          title="Excluir Perfil"
-                        >
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                  {twilioAccounts.length === 0 && (
-                    <tr>
-                      <td colSpan="4" style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-tertiary)' }}>
-                        Nenhum perfil de conta Twilio cadastrado. Clique em "+ Novo Perfil Twilio" para começar!
-                      </td>
-                    </tr>
+              {/* Twilio Profiles List */}
+              <div style={styles.formContainer}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+                  <h2 style={{ margin: 0, fontSize: '1.3rem', fontWeight: '800', background: 'var(--accent-flow)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                    Perfis do Twilio Cadastrados
+                  </h2>
+                  {!showTwilioForm && (
+                    <button type="button" onClick={handleOpenNewForm} style={{ padding: '0.7rem 1.4rem', borderRadius: '8px', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                      Novo Perfil Twilio
+                    </button>
                   )}
-                </tbody>
-              </table>
-            </div>
-          </div>
+                </div>
 
+                {message && !showTwilioForm && <p className="success-message">{message}</p>}
+                {error && !showTwilioForm && <p className="error-message">{error}</p>}
+
+                <div className="table-container">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Nome Amigável</th>
+                        <th>Account SID</th>
+                        <th>Telefone / WhatsApp</th>
+                        <th style={{ width: '120px', textAlign: 'center' }}>Ações</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {twilioAccounts.map(acc => (
+                        <tr key={acc.id}>
+                          <td style={{ fontWeight: '700', color: 'var(--text-primary)' }}>{acc.friendly_name}</td>
+                          <td style={{ fontFamily: 'monospace', color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
+                            {acc.twilio_account_sid.substring(0, 12)}...
+                          </td>
+                          <td style={{ fontFamily: 'monospace', color: 'var(--accent-secondary)' }}>
+                            {acc.twilio_phone_number}
+                          </td>
+                          <td style={{ textAlign: 'center', display: 'flex', justifyContent: 'center', gap: '8px' }}>
+                            <button 
+                              onClick={() => handleOpenEditForm(acc)}
+                              style={styles.actionBtn}
+                              title="Editar Perfil"
+                            >
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                            </button>
+                            <button 
+                              onClick={() => handleDeleteTwilioAccount(acc.id, acc.friendly_name)}
+                              style={{ ...styles.actionBtn, color: '#ef4444' }}
+                              title="Excluir Perfil"
+                            >
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                      {twilioAccounts.length === 0 && (
+                        <tr>
+                          <td colSpan="4" style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-tertiary)' }}>
+                            Nenhum perfil de conta Twilio cadastrado. Clique em "+ Novo Perfil Twilio" para começar!
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeSection === 'gemini' && (
+            <form onSubmit={handleGeminiSubmit} style={styles.formContainer}>
+              <h2 style={styles.sectionHeader}>Google Gemini — Criador de Bots</h2>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: 0, marginBottom: '1.25rem' }}>
+                Chave e modelo usados nos fluxos de bot para respostas com IA e avaliação de condições.
+              </p>
+
+              <div className="input-group">
+                <label>API Key</label>
+                <div style={{ position: 'relative' }}>
+                  <input
+                    type={showGeminiKey ? 'text' : 'password'}
+                    name="gemini_api_key"
+                    value={settings.gemini_api_key}
+                    onChange={handleChange}
+                    placeholder="AIza..."
+                    autoComplete="off"
+                    style={{ fontFamily: 'monospace', paddingRight: '2.75rem' }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowGeminiKey(!showGeminiKey)}
+                    style={{
+                      position: 'absolute',
+                      right: 10,
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      background: 'none',
+                      border: 'none',
+                      color: 'var(--text-secondary)',
+                      cursor: 'pointer',
+                      fontSize: '0.75rem',
+                      minWidth: 'auto',
+                      padding: '4px 8px',
+                    }}
+                  >
+                    {showGeminiKey ? 'Ocultar' : 'Mostrar'}
+                  </button>
+                </div>
+                <small style={{ color: 'var(--text-tertiary)', display: 'block', marginTop: '6px' }}>
+                  Obtenha em{' '}
+                  <a href="https://aistudio.google.com/apikey" target="_blank" rel="noreferrer" style={{ color: 'var(--accent-flow)' }}>
+                    Google AI Studio
+                  </a>
+                  . Nos nós de mensagem do Criador de Bots, marque &quot;Gerar com IA&quot;.
+                  {settings.has_gemini_api_key && settings.gemini_api_key === '********' && (
+                    <> Deixe <strong>********</strong> para manter a chave atual.</>
+                  )}
+                </small>
+              </div>
+
+              <div className="input-group" style={{ marginTop: '1rem' }}>
+                <label>Modelo</label>
+                <input
+                  type="text"
+                  name="gemini_model"
+                  value={settings.gemini_model}
+                  onChange={handleChange}
+                  placeholder="gemini-2.0-flash"
+                  style={{ fontFamily: 'monospace', maxWidth: 360 }}
+                />
+                <small style={{ color: 'var(--text-tertiary)', display: 'block', marginTop: '6px' }}>
+                  Exemplos: gemini-2.0-flash, gemini-1.5-flash, gemini-1.5-pro
+                </small>
+              </div>
+
+              {error && <p className="error-message">{error}</p>}
+              {message && <p className="success-message">{message}</p>}
+
+              <button type="submit" style={{ marginTop: '1.5rem', width: 'fit-content', padding: '0.75rem 2.5rem', borderRadius: 'var(--radius-sm)' }}>
+                Salvar Gemini
+              </button>
+            </form>
+          )}
+
+          {activeSection === 'preferences' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+              {/* Security Settings */}
+              <div>
+                <h2 style={{ ...styles.sectionHeader, fontSize: '1.2rem', marginBottom: '1.5rem' }}>Segurança</h2>
+                <div style={{ border: '1px solid var(--border-glass)', borderRadius: '12px', padding: '1.5rem', background: 'var(--bg-input)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '1rem', borderBottom: '1px solid var(--border-glass)', marginBottom: '1rem' }}>
+                    <div>
+                      <h4 style={{ margin: 0, color: 'var(--text-primary)', fontSize: '0.95rem' }}>Autenticação 2FA</h4>
+                      <p style={{ margin: 0, color: 'var(--text-tertiary)', fontSize: '0.8rem' }}>Exigir código por SMS/E-mail no login</p>
+                    </div>
+                    <label className="toggle-switch">
+                      <input type="checkbox" defaultChecked />
+                      <span className="slider round"></span>
+                    </label>
+                  </div>
+
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <div>
+                      <h4 style={{ margin: 0, color: 'var(--text-primary)', fontSize: '0.95rem' }}>Alerta de Novo Dispositivo</h4>
+                      <p style={{ margin: 0, color: 'var(--text-tertiary)', fontSize: '0.8rem' }}>Notificar quando logar de outro IP</p>
+                    </div>
+                    <label className="toggle-switch">
+                      <input type="checkbox" defaultChecked />
+                      <span className="slider round"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              {/* Notifications Settings */}
+              <div>
+                <h2 style={{ ...styles.sectionHeader, fontSize: '1.2rem', marginBottom: '1.5rem' }}>Alertas & Notificações</h2>
+                <div style={{ border: '1px solid var(--border-glass)', borderRadius: '12px', padding: '1.5rem', background: 'var(--bg-input)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '1rem', borderBottom: '1px solid var(--border-glass)', marginBottom: '1rem' }}>
+                    <div>
+                      <h4 style={{ margin: 0, color: 'var(--text-primary)', fontSize: '0.95rem' }}>Fim de Campanha</h4>
+                      <p style={{ margin: 0, color: 'var(--text-tertiary)', fontSize: '0.8rem' }}>E-mail ao terminar lote de disparos</p>
+                    </div>
+                    <label className="toggle-switch">
+                      <input type="checkbox" defaultChecked />
+                      <span className="slider round"></span>
+                    </label>
+                  </div>
+
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <div>
+                      <h4 style={{ margin: 0, color: 'var(--text-primary)', fontSize: '0.95rem' }}>Alerta de Saldo Baixo</h4>
+                      <p style={{ margin: 0, color: 'var(--text-tertiary)', fontSize: '0.8rem' }}>Avisar quando saldo for &lt; R$ 50,00</p>
+                    </div>
+                    <label className="toggle-switch">
+                      <input type="checkbox" defaultChecked />
+                      <span className="slider round"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              {/* Theme Settings */}
+              <div>
+                <h2 style={{ ...styles.sectionHeader, fontSize: '1.2rem', marginBottom: '1.5rem' }}>Aparência</h2>
+                <div style={{ border: '1px solid var(--border-glass)', borderRadius: '12px', padding: '1.5rem', background: 'var(--bg-input)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <div>
+                      <h4 style={{ margin: 0, color: 'var(--text-primary)', fontSize: '0.95rem' }}>Modo Claro</h4>
+                      <p style={{ margin: 0, color: 'var(--text-tertiary)', fontSize: '0.8rem' }}>Cores chapadas e menos efeitos</p>
+                    </div>
+                    <label className="toggle-switch">
+                      <input 
+                        type="checkbox" 
+                        checked={theme === 'light'}
+                        onChange={(e) => setTheme?.(e.target.checked ? 'light' : 'dark')}
+                      />
+                      <span className="slider round"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
+      </div>
     </div>
   );
 };
@@ -565,7 +648,7 @@ const styles = {
     border: 'none',
     padding: '0',
     boxShadow: 'none',
-    marginBottom: '2rem'
+    marginBottom: 0
   },
   sectionHeader: {
     marginTop: 0,

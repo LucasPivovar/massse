@@ -125,7 +125,7 @@ const LineChart = ({ data }) => {
             <text x={p.x} y="144"
               fill={hov === i ? 'rgba(229,229,229,0.9)' : 'rgba(107,114,128,0.65)'}
               fontSize="11" fontWeight="600" textAnchor="middle"
-              style={{ transition:'fill 0.15s', fontFamily:'Outfit,sans-serif' }}>
+              style={{ transition:'fill 0.15s', fontFamily:'Inter,sans-serif' }}>
               {p.label}
             </text>
             <rect x={p.x-34} y="0" width="68" height="148"
@@ -296,7 +296,7 @@ const ClientDashboard = ({ token }) => {
                   Cliente Atribuído
                 </span>
               </div>
-              <h2 style={{ fontSize: '1.4rem', margin: 0, fontWeight: '800', color: '#fff' }}>{metrics.clientName}</h2>
+              <h2 style={{ fontSize: '1.4rem', margin: 0, fontWeight: '800', color: 'var(--text-primary)' }}>{metrics.clientName}</h2>
             </Card>
 
             {/* KPI 2 */}
@@ -312,7 +312,7 @@ const ClientDashboard = ({ token }) => {
                 </span>
               </div>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px' }}>
-                <h2 style={{ fontSize: '2rem', margin: 0, fontWeight: '800', color: '#fff' }}>{metrics.sent}</h2>
+                <h2 style={{ fontSize: '2rem', margin: 0, fontWeight: '800', color: 'var(--text-primary)' }}>{metrics.sent}</h2>
                 <span style={{ fontSize: '0.8rem', color: B.lime, fontWeight: '700', padding: '2px 8px', background: 'rgba(168, 85, 247,0.1)', borderRadius: '20px' }}>
                   Concluído
                 </span>
@@ -333,7 +333,7 @@ const ClientDashboard = ({ token }) => {
                 </span>
               </div>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px' }}>
-                <h2 style={{ fontSize: '2rem', margin: 0, fontWeight: '800', color: '#fff' }}>{metrics.read}</h2>
+                <h2 style={{ fontSize: '2rem', margin: 0, fontWeight: '800', color: 'var(--text-primary)' }}>{metrics.read}</h2>
                 <span style={{ fontSize: '0.8rem', color: '#38bdf8', fontWeight: '700', padding: '2px 8px', background: 'rgba(56,189,248,0.1)', borderRadius: '20px' }}>
                   {metrics.ctr} Taxa Média
                 </span>
@@ -355,7 +355,7 @@ const ClientDashboard = ({ token }) => {
                 </span>
               </div>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px' }}>
-                <h2 style={{ fontSize: '2rem', margin: 0, fontWeight: '800', color: '#fff' }}>{metrics.failed}</h2>
+                <h2 style={{ fontSize: '2rem', margin: 0, fontWeight: '800', color: 'var(--text-primary)' }}>{metrics.failed}</h2>
                 <span style={{ fontSize: '0.8rem', color: '#ef4444', fontWeight: '700' }}>
                   Falhas
                 </span>
@@ -367,7 +367,7 @@ const ClientDashboard = ({ token }) => {
           <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
             {/* Advanced Chart Visualization */}
             <Card className="card-gradient" style={{ flex: 2, minWidth: '300px', padding: '2.5rem 2rem' }}>
-              <h3 style={{ margin: '0 0 1.5rem 0', fontSize: '1.1rem', color: '#fff' }}>Evolução de Interações</h3>
+              <h3 style={{ margin: '0 0 1.5rem 0', fontSize: '1.1rem', color: 'var(--text-primary)' }}>Evolução de Interações</h3>
               <LineChart data={metrics.chartData} />
             </Card>
           </div>

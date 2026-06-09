@@ -178,7 +178,7 @@ const Contacts = ({ token }) => {
       <div className="contacts-action-panel" style={{ display: 'flex', gap: '2rem', marginBottom: '3rem', flexWrap: 'wrap' }}>
         
         {/* Upload Form Box */}
-        <form onSubmit={handleUpload} className="card-gradient" style={styles.formContainer}>
+        <form onSubmit={handleUpload} style={{ ...styles.formContainer, background: '#ffffff', border: '1px solid var(--border-glass)' }}>
           <h2 style={{ fontSize: '1.25rem', marginTop: 0, marginBottom: '1.25rem' }}>Importar Novo Lote</h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
             <div className="input-group" style={{ margin: 0, width: '100%' }}>
@@ -329,13 +329,7 @@ const Contacts = ({ token }) => {
                   <td style={{ fontWeight: '600' }}>{c.nome}</td>
                   <td style={{ fontFamily: 'monospace', color: '#ffffff' }}>{c.telefone}</td>
                   <td>
-                    <span className="badge" style={{ background: 'var(--accent-indigo-light)', color: '#34d399', border: '1px solid rgba(168, 85, 247, 0.2)' }}>
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '4px' }}>
-                        <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
-                        <line x1="7" y1="7" x2="7.01" y2="7"></line>
-                      </svg>
-                      {c.flag}
-                    </span>
+                    <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>{c.flag}</span>
                   </td>
                   <td style={{ color: 'var(--text-secondary)', fontSize: '0.88rem' }}>
                     {new Date(c.created_at).toLocaleDateString()} às {new Date(c.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
