@@ -150,7 +150,7 @@ const Reports = ({ token }) => {
                 strokeDasharray="439.8"
                 strokeDashoffset={439.8 - (439.8 * avgReadRate) / 100}
                 strokeLinecap="round"
-                style={{ transition: 'stroke-dashoffset 1s ease-in-out', filter: 'drop-shadow(0px 0px 8px rgba(6, 182, 212, 0.4))' }}
+                style={{ transition: 'stroke-dashoffset 1s ease-in-out' }}
               />
               <defs>
                 <linearGradient id="donutGradient" x1="0%" y1="0%" x2="100%" y2="100%">

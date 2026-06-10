@@ -381,7 +381,7 @@ const Campaigns = ({ token }) => {
             <thead>
               <tr>
                 <th>Nome da Campanha</th>
-                <th>Provedor</th>
+                <th>Tag</th>
                 <th>Data</th>
                 <th>Envios</th>
                 <th>Entregues</th>
@@ -396,49 +396,31 @@ const Campaigns = ({ token }) => {
                 <tr key={c.id}>
                   <td style={{ fontWeight: '700', fontSize: '1.02rem' }}>
                     {c.name}
-                    {c.contact_flag && (
-                      <div style={{ marginTop: '5px' }}>
-                        <span className="badge" style={{ 
-                          background: 'rgba(168, 85, 247, 0.08)', 
-                          color: '#34d399', 
-                          border: '1px solid rgba(168, 85, 247, 0.2)',
-                          fontSize: '0.72rem',
-                          padding: '2px 8px',
-                          borderRadius: '6px',
-                          fontWeight: '600'
-                        }}>
-                          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '4px' }}>
-                            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
-                            <line x1="7" y1="7" x2="7.01" y2="7"></line>
-                          </svg>
-                          {c.contact_flag}
-                        </span>
-                      </div>
-                    )}
                   </td>
                   <td>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                      <span 
-                        style={{ 
-                          fontSize: '0.75rem', 
-                          padding: '0.3rem 0.8rem', 
-                          borderRadius: '99px',
-                          background: c.template_sid ? 'var(--accent-indigo-light)' : '#F3F4F6',
-                          color: c.template_sid ? 'var(--accent-secondary)' : 'var(--text-secondary)',
-                          border: c.template_sid ? '1px solid rgba(168, 85, 247, 0.2)' : '1px solid rgba(255, 255, 255, 0.08)',
-                          fontWeight: '700',
-                          display: 'inline-block',
-                          width: 'fit-content'
-                        }}
-                      >
-                        {c.template_sid ? 'Twilio Template' : 'Padrão Custom'}
+                    {c.contact_flag ? (
+                      <span className="tag-badge" style={{ 
+                        background: 'rgba(168, 85, 247, 0.08)', 
+                        color: '#A855F7', 
+                        border: '1px solid rgba(168, 85, 247, 0.2)',
+                        fontSize: '0.75rem',
+                        padding: '0.25rem 0.6rem',
+                        borderRadius: '6px',
+                        fontWeight: '700',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        width: 'fit-content'
+                      }}>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                          <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                        </svg>
+                        {c.contact_flag}
                       </span>
-                      {c.template_sid && c.twilio_account_name && (
-                        <span style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', fontWeight: '600', paddingLeft: '4px' }}>
-                          Conta: {c.twilio_account_name}
-                        </span>
-                      )}
-                    </div>
+                    ) : (
+                      <span style={{ color: 'var(--text-tertiary)', fontSize: '0.85rem' }}>-</span>
+                    )}
                   </td>
                   <td style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', whiteSpace: 'nowrap' }}>
                     {new Date(c.created_at).toLocaleDateString()}

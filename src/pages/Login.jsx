@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-import logoImage from '../assets/logo_massflow.png';
+import logoImage from '../assets/logo-branco.png';
 import authBgImage from '../assets/auth_background.png';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
@@ -105,18 +105,18 @@ const Login = ({ onLogin }) => {
           {/* Brand Header */}
           <div style={styles.brandHeader}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <img 
-                src={logoImage} 
-                alt="MassFlow Logo" 
-                style={{ height: '50px', width: 'auto', objectFit: 'contain' }} 
+              <img
+                src={logoImage}
+                alt="MassFlow Logo"
+                style={{ height: '50px', width: 'auto', objectFit: 'contain' }}
               />
             </div>
           </div>
 
           {view === 'login' && (
             <form onSubmit={handleSubmit} style={styles.form}>
-              <h2 style={{ fontSize: '1.75rem', fontWeight: '800', margin: '0 0 1.5rem 0', textAlign: 'center' }}>Faça o seu login <span style={{ color: '#A855F7' }}>•</span></h2>
-              
+              <h2 style={{ fontSize: '1.75rem', fontWeight: '800', margin: '0 0 1.5rem 0', textAlign: 'center' }}>Faça o seu login</h2>
+
               <div className="input-group">
                 <label style={styles.label}>usuário</label>
                 <div style={{ position: 'relative' }}>
@@ -126,13 +126,13 @@ const Login = ({ onLogin }) => {
                       <circle cx="12" cy="7" r="4"></circle>
                     </svg>
                   </span>
-                  <input 
-                    type="text" 
-                    value={username} 
-                    onChange={(e) => setUsername(e.target.value)} 
+                  <input
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
                     placeholder="Qualquer usuário"
                     style={{ ...styles.input, paddingLeft: '2.8rem' }}
-                    required 
+                    required
                   />
                 </div>
               </div>
@@ -145,16 +145,16 @@ const Login = ({ onLogin }) => {
                       <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                     </svg>
                   </span>
-                  <input 
-                    type={showPassword ? 'text' : 'password'} 
-                    value={password} 
-                    onChange={(e) => setPassword(e.target.value)} 
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     placeholder="Qualquer senha"
                     style={{ ...styles.input, paddingLeft: '2.8rem', paddingRight: '2.8rem' }}
-                    required 
+                    required
                   />
-                  <button 
-                    type="button" 
+                  <button
+                    type="button"
                     className="eye-btn"
                     onClick={() => setShowPassword(!showPassword)}
                     style={styles.eyeToggleBtn}
@@ -178,9 +178,9 @@ const Login = ({ onLogin }) => {
               {/* Remember me & Forgot password simulation row */}
               <div style={styles.extraRow}>
                 <label style={styles.checkboxLabel}>
-                  <input 
-                    type="checkbox" 
-                    checked={rememberMe} 
+                  <input
+                    type="checkbox"
+                    checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
                     style={styles.checkboxInput}
                   />
@@ -190,10 +190,10 @@ const Login = ({ onLogin }) => {
                   esqueci minha senha
                 </a>
               </div>
-              
+
               {error && <p className="error-message" style={styles.error}>{error}</p>}
               {success && <p className="success-message" style={styles.success}>{success}</p>}
-              
+
               <button type="submit" disabled={loading} style={styles.button}>
                 {loading ? 'Autenticando...' : 'Entrar'}
                 {!loading && (
@@ -205,8 +205,8 @@ const Login = ({ onLogin }) => {
               </button>
 
               <div style={{ marginTop: '1.75rem', textAlign: 'center' }}>
-                <span style={{ color: 'var(--text-primary)', fontSize: '0.85rem' }}>Ainda não possui uma conta? </span>
-                <a href="/register" onClick={(e) => { e.preventDefault(); window.location.href = '/register'; }} style={{...styles.forgotLink, textDecoration: 'underline'}}>
+                <span style={{ color: '#ffffff', fontSize: '0.85rem' }}>Ainda não possui uma conta? </span>
+                <a href="/register" onClick={(e) => { e.preventDefault(); window.location.href = '/register'; }} style={{ ...styles.forgotLink, textDecoration: 'underline' }}>
                   Cadastre-se
                 </a>
               </div>
@@ -216,26 +216,26 @@ const Login = ({ onLogin }) => {
           {view === 'login_2fa' && (
             <form onSubmit={handle2FASubmit} style={styles.form}>
               <h2 style={{ fontSize: '1.75rem', fontWeight: '800', margin: '0 0 1.5rem 0', textAlign: 'center' }}>autenticação <span style={{ color: '#A855F7' }}>•</span></h2>
-              
+
               <div className="input-group" style={{ marginBottom: '2rem', textAlign: 'center' }}>
                 <label style={{ ...styles.label, textAlign: 'center' }}>código 2fa</label>
                 <div style={{ position: 'relative' }}>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     className="input-2fa"
-                    value={code2fa} 
-                    onChange={(e) => setCode2fa(e.target.value.replace(/\D/g, '').slice(0, 6))} 
+                    value={code2fa}
+                    onChange={(e) => setCode2fa(e.target.value.replace(/\D/g, '').slice(0, 6))}
                     placeholder="000000"
-                    required 
+                    required
                   />
                 </div>
                 <small style={{ color: 'var(--text-tertiary)', display: 'block', marginTop: '10px', textAlign: 'center' }}>
                   Insira o código enviado para seu dispositivo.
                 </small>
               </div>
-              
+
               {error && <p className="error-message" style={styles.error}>{error}</p>}
-              
+
               <button type="submit" disabled={loading} style={styles.button}>
                 {loading ? 'Verificando...' : 'Confirmar Acesso'}
               </button>
@@ -250,7 +250,7 @@ const Login = ({ onLogin }) => {
           {view === 'forgot' && (
             <form onSubmit={handleForgotSubmit} style={styles.form}>
               <h2 style={{ fontSize: '1.75rem', fontWeight: '800', margin: '0 0 1.5rem 0', textAlign: 'center' }}>recuperar senha <span style={{ color: '#A855F7' }}>•</span></h2>
-              
+
               <div className="input-group" style={{ marginBottom: '2rem' }}>
                 <label style={styles.label}>e-mail cadastrado</label>
                 <div style={{ position: 'relative' }}>
@@ -260,19 +260,19 @@ const Login = ({ onLogin }) => {
                       <polyline points="22,6 12,13 2,6"></polyline>
                     </svg>
                   </span>
-                  <input 
-                    type="email" 
-                    value={forgotEmail} 
-                    onChange={(e) => setForgotEmail(e.target.value)} 
+                  <input
+                    type="email"
+                    value={forgotEmail}
+                    onChange={(e) => setForgotEmail(e.target.value)}
                     placeholder="seu-email@dominio.com"
                     style={{ ...styles.input, paddingLeft: '2.8rem' }}
-                    required 
+                    required
                   />
                 </div>
               </div>
-              
+
               {error && <p className="error-message" style={styles.error}>{error}</p>}
-              
+
               <button type="submit" disabled={forgotLoading} style={{ ...styles.button, whiteSpace: 'nowrap' }}>
                 {forgotLoading ? 'Enviando Instruções...' : 'Enviar Link de Redefinição'}
                 {!forgotLoading && (
@@ -294,26 +294,26 @@ const Login = ({ onLogin }) => {
           {view === 'forgot_2fa' && (
             <form onSubmit={handleForgot2FASubmit} style={styles.form}>
               <h2 style={{ fontSize: '1.75rem', fontWeight: '800', margin: '0 0 1.5rem 0', textAlign: 'center' }}>autenticação <span style={{ color: '#A855F7' }}>•</span></h2>
-              
+
               <div className="input-group" style={{ marginBottom: '2rem', textAlign: 'center' }}>
                 <label style={{ ...styles.label, textAlign: 'center' }}>código de recuperação</label>
                 <div style={{ position: 'relative' }}>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     className="input-2fa"
-                    value={code2fa} 
-                    onChange={(e) => setCode2fa(e.target.value.replace(/\D/g, '').slice(0, 6))} 
+                    value={code2fa}
+                    onChange={(e) => setCode2fa(e.target.value.replace(/\D/g, '').slice(0, 6))}
                     placeholder="000000"
-                    required 
+                    required
                   />
                 </div>
                 <small style={{ color: 'var(--text-tertiary)', display: 'block', marginTop: '10px', textAlign: 'center' }}>
                   Insira o código de 6 dígitos enviado para o seu e-mail.
                 </small>
               </div>
-              
+
               {error && <p className="error-message" style={styles.error}>{error}</p>}
-              
+
               <button type="submit" disabled={forgotLoading} style={styles.button}>
                 {forgotLoading ? 'Verificando...' : 'Verificar Código'}
               </button>
@@ -498,9 +498,9 @@ const styles = {
     top: '50%',
     transform: 'translateY(-50%)',
     fontSize: '1rem',
-    color: 'var(--text-secondary)',
+    color: '#ffffff',
     pointerEvents: 'none',
-    opacity: 0.8,
+    opacity: 0.7,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'
@@ -510,18 +510,21 @@ const styles = {
     right: '0.5rem',
     top: '50%',
     transform: 'translateY(-50%)',
-    background: 'transparent',
+    background: 'none',
+    backgroundColor: 'transparent',
+    backgroundImage: 'none',
     border: 'none',
     boxShadow: 'none',
-    color: 'var(--text-secondary)',
+    color: '#ffffff',
     cursor: 'pointer',
     fontSize: '1rem',
-    padding: '8px',
+    padding: '4px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     minWidth: 'auto',
-    margin: 0
+    margin: 0,
+    opacity: 0.7
   },
   extraRow: {
     display: 'flex',

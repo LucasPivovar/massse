@@ -10,6 +10,9 @@ const Contacts = ({ token }) => {
   const [contacts, setContacts] = useState([]);
   const [loadingContacts, setLoadingContacts] = useState(true);
   
+  // Modal state
+  const [showImportModal, setShowImportModal] = useState(false);
+
   // Backend Pagination & Search/Filter State
   const [currentPage, setCurrentPage] = useState(1);
   const [totalContacts, setTotalContacts] = useState(0);
@@ -157,84 +160,48 @@ const Contacts = ({ token }) => {
       setMessage('Planilha enviada com sucesso!');
       setFile(null);
       setFlag('');
-      setCurrentPage(1); // Reset to page 1 on new import
+      setCurrentPage(1);
       fetchContacts();
+      // Close modal after short delay on success
+      setTimeout(() => {
+        setShowImportModal(false);
+        setMessage('');
+      }, 1800);
     } catch (err) {
       setMessage('Erro ao processar planilha.');
       console.error(err);
     }
   };
 
+  const closeModal = () => {
+    setShowImportModal(false);
+    setFile(null);
+    setFlag('');
+    setMessage('');
+  };
+
   return (
     <div className="page-container pulse-glow">
-      <div style={{ marginBottom: '2rem' }}>
-        <h1>Contatos</h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', margin: 0 }}>
-          Importe novas planilhas de leads e gerencie sua base de contatos cadastrados.
-        </p>
-      </div>
-      
-      {/* Action panel (Download sample & Import) */}
-      <div className="contacts-action-panel" style={{ display: 'flex', gap: '2rem', marginBottom: '3rem', flexWrap: 'wrap' }}>
-        
-        {/* Upload Form Box */}
-        <form onSubmit={handleUpload} style={{ ...styles.formContainer, background: '#ffffff', border: '1px solid var(--border-glass)' }}>
-          <h2 style={{ fontSize: '1.25rem', marginTop: 0, marginBottom: '1.25rem' }}>Importar Novo Lote</h2>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-            <div className="input-group" style={{ margin: 0, width: '100%' }}>
-              <label>Flag de Identificação (Obrigatório)</label>
-              <input 
-                type="text" 
-                value={flag} 
-                onChange={(e) => setFlag(e.target.value)} 
-                placeholder="Ex: leads_agosto_2026"
-              />
-              <small style={{ color: 'var(--text-tertiary)', display: 'block', marginTop: '6px', fontSize: '0.8rem' }}>
-                Preencha a flag antes de selecionar a planilha.
-              </small>
-            </div>
-            
-            <label className="file-upload-area pulse-hover" style={{ padding: '3rem 1rem', width: '100%', boxSizing: 'border-box' }}>
-              <input 
-                type="file" 
-                accept=".xlsx,.xls,.csv" 
-                onChange={(e) => {
-                  const selected = e.target.files[0];
-                  setFile(selected);
-                  // We simulate form submission implicitly if flag is set, else we wait for the user
-                  // Because the form uses handleUpload on submit, let's keep the submit button but hide it
-                }} 
-                style={{ display: 'none' }} 
-              />
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#A855F7" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: '1rem', filter: 'drop-shadow(0 0 8px rgba(168, 85, 247,0.4))' }}>
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                <polyline points="17 8 12 3 7 8"></polyline>
-                <line x1="12" y1="3" x2="12" y2="15"></line>
-              </svg>
-              <span style={{ fontWeight: '800', color: '#000', fontSize: '1.2rem', marginBottom: '8px' }}>
-                {file ? file.name : 'Clique para Enviar Planilha'}
-              </span>
-              <span style={{ fontSize: '0.9rem', color: 'var(--text-tertiary)' }}>Suporta .XLSX, .XLS ou .CSV</span>
-            </label>
-            
-            {file && (
-              <button type="submit" style={{ width: '100%', borderRadius: 'var(--radius-sm)', animation: 'fadeIn 0.3s ease-out' }}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '8px' }}><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                Confirmar Importação
-              </button>
-            )}
-            
-
-          </div>
-
-          {message && (
-            <p className={message.includes('sucesso') ? 'success-message' : 'error-message'} style={{ marginBottom: 0, marginTop: '1rem' }}>
-              {message}
-            </p>
-          )}
-        </form>
-
-        {/* Info Box removed as requested */}
+      {/* Header */}
+      <div style={{ marginBottom: '2rem', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
+        <div>
+          <h1>Contatos</h1>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', margin: 0 }}>
+            Importe novas planilhas de leads e gerencie sua base de contatos cadastrados.
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={() => setShowImportModal(true)}
+          style={styles.importBtn}
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" y1="3" x2="12" y2="15"></line>
+          </svg>
+          Importar Planilha
+        </button>
       </div>
 
       {/* List of Contacts */}
@@ -440,46 +407,124 @@ const Contacts = ({ token }) => {
           </div>
         </div>
       )}
+
+      {/* ── Import Modal ── */}
+      {showImportModal && (
+        <div style={styles.modalOverlay} onClick={closeModal}>
+          <div style={styles.modalCard} onClick={e => e.stopPropagation()}>
+            {/* Modal Header */}
+            <div style={styles.modalHeader}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <div style={styles.modalIconBox}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A855F7" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                  </svg>
+                </div>
+                <div>
+                  <h2 style={{ margin: 0, fontSize: '1.15rem', fontWeight: '800' }}>Importar Novo Lote</h2>
+                  <p style={{ margin: 0, fontSize: '0.82rem', color: 'var(--text-tertiary)' }}>Envie uma planilha .XLSX, .XLS ou .CSV</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={closeModal}
+                style={styles.modalCloseBtn}
+                title="Fechar"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <form onSubmit={handleUpload} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+              <div className="input-group" style={{ margin: 0 }}>
+                <label>Flag de Identificação <span style={{ color: '#ef4444' }}>*</span></label>
+                <input 
+                  type="text" 
+                  value={flag} 
+                  onChange={(e) => setFlag(e.target.value)} 
+                  placeholder="Ex: leads_agosto_2026"
+                  style={{ border: '1px solid var(--border-glass)', borderRadius: 'var(--radius-sm)', background: 'var(--bg-input)' }}
+                />
+                <small style={{ color: 'var(--text-tertiary)', display: 'block', marginTop: '6px', fontSize: '0.8rem' }}>
+                  Preencha a flag antes de selecionar a planilha.
+                </small>
+              </div>
+
+              <label className="file-upload-area pulse-hover" style={{ padding: '2.5rem 1rem', width: '100%', boxSizing: 'border-box', cursor: 'pointer' }}>
+                <input 
+                  type="file" 
+                  accept=".xlsx,.xls,.csv" 
+                  onChange={(e) => setFile(e.target.files[0])} 
+                  style={{ display: 'none' }} 
+                />
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#A855F7" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: '0.75rem', filter: 'drop-shadow(0 0 8px rgba(168, 85, 247,0.4))' }}>
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="17 8 12 3 7 8"></polyline>
+                  <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+                <span style={{ fontWeight: '800', color: 'var(--text-primary)', fontSize: '1rem', marginBottom: '6px' }}>
+                  {file ? file.name : 'Clique para Enviar Planilha'}
+                </span>
+                <span style={{ fontSize: '0.85rem', color: 'var(--text-tertiary)' }}>Suporta .XLSX, .XLS ou .CSV</span>
+              </label>
+
+              {message && (
+                <p className={message.includes('sucesso') ? 'success-message' : 'error-message'} style={{ margin: 0 }}>
+                  {message}
+                </p>
+              )}
+
+              <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end', marginTop: '0.5rem' }}>
+                <button
+                  type="button"
+                  className="secondary"
+                  onClick={closeModal}
+                  style={{ padding: '0.75rem 1.5rem', fontSize: '0.9rem', borderRadius: 'var(--radius-sm)', margin: 0, boxShadow: 'none' }}
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  disabled={!file || !flag}
+                  style={{ padding: '0.75rem 1.75rem', fontSize: '0.9rem', borderRadius: 'var(--radius-sm)', margin: 0, opacity: (!file || !flag) ? 0.5 : 1, cursor: (!file || !flag) ? 'not-allowed' : 'pointer' }}
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                  </svg>
+                  Confirmar Importação
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
 const styles = {
-  formContainer: {
-    flex: 2,
-    minWidth: '320px',
-    padding: '2rem',
-    borderRadius: 'var(--radius-md)',
-    border: '1px solid var(--border-glass)',
-    boxShadow: 'var(--shadow-sm)'
-  },
-  infoContainer: {
-    flex: 1,
-    minWidth: '250px',
-    background: 'rgba(168, 85, 247, 0.04)',
-    padding: '2rem',
-    borderRadius: 'var(--radius-md)',
-    border: '1px solid rgba(168, 85, 247, 0.1)',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    boxShadow: 'var(--shadow-sm)'
-  },
-  downloadBtn: {
+  importBtn: {
     display: 'inline-flex',
     alignItems: 'center',
-    justifyContent: 'center',
     gap: '8px',
-    textDecoration: 'none',
-    padding: '0.9rem 1.5rem',
-    backgroundColor: '#F3F4F6',
-    color: 'var(--text-primary)',
-    border: '1px solid var(--border-glass)',
-    borderRadius: 'var(--radius-sm)',
-    fontWeight: '600',
+    padding: '0.75rem 1.5rem',
     fontSize: '0.9rem',
-    transition: 'all 0.2s',
-    cursor: 'pointer'
+    fontWeight: '600',
+    borderRadius: 'var(--radius-sm)',
+    background: 'var(--accent-primary)',
+    color: '#ffffff',
+    border: 'none',
+    cursor: 'pointer',
+    boxShadow: '0 4px 14px rgba(168, 85, 247, 0.3)',
+    margin: 0,
+    alignSelf: 'flex-start'
   },
   deleteButton: {
     background: 'transparent',
@@ -570,6 +615,66 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     animation: 'pulseGlow 4s infinite ease-in-out'
+  },
+  // Modal styles
+  modalOverlay: {
+    position: 'fixed',
+    inset: 0,
+    background: 'rgba(0, 0, 0, 0.55)',
+    backdropFilter: 'blur(6px)',
+    WebkitBackdropFilter: 'blur(6px)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 2000,
+    padding: '1rem',
+    animation: 'fadeIn 0.2s ease'
+  },
+  modalCard: {
+    background: '#ffffff',
+    border: '1px solid var(--border-glass)',
+    borderRadius: 'var(--radius-lg)',
+    boxShadow: '0 24px 64px rgba(0,0,0,0.18), 0 0 0 1px rgba(168,85,247,0.06)',
+    padding: '2rem',
+    width: '100%',
+    maxWidth: '500px',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '1.5rem',
+    animation: 'slideUp 0.25s cubic-bezier(0.34,1.56,0.64,1)'
+  },
+  modalHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: '1rem'
+  },
+  modalIconBox: {
+    width: '40px',
+    height: '40px',
+    borderRadius: '10px',
+    background: 'rgba(168, 85, 247, 0.08)',
+    border: '1px solid rgba(168, 85, 247, 0.15)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0
+  },
+  modalCloseBtn: {
+    background: 'transparent',
+    border: 'none',
+    boxShadow: 'none',
+    color: 'var(--text-tertiary)',
+    cursor: 'pointer',
+    padding: '6px',
+    borderRadius: '8px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minWidth: 'auto',
+    margin: 0,
+    flexShrink: 0,
+    transition: 'color 0.2s'
   }
 };
 
