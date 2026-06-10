@@ -174,7 +174,7 @@ const Reports = ({ token }) => {
           {/* Legenda das barras */}
           <div style={{ display: 'flex', gap: '1.25rem', marginBottom: '1.5rem', fontSize: '0.8rem', fontWeight: '600', color: 'var(--text-secondary)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'help' }} title="Total de mensagens enviadas pela campanha">
-              <div style={{ width: '14px', height: '6px', borderRadius: '3px', background: '#E5E7EB' }}></div>
+              <div style={{ width: '14px', height: '6px', borderRadius: '3px', background: '#B4B9C2' }}></div>
               <span>Enviados</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'help' }} title="Mensagens que chegaram ao aparelho do destinatário">
@@ -229,7 +229,7 @@ const Reports = ({ token }) => {
                   <div style={styles.barTracksContainer}>
                     {/* Sent bar */}
                     <div style={styles.barTrackOuter}>
-                      <div style={{ ...styles.barTrackFill, width: `${pctSent}%`, background: '#E5E7EB', border: '1px solid #F3F4F6' }} />
+                      <div style={{ ...styles.barTrackFill, width: `${pctSent}%`, background: '#B4B9C2', border: '1px solid #F3F4F6' }} />
                     </div>
                     {/* Delivered bar */}
                     <div style={styles.barTrackOuter}>
@@ -320,7 +320,7 @@ const Reports = ({ token }) => {
                     <td style={{ fontFamily: 'monospace', fontSize: '0.85rem', color: 'var(--text-tertiary)' }}>
                       #{String(c.id).substring(0, 6)}
                     </td>
-                    <td style={{ fontWeight: '600', color: 'var(--text-primary)' }}>{c.name}</td>
+                    <td style={{ fontWeight: '600', color: '#4b5563' }}>{c.name}</td>
                     <td>
                       <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
                         {c.contact_flag}
@@ -510,7 +510,7 @@ const styles = {
   },
   campaignBarName: {
     fontWeight: '600',
-    color: 'var(--text-primary)',
+    color: '#4b5563',
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',

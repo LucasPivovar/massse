@@ -394,7 +394,7 @@ const Campaigns = ({ token }) => {
             <tbody>
               {paginatedCampaigns.map(c => (
                 <tr key={c.id}>
-                  <td style={{ fontWeight: '700', fontSize: '1.02rem' }}>
+                  <td style={{ fontWeight: '700', fontSize: '1.02rem', color: '#4b5563' }}>
                     {c.name}
                   </td>
                   <td>
