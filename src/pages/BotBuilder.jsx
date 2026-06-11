@@ -22,6 +22,8 @@ export default function BotBuilder() {
   const [flows, setFlows] = useState([]);
 
   const [selectedSidebarItem, setSelectedSidebarItem] = useState('all'); // 'all' | 'trash' | folderId
+  const [folders, setFolders] = useState(mockFolders);
+  const [newFlowFolderId, setNewFlowFolderId] = useState('');
   const [trashFlows, setTrashFlows] = useState([
     { id: 'mock_trash_1', name: 'Rascunho de Teste', channel: 'whatsapp_qr', isActive: false, nodeCount: 1, description: 'Fluxo excluído anteriormente.' }
   ]);
@@ -49,6 +51,14 @@ export default function BotBuilder() {
       if (!flow) {
         toast.error('Erro ao criar fluxo');
         return;
+      }
+      if (newFlowFolderId) {
+        setFolders(prev => prev.map(f => {
+          if (f.id === newFlowFolderId) {
+            return { ...f, flowIds: [...f.flowIds, flow.id] };
+          }
+          return f;
+        }));
       }
       toast.success('Fluxo criado!');
       setIsCreateModalOpen(false);
@@ -105,7 +115,7 @@ export default function BotBuilder() {
   };
 
   const getFolderFlowCount = (folderId) => {
-    const folder = mockFolders.find(f => f.id === folderId);
+    const folder = folders.find(f => f.id === folderId);
     if (!folder) return 0;
     return flows.filter(flow => folder.flowIds.includes(flow.id)).length;
   };
@@ -130,7 +140,12 @@ export default function BotBuilder() {
         <button
           type="button"
           className="btn-primary"
-          onClick={() => { setIsCreateModalOpen(true); setNewFlowName(''); setNewFlowChannel('whatsapp_qr'); }}
+          onClick={() => {
+            setIsCreateModalOpen(true);
+            setNewFlowName('');
+            setNewFlowChannel('whatsapp_qr');
+            setNewFlowFolderId(folders.some(f => f.id === selectedSidebarItem) ? selectedSidebarItem : '');
+          }}
           style={{ display: 'flex', alignItems: 'center', gap: 8, boxShadow: 'none' }}
         >
           + Novo fluxo
@@ -200,7 +215,7 @@ export default function BotBuilder() {
               Pastas
             </span>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-              {mockFolders.map((folder) => {
+              {folders.map((folder) => {
                 const isSelected = selectedSidebarItem === folder.id;
                 return (
                   <button
@@ -385,7 +400,7 @@ export default function BotBuilder() {
             }
 
             const isFolderView = selectedSidebarItem !== 'all';
-            const activeFolder = isFolderView ? mockFolders.find(f => f.id === selectedSidebarItem) : null;
+            const activeFolder = isFolderView ? folders.find(f => f.id === selectedSidebarItem) : null;
             const folderFlows = isFolderView && activeFolder 
               ? currentFlows.filter(flow => activeFolder.flowIds.includes(flow.id)) 
               : currentFlows;
@@ -400,7 +415,12 @@ export default function BotBuilder() {
                     <button 
                       type="button" 
                       className="btn-primary" 
-                      onClick={() => { setIsCreateModalOpen(true); setNewFlowName(''); setNewFlowChannel('whatsapp_qr'); }}
+                      onClick={() => {
+                        setIsCreateModalOpen(true);
+                        setNewFlowName('');
+                        setNewFlowChannel('whatsapp_qr');
+                        setNewFlowFolderId(folders.some(f => f.id === selectedSidebarItem) ? selectedSidebarItem : '');
+                      }}
                       style={{ boxShadow: 'none' }}
                     >
                       Criar primeiro fluxo
@@ -546,9 +566,7 @@ export default function BotBuilder() {
             left: 0,
             width: '100%',
             height: '100%',
-            background: 'rgba(3, 7, 18, 0.4)',
-            backdropFilter: 'blur(8px)',
-            WebkitBackdropFilter: 'blur(8px)',
+            background: 'rgba(0, 0, 0, 0.65)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -739,7 +757,8 @@ export default function BotBuilder() {
                   boxSizing: 'border-box',
                   outline: 'none',
                   fontSize: '0.92rem',
-                  transition: 'all 0.22s ease'
+                  transition: 'all 0.22s ease',
+                  marginBottom: '10px'
                 }}
                 onFocus={(e) => {
                   e.currentTarget.style.borderColor = 'var(--accent-primary)';
@@ -750,6 +769,36 @@ export default function BotBuilder() {
                   e.currentTarget.style.boxShadow = 'none';
                 }}
               />
+            </div>
+
+            <div>
+              <label style={{ display: 'block', fontSize: '0.72rem', color: 'var(--text-secondary)', fontWeight: '700', letterSpacing: '0.05em', marginBottom: '8px', textTransform: 'uppercase' }}>
+                Pasta / Categoria
+              </label>
+              <select
+                value={newFlowFolderId}
+                onChange={(e) => setNewFlowFolderId(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '11px 14px',
+                  background: 'var(--bg-card)',
+                  border: '1px solid var(--border-glass)',
+                  borderRadius: '10px',
+                  color: 'var(--text-primary)',
+                  boxSizing: 'border-box',
+                  outline: 'none',
+                  fontSize: '0.92rem',
+                  transition: 'all 0.22s ease',
+                  cursor: 'pointer'
+                }}
+              >
+                <option value="">Nenhuma (Geral)</option>
+                {folders.map((fold) => (
+                  <option key={fold.id} value={fold.id}>
+                    {fold.name}
+                  </option>
+                ))}
+              </select>
             </div>
             
             <div style={{ display: 'flex', gap: '12px', marginTop: '8px' }}>

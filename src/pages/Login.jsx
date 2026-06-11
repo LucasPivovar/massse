@@ -266,28 +266,12 @@ const Login = ({ onLogin }) => {
           boxShadow: 'none',
           boxSizing: 'border-box'
         }}>
-          {/* Form Header */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <span style={{
-              width: '6px', height: '6px', borderRadius: '50%', backgroundColor: 'var(--accent-primary)'
-            }} />
-            <span style={{
-              fontSize: '0.75rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.05em',
-              color: 'var(--text-secondary)'
-            }}>
-              MassFlow
-            </span>
-          </div>
-
           {view === 'login' && (
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <div>
-                <h2 style={{ fontSize: '1.4rem', fontWeight: '800', margin: '0 0 4px 0', color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>
+                <h2 style={{ fontSize: '1.4rem', fontWeight: '800', margin: '0', color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>
                   Bem-vindo de volta
                 </h2>
-                <p style={{ color: 'var(--text-secondary)', fontSize: '0.82rem', margin: 0, lineHeight: 1.4 }}>
-                  Entre com seu usuário e senha para acessar o painel administrativo.
-                </p>
               </div>
 
               <div>

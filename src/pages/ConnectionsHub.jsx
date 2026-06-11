@@ -40,14 +40,14 @@ const ConnectionsHub = () => {
     }
   }, []);
 
-  const experts = [
+  const connections = [
     { id: 'exp1', name: 'Lucas Pivovar', phone: '+55 11 99999-9999', niche: 'Vendas & Marketing', status: 'connected', contacts: '1.2k', campaigns: 4 },
     { id: 'exp2', name: 'Clínica Odonto Riso', phone: '+55 11 88888-8888', niche: 'Atendimento & Suporte', status: 'connected', contacts: '850', campaigns: 2 },
     { id: 'exp3', name: 'E-commerce Importados', phone: '+55 11 77777-7777', niche: 'Recuperação de Vendas', status: 'disconnected', contacts: '3.4k', campaigns: 0 },
   ];
 
-  const handleSelectExpert = (expert) => {
-    localStorage.setItem('selectedExpert', expert.name);
+  const handleSelectConnection = (conn) => {
+    localStorage.setItem('selectedConnection', conn.name);
     navigate('/sender/dashboard');
   };
 
@@ -103,7 +103,7 @@ const ConnectionsHub = () => {
             WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', color: 'transparent',
             letterSpacing: '-0.02em', display: 'inline-block'
           }}>
-            Selecione a Conta do Expert
+            Selecione a sua Conexão
           </h1>
           <p style={{ color: B.muted, fontSize: '1.05rem', maxWidth: '600px', margin: '0 auto', lineHeight: 1.6 }}>
             Escolha uma das contas integradas de WhatsApp para gerenciar campanhas e automações.
@@ -119,7 +119,7 @@ const ConnectionsHub = () => {
           maxWidth: '100%', 
           margin: '0 auto' 
         }}>
-          {experts.map((exp) => {
+          {connections.map((conn) => {
             const cardPadding = isMobile ? '2rem 1.5rem' : isTablet ? '2.5rem 2rem' : '3rem 2.5rem';
             const avatarSize = isMobile ? '48px' : '58px';
             const avatarFontSize = isMobile ? '1.15rem' : '1.4rem';
@@ -136,8 +136,8 @@ const ConnectionsHub = () => {
 
             return (
               <div
-                key={exp.id}
-                onClick={() => handleSelectExpert(exp)}
+                key={conn.id}
+                onClick={() => handleSelectConnection(conn)}
                 style={{
                   background: 'var(--bg-card)',
                   borderRadius: '20px',
@@ -156,14 +156,14 @@ const ConnectionsHub = () => {
                   e.currentTarget.style.transform = 'translateY(-6px)';
                   e.currentTarget.style.boxShadow = '0 20px 25px -5px rgba(168, 85, 247, 0.05), 0 10px 10px -5px rgba(168, 85, 247, 0.03)';
                   e.currentTarget.style.borderColor = 'var(--accent-primary)';
-                  const svg = e.currentTarget.querySelector('.manage-expert-link svg');
+                  const svg = e.currentTarget.querySelector('.manage-conn-link svg');
                   if (svg) svg.style.transform = 'translateX(4px)';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.transform = 'translateY(0)';
                   e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.01)';
                   e.currentTarget.style.borderColor = B.border;
-                  const svg = e.currentTarget.querySelector('.manage-expert-link svg');
+                  const svg = e.currentTarget.querySelector('.manage-conn-link svg');
                   if (svg) svg.style.transform = 'translateX(0)';
                 }}
               >
@@ -175,11 +175,11 @@ const ConnectionsHub = () => {
                     color: '#FFFFFF', fontWeight: '800', fontSize: avatarFontSize,
                     boxShadow: '0 4px 10px rgba(168, 85, 247, 0.15)'
                   }}>
-                    {exp.name.charAt(0).toUpperCase()}
+                    {conn.name.charAt(0).toUpperCase()}
                   </div>
                   
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    {exp.status === 'connected' ? (
+                    {conn.status === 'connected' ? (
                       <span style={{ position: 'relative', display: 'flex', height: '8px', width: '8px' }}>
                         <span style={{
                           position: 'absolute', display: 'inline-flex', height: '100%', width: '100%', borderRadius: '50%',
@@ -199,22 +199,22 @@ const ConnectionsHub = () => {
                     )}
                     <span style={{
                       fontSize: isMobile ? '0.75rem' : '0.8rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.05em',
-                      color: exp.status === 'connected' ? '#10b981' : '#6b7280'
+                      color: conn.status === 'connected' ? '#10b981' : '#6b7280'
                     }}>
-                      {exp.status === 'connected' ? 'Conectado' : 'Inativo'}
+                      {conn.status === 'connected' ? 'Conectado' : 'Inativo'}
                     </span>
                   </div>
                 </div>
 
                 <div>
-                  <h3 style={{ fontSize: nameFontSize, fontWeight: '800', margin: '0 0 4px 0', color: 'var(--text-primary)' }}>{exp.name}</h3>
-                  <span style={{ fontSize: phoneFontSize, color: 'var(--text-tertiary)', fontFamily: 'monospace', display: 'block' }}>{exp.phone}</span>
+                  <h3 style={{ fontSize: nameFontSize, fontWeight: '800', margin: '0 0 4px 0', color: 'var(--text-primary)' }}>{conn.name}</h3>
+                  <span style={{ fontSize: phoneFontSize, color: 'var(--text-tertiary)', fontFamily: 'monospace', display: 'block' }}>{conn.phone}</span>
                   <span style={{ 
                     display: 'inline-block', fontSize: nicheFontSize, fontWeight: '700',
                     color: 'var(--accent-primary)', background: 'rgba(168, 85, 247, 0.06)',
                     padding: nichePadding, borderRadius: nicheRadius, marginTop: '8px'
                   }}>
-                    {exp.niche}
+                    {conn.niche}
                   </span>
                 </div>
 
@@ -226,20 +226,20 @@ const ConnectionsHub = () => {
                     <svg width={iconSize} height={iconSize} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--text-tertiary)' }}>
                       <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
                     </svg>
-                    <span>Contatos: <strong>{exp.contacts}</strong></span>
+                    <span>Contatos: <strong>{conn.contacts}</strong></span>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }} title="Campanhas ativas">
                     <svg width={iconSize} height={iconSize} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--text-tertiary)' }}>
                       <path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/>
                     </svg>
-                    <span>Campanhas: <strong>{exp.campaigns}</strong></span>
+                    <span>Campanhas: <strong>{conn.campaigns}</strong></span>
                   </div>
                 </div>
 
                 <div style={{ 
                   display: 'flex', alignItems: 'center', gap: '4px', fontSize: manageFontSize, fontWeight: '700', 
                   color: 'var(--accent-primary)', marginTop: '2px', opacity: 0.85, transition: 'all 0.22s ease'
-                }} className="manage-expert-link">
+                }} className="manage-conn-link">
                   Gerenciar Conta
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transition: 'transform 0.22s ease' }}>
                     <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>

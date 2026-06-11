@@ -396,17 +396,11 @@ export const BOT_CHANNELS = [
     description: 'Integração via Meta Business / Cloud API (em breve).',
     disabled: true,
   },
-  {
-    id: 'telegram',
-    label: 'Telegram',
-    description: 'Bot via token do @BotFather com webhook automático.',
-  },
 ];
 
 export const BOT_CHANNEL_LABELS = {
   whatsapp_qr: 'WhatsApp QR',
   whatsapp_api: 'WhatsApp API',
-  telegram: 'Telegram',
 };
 
 export function getBotChannelLabel(channel) {

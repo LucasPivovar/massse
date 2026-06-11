@@ -100,7 +100,7 @@ const Register = ({ onLogin }) => {
       display: 'flex',
       width: '100%',
       minHeight: '100vh',
-      background: '#F8F7FA',
+      background: '#FFFFFF',
       color: 'var(--text-primary)',
       fontFamily: 'Inter, sans-serif',
       boxSizing: 'border-box'
@@ -113,28 +113,18 @@ const Register = ({ onLogin }) => {
           flexDirection: 'column',
           justifyContent: 'space-between',
           padding: '4rem',
-          background: 'linear-gradient(135deg, #180D2C 0%, #0B0518 100%)',
-          backgroundImage: 'radial-gradient(rgba(168, 85, 247, 0.35) 1.5px, transparent 1.5px)',
+          background: 'linear-gradient(135deg, #F9FAFB 0%, #F3F4F6 100%)',
+          backgroundImage: 'radial-gradient(rgba(168, 85, 247, 0.28) 1.5px, transparent 1.5px)',
           backgroundSize: '24px 24px',
-          borderRight: '1px solid rgba(168, 85, 247, 0.15)',
+          borderRight: '1px solid var(--border-glass)',
           position: 'relative',
           boxSizing: 'border-box'
         }}>
-          {/* Subtle Ambient Glow */}
-          <div style={{
-            position: 'absolute', top: '20%', left: '10%', width: '300px', height: '300px',
-            background: 'rgba(168, 85, 247, 0.15)', filter: 'blur(100px)', pointerEvents: 'none'
-          }} />
-          <div style={{
-            position: 'absolute', bottom: '20%', right: '10%', width: '250px', height: '250px',
-            background: 'rgba(126, 34, 206, 0.15)', filter: 'blur(90px)', pointerEvents: 'none'
-          }} />
-
           {/* Pill Badge */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', zIndex: 2 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <span style={{
-              background: 'rgba(168, 85, 247, 0.2)',
-              color: '#D8B4FE',
+              background: 'rgba(168, 85, 247, 0.1)',
+              color: 'var(--accent-primary)',
               padding: '6px 14px',
               borderRadius: '99px',
               fontSize: '0.78rem',
@@ -147,13 +137,13 @@ const Register = ({ onLogin }) => {
           </div>
 
           {/* Heading, Subtext, Features */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', maxWidth: '560px', margin: 'auto 0', zIndex: 2 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', maxWidth: '560px', margin: 'auto 0' }}>
             <h1 style={{
               fontSize: 'clamp(2.2rem, 4.2vw, 2.8rem)',
               fontWeight: '800',
               lineHeight: 1.15,
               margin: 0,
-              color: '#FFFFFF',
+              color: 'var(--text-primary)',
               letterSpacing: '-0.02em',
               background: 'none',
               WebkitTextFillColor: 'initial',
@@ -161,7 +151,7 @@ const Register = ({ onLogin }) => {
             }}>
               Comunique-se em massa,<br />
               <span style={{
-                background: 'linear-gradient(135deg, #C084FC 0%, #A855F7 100%)',
+                background: 'linear-gradient(135deg, #A855F7 0%, #7E22CE 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
@@ -171,7 +161,7 @@ const Register = ({ onLogin }) => {
               </span>
             </h1>
             
-            <p style={{ color: '#9CA3AF', fontSize: '1.05rem', lineHeight: 1.6, margin: 0 }}>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem', lineHeight: 1.6, margin: 0 }}>
               Painel de controle para gerenciar seus disparos, criar automações interativas e gerenciar contatos de forma eficiente e centralizada.
             </p>
             
@@ -179,26 +169,26 @@ const Register = ({ onLogin }) => {
               <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
                 <div style={{
                   width: '34px', height: '34px', borderRadius: '8px',
-                  background: 'rgba(168, 85, 247, 0.2)',
+                  background: 'rgba(168, 85, 247, 0.1)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  color: '#D8B4FE', flexShrink: 0
+                  color: 'var(--accent-primary)', flexShrink: 0
                 }}>
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
                   </svg>
                 </div>
                 <div>
-                  <strong style={{ color: '#FFFFFF', display: 'block', fontSize: '0.92rem', fontWeight: '700' }}>Envios em massa</strong>
-                  <span style={{ color: '#9CA3AF', fontSize: '0.82rem', lineHeight: 1.4, display: 'block', marginTop: '2px' }}>Crie campanhas e envie mensagens massivas com alta performance.</span>
+                  <strong style={{ color: 'var(--text-primary)', display: 'block', fontSize: '0.92rem', fontWeight: '700' }}>Envios em massa</strong>
+                  <span style={{ color: 'var(--text-secondary)', fontSize: '0.82rem', lineHeight: 1.4, display: 'block', marginTop: '2px' }}>Crie campanhas e envie mensagens massivas com alta performance.</span>
                 </div>
               </div>
               
               <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
                 <div style={{
                   width: '34px', height: '34px', borderRadius: '8px',
-                  background: 'rgba(168, 85, 247, 0.2)',
+                  background: 'rgba(168, 85, 247, 0.1)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  color: '#D8B4FE', flexShrink: 0
+                  color: 'var(--accent-primary)', flexShrink: 0
                 }}>
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <rect x="3" y="11" width="18" height="10" rx="2"/>
@@ -207,32 +197,32 @@ const Register = ({ onLogin }) => {
                   </svg>
                 </div>
                 <div>
-                  <strong style={{ color: '#FFFFFF', display: 'block', fontSize: '0.92rem', fontWeight: '700' }}>Automações visuais</strong>
-                  <span style={{ color: '#9CA3AF', fontSize: '0.82rem', lineHeight: 1.4, display: 'block', marginTop: '2px' }}>Configure fluxos interativos de atendimento e respostas automáticas.</span>
+                  <strong style={{ color: 'var(--text-primary)', display: 'block', fontSize: '0.92rem', fontWeight: '700' }}>Automações visuais</strong>
+                  <span style={{ color: 'var(--text-secondary)', fontSize: '0.82rem', lineHeight: 1.4, display: 'block', marginTop: '2px' }}>Configure fluxos interativos de atendimento e respostas automáticas.</span>
                 </div>
               </div>
 
               <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
                 <div style={{
                   width: '34px', height: '34px', borderRadius: '8px',
-                  background: 'rgba(168, 85, 247, 0.2)',
+                  background: 'rgba(168, 85, 247, 0.1)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  color: '#D8B4FE', flexShrink: 0
+                  color: 'var(--accent-primary)', flexShrink: 0
                 }}>
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
                   </svg>
                 </div>
                 <div>
-                  <strong style={{ color: '#FFFFFF', display: 'block', fontSize: '0.92rem', fontWeight: '700' }}>Contatos e leads</strong>
-                  <span style={{ color: '#9CA3AF', fontSize: '0.82rem', lineHeight: 1.4, display: 'block', marginTop: '2px' }}>Importe listas, filtre por tags e organize seus leads perfeitamente.</span>
+                  <strong style={{ color: 'var(--text-primary)', display: 'block', fontSize: '0.92rem', fontWeight: '700' }}>Contatos e leads</strong>
+                  <span style={{ color: 'var(--text-secondary)', fontSize: '0.82rem', lineHeight: 1.4, display: 'block', marginTop: '2px' }}>Importe listas, filtre por tags e organize seus leads perfeitamente.</span>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Footer */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', color: '#6B7280', fontSize: '0.78rem', zIndex: 2 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-secondary)', fontSize: '0.78rem' }}>
             <span>• Plataforma online</span>
             <span>Todos os sistemas operacionais</span>
           </div>
@@ -246,37 +236,24 @@ const Register = ({ onLogin }) => {
         alignItems: 'center',
         justifyContent: 'center',
         padding: isMobile ? '1.5rem' : '2.5rem',
-        background: '#FAF9FC',
+        background: '#FFFFFF',
         backgroundImage: 'radial-gradient(rgba(168, 85, 247, 0.08) 1.5px, transparent 1.5px)',
         backgroundSize: '24px 24px',
         boxSizing: 'border-box'
       }}>
         <div style={{
           background: '#FFFFFF',
-          border: '1px solid #E5E5E9',
-          borderRadius: '24px',
-          padding: isMobile ? '2rem 1.5rem' : '3rem 2.5rem',
+          border: '1px solid var(--border-glass)',
+          borderRadius: '16px',
+          padding: isMobile ? '2rem 1.5rem' : '2.5rem',
           width: '100%',
-          maxWidth: '440px',
+          maxWidth: '420px',
           display: 'flex',
           flexDirection: 'column',
-          gap: '20px',
-          boxShadow: '0 8px 30px rgba(126, 34, 206, 0.04)',
+          gap: '24px',
+          boxShadow: 'none',
           boxSizing: 'border-box'
         }}>
-          {/* Form Header */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <span style={{
-              width: '6px', height: '6px', borderRadius: '50%', backgroundColor: 'var(--accent-primary)'
-            }} />
-            <span style={{
-              fontSize: '0.75rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.05em',
-              color: 'var(--text-secondary)'
-            }}>
-              Cadastro
-            </span>
-          </div>
-
           {/* Stepper Indicator */}
           <div>
             <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
@@ -306,6 +283,11 @@ const Register = ({ onLogin }) => {
 
           {step === 1 && (
             <form onSubmit={handleStep1Submit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <div>
+                <h2 style={{ fontSize: '1.4rem', fontWeight: '800', margin: '0', color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>
+                  Criar conta
+                </h2>
+              </div>
               <div>
                 <label style={{ display: 'block', fontSize: '0.72rem', color: 'var(--text-secondary)', fontWeight: '700', letterSpacing: '0.05em', marginBottom: '6px', textTransform: 'uppercase' }}>
                   Nome Completo

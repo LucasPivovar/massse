@@ -72,8 +72,8 @@ const TopBar = ({ onLogout, onOpenChat, onCloseChat }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const selectedExpert = localStorage.getItem('selectedExpert') || 'Usuário';
-  const expertInitial = selectedExpert.charAt(0).toUpperCase();
+  const selectedConnection = localStorage.getItem('selectedConnection') || 'Usuário';
+  const connInitial = selectedConnection.charAt(0).toUpperCase();
 
   // Se a rota for raiz, estamos no Hub e não mostramos os menus de Sender.
   const isHubPage = location.pathname === '/';
@@ -157,13 +157,13 @@ const TopBar = ({ onLogout, onOpenChat, onCloseChat }) => {
                 if (el) el.style.display = el.style.display === 'block' ? 'none' : 'block';
               }} 
               style={{ background: 'rgba(168, 85, 247, 0.1)', color: 'var(--accent-primary)', border: 'none', padding: '8px', borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '40px', height: '40px', boxShadow: 'none' }} title="Perfil">
-              <span style={{ fontWeight: 'bold', fontSize: '1rem' }}>{expertInitial}</span>
+              <span style={{ fontWeight: 'bold', fontSize: '1rem' }}>{connInitial}</span>
             </button>
 
             {/* Dropdown Menu */}
-            <div id="profile-menu" style={{ display: 'none', position: 'absolute', top: '100%', right: '0', marginTop: '10px', background: 'var(--bg-card)', border: '1px solid var(--border-glass)', borderRadius: '12px', boxShadow: 'var(--shadow-md)', minWidth: '180px', overflow: 'hidden', zIndex: 100 }}>
+            <div id="profile-menu" style={{ display: 'none', position: 'absolute', top: '100%', left: '0', marginTop: '10px', background: 'var(--bg-card)', border: '1px solid var(--border-glass)', borderRadius: '12px', boxShadow: 'var(--shadow-md)', minWidth: '180px', overflow: 'hidden', zIndex: 100 }}>
               <div style={{ padding: '1rem', borderBottom: '1px solid var(--border-glass)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                <span style={{ fontSize: '0.9rem', fontWeight: 'bold', color: 'var(--text-primary)' }}>{selectedExpert}</span>
+                <span style={{ fontSize: '0.9rem', fontWeight: 'bold', color: 'var(--text-primary)' }}>{selectedConnection}</span>
                 <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>admin@massflow.com</span>
               </div>
               <button onClick={() => { navigate('/planos'); document.getElementById('profile-menu').style.display='none'; }} style={{ width: '100%', padding: '0.75rem 1rem', background: 'transparent', border: 'none', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-primary)', fontSize: '0.85rem', boxShadow: 'none', borderRadius: 0 }} onMouseOver={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.boxShadow = 'none'; }} onMouseOut={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.boxShadow = 'none'; }}>
