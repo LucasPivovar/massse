@@ -82,7 +82,7 @@ function App() {
                 <Route path="/bot-builder" element={<BotBuilder />} />
                 <Route path="/bot-builder/new" element={<BotCreateFlow />} />
                 <Route path="/bot-builder/:id/edit" element={<BotFlowEditor />} />
-                <Route path="/bot-builder/:id" element={<BotFlowDetail />} />
+                <Route path="/bot-builder/:id" element={<BotFlowEditor />} />
                 <Route path="/new-campaign" element={<NewCampaign token={token} />} />
                 <Route path="/client-dashboard" element={<ClientDashboard token={token} />} />
                 <Route path="/reports" element={<Reports token={token} />} />

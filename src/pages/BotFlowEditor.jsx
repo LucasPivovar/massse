@@ -22,6 +22,8 @@ import { ImageNode } from '../components/bot-builder/nodes/ImageNode';
 import { DelayNode } from '../components/bot-builder/nodes/DelayNode';
 import { ButtonNode } from '../components/bot-builder/nodes/ButtonNode';
 import { PollNode } from '../components/bot-builder/nodes/PollNode';
+import { ShapeNode } from '../components/bot-builder/nodes/ShapeNode';
+import { EmailNode } from '../components/bot-builder/nodes/EmailNode';
 
 const nodeTypes = {
   contextNode: ContextNode,
@@ -31,6 +33,8 @@ const nodeTypes = {
   buttonNode: ButtonNode,
   pollNode: PollNode,
   delayNode: DelayNode,
+  shapeNode: ShapeNode,
+  emailNode: EmailNode,
 };
 
 function createNodeId() {
@@ -42,6 +46,31 @@ function normalizeNodes(raw) {
     ...n,
     data: n.data && typeof n.data === 'object' ? { ...n.data } : {},
   }));
+}
+
+function getDefaultNodeData(type, dragInfo = {}) {
+  switch (type) {
+    case 'messageNode':
+      return { useAi: true, message: '' };
+    case 'buttonNode':
+      return { message: '', buttons: [] };
+    case 'pollNode':
+      return { question: '', options: [] };
+    case 'shapeNode':
+      return { 
+        shapeType: dragInfo.shapeType || 'square', 
+        label: dragInfo.shapeType === 'circle' ? 'Círculo' : (dragInfo.shapeType === 'rectangle' ? 'Retângulo' : 'Quadrado'), 
+        bgColor: 'rgba(168, 85, 247, 0.2)', 
+        borderColor: '#a855f7', 
+        textColor: '#ffffff',
+        borderStyle: 'solid',
+        fontSize: '14px'
+      };
+    case 'emailNode':
+      return { to: '', subject: '', body: '' };
+    default:
+      return {};
+  }
 }
 
 function BotFlowEditorInner() {
@@ -120,13 +149,13 @@ function BotFlowEditorInner() {
   }, []);
 
   const addNodeAtPosition = useCallback(
-    (type, position, autoConnect, conditionHandle) => {
+    (type, position, autoConnect, conditionHandle, shapeType) => {
       const newNodeId = createNodeId();
       const newNode = {
         id: newNodeId,
         type,
         position,
-        data: type === 'messageNode' ? { useAi: true, message: '' } : (type === 'buttonNode' ? { message: '', buttons: [] } : (type === 'pollNode' ? { question: '', options: [] } : {})),
+        data: getDefaultNodeData(type, { shapeType }),
         selected: true,
       };
 
@@ -170,19 +199,20 @@ function BotFlowEditorInner() {
 
       const autoConnect = event.dataTransfer.getData('application/reactflow-autoconnect') === 'true';
       const conditionHandle = event.dataTransfer.getData('application/reactflow-conditionhandle') || 'true';
+      const shapeType = event.dataTransfer.getData('application/reactflow-shapetype') || undefined;
 
       const position = reactFlowInstance.screenToFlowPosition({
         x: event.clientX,
         y: event.clientY,
       });
 
-      addNodeAtPosition(type, position, autoConnect, conditionHandle);
+      addNodeAtPosition(type, position, autoConnect, conditionHandle, shapeType);
     },
     [reactFlowInstance, addNodeAtPosition],
   );
 
   const handleAddNode = useCallback(
-    (type, options) => {
+    (type, options = {}) => {
       if (!reactFlowInstance) {
         toast.error('Aguarde o editor carregar');
         return;
@@ -205,7 +235,7 @@ function BotFlowEditorInner() {
           id: newNodeId,
           type,
           position,
-          data: type === 'messageNode' ? { useAi: true, message: '' } : (type === 'buttonNode' ? { message: '', buttons: [] } : (type === 'pollNode' ? { question: '', options: [] } : {})),
+          data: getDefaultNodeData(type, { shapeType: options.shapeType }),
           selected: true,
         };
 
@@ -249,7 +279,7 @@ function BotFlowEditorInner() {
     });
     if (ok) {
       toast.success('Fluxo salvo!');
-      navigate(`/bot-builder/${flowId}`);
+      navigate('/bot-builder');
     } else {
       toast.error('Erro ao salvar');
     }
@@ -273,7 +303,7 @@ function BotFlowEditorInner() {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <button type="button" className="btn-secondary" onClick={() => navigate(`/bot-builder/${flowId}`)}>
+          <button type="button" className="btn-secondary" onClick={() => navigate('/bot-builder')}>
             ← Voltar
           </button>
           <h2 style={{ margin: 0, color: '#E5E5E5', fontSize: '1.25rem' }}>{flowName || 'Editor de fluxo'}</h2>
@@ -296,8 +326,7 @@ function BotFlowEditorInner() {
       </div>
 
       <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }} ref={reactFlowWrapper}>
-        <BotBuilderSidebar onAddNode={handleAddNode} />
-        <div className="bot-flow-canvas" style={{ flex: 1 }}>
+        <div className="bot-flow-canvas">
           <ReactFlow
             nodes={nodes}
             edges={edges}
@@ -322,6 +351,7 @@ function BotFlowEditorInner() {
             <Background gap={12} size={1} color="rgba(168, 85, 247,0.08)" />
           </ReactFlow>
         </div>
+        <BotBuilderSidebar onAddNode={handleAddNode} />
       </div>
     </div>
   );

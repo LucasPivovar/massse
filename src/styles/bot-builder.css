@@ -8,7 +8,7 @@
 }
 
 .bot-flow-canvas {
-  flex: 1;
+  flex: 70;
   background: rgba(10, 16, 6, 0.5);
 }
 
@@ -72,12 +72,14 @@
 }
 
 .bot-builder-sidebar {
-  width: 220px;
-  flex-shrink: 0;
-  background: rgba(0, 0, 0, 0.9);
-  border-right: 1px solid rgba(168, 85, 247, 0.1);
+  flex: 30;
+  min-width: 300px;
+  max-width: 400px;
+  background: rgba(0, 0, 0, 0.95);
+  border-left: 1px solid rgba(168, 85, 247, 0.15);
   padding: 16px;
   overflow-y: auto;
+  order: 2; /* Side bar at the right side */
 }
 
 .bot-sidebar-item {

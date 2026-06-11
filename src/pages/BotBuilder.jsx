@@ -449,8 +449,8 @@ export default function BotBuilder() {
                       key={flow.id}
                       role="button"
                       tabIndex={0}
-                      onClick={() => navigate(`/bot-builder/${flow.id}`)}
-                      onKeyDown={(e) => e.key === 'Enter' && navigate(`/bot-builder/${flow.id}`)}
+                      onClick={() => navigate(`/bot-builder/${flow.id}/edit`)}
+                      onKeyDown={(e) => e.key === 'Enter' && navigate(`/bot-builder/${flow.id}/edit`)}
                       style={{
                         background: 'var(--bg-card)',
                         boxShadow: 'none',
