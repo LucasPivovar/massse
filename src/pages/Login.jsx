@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import logoImage from '../assets/logo-branco.png';
@@ -7,6 +8,7 @@ import authBgImage from '../assets/auth_background.png';
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const Login = ({ onLogin }) => {
+  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -21,6 +23,14 @@ const Login = ({ onLogin }) => {
   const [forgotLoading, setForgotLoading] = useState(false);
   const [code2fa, setCode2fa] = useState('');
   const [tempToken, setTempToken] = useState('');
+
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 860);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 860);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -98,75 +108,280 @@ const Login = ({ onLogin }) => {
   };
 
   return (
-    <div className="auth-outer">
-      <div className="auth-container">
-        {/* Left Side: Form Container */}
-        <div className="auth-form-side">
-          {/* Brand Header */}
-          <div style={styles.brandHeader}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <img
-                src={logoImage}
-                alt="MassFlow Logo"
-                style={{ height: '50px', width: 'auto', objectFit: 'contain' }}
-              />
+    <div style={{
+      display: 'flex',
+      width: '100%',
+      minHeight: '100vh',
+      background: '#FFFFFF',
+      color: 'var(--text-primary)',
+      fontFamily: 'Inter, sans-serif',
+      boxSizing: 'border-box'
+    }}>
+      {/* Left Column: Marketing Info (Desktop Only) */}
+      {!isMobile && (
+        <div style={{
+          flex: 1.2,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          padding: '4rem',
+          background: 'linear-gradient(135deg, #F9FAFB 0%, #F3F4F6 100%)',
+          backgroundImage: 'radial-gradient(rgba(168, 85, 247, 0.28) 1.5px, transparent 1.5px)',
+          backgroundSize: '24px 24px',
+          borderRight: '1px solid var(--border-glass)',
+          position: 'relative',
+          boxSizing: 'border-box'
+        }}>
+          {/* Pill Badge */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{
+              background: 'rgba(168, 85, 247, 0.1)',
+              color: 'var(--accent-primary)',
+              padding: '6px 14px',
+              borderRadius: '99px',
+              fontSize: '0.78rem',
+              fontWeight: '800',
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em'
+            }}>
+              • MassFlow Sender
+            </span>
+          </div>
+
+          {/* Heading, Subtext, Features */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', maxWidth: '560px', margin: 'auto 0' }}>
+            <h1 style={{
+              fontSize: 'clamp(2.2rem, 4.2vw, 2.8rem)',
+              fontWeight: '800',
+              lineHeight: 1.15,
+              margin: 0,
+              color: 'var(--text-primary)',
+              letterSpacing: '-0.02em',
+              background: 'none',
+              WebkitTextFillColor: 'initial',
+              display: 'block'
+            }}>
+              Comunique-se em massa,<br />
+              <span style={{
+                background: 'linear-gradient(135deg, #A855F7 0%, #7E22CE 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                color: 'transparent'
+              }}>
+                sem complicação.
+              </span>
+            </h1>
+            
+            <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem', lineHeight: 1.6, margin: 0 }}>
+              Painel de controle para gerenciar seus disparos, criar automações interativas e gerenciar contatos de forma eficiente e centralizada.
+            </p>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '18px', marginTop: '1.5rem' }}>
+              <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                <div style={{
+                  width: '34px', height: '34px', borderRadius: '8px',
+                  background: 'rgba(168, 85, 247, 0.1)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  color: 'var(--accent-primary)', flexShrink: 0
+                }}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                  </svg>
+                </div>
+                <div>
+                  <strong style={{ color: 'var(--text-primary)', display: 'block', fontSize: '0.92rem', fontWeight: '700' }}>Envios em massa</strong>
+                  <span style={{ color: 'var(--text-secondary)', fontSize: '0.82rem', lineHeight: 1.4, display: 'block', marginTop: '2px' }}>Crie campanhas e envie mensagens massivas com alta performance.</span>
+                </div>
+              </div>
+              
+              <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                <div style={{
+                  width: '34px', height: '34px', borderRadius: '8px',
+                  background: 'rgba(168, 85, 247, 0.1)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  color: 'var(--accent-primary)', flexShrink: 0
+                }}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="11" width="18" height="10" rx="2"/>
+                    <circle cx="12" cy="5" r="2"/>
+                    <path d="M12 7v4"/>
+                  </svg>
+                </div>
+                <div>
+                  <strong style={{ color: 'var(--text-primary)', display: 'block', fontSize: '0.92rem', fontWeight: '700' }}>Automações visuais</strong>
+                  <span style={{ color: 'var(--text-secondary)', fontSize: '0.82rem', lineHeight: 1.4, display: 'block', marginTop: '2px' }}>Configure fluxos interativos de atendimento e respostas automáticas.</span>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                <div style={{
+                  width: '34px', height: '34px', borderRadius: '8px',
+                  background: 'rgba(168, 85, 247, 0.1)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  color: 'var(--accent-primary)', flexShrink: 0
+                }}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                  </svg>
+                </div>
+                <div>
+                  <strong style={{ color: 'var(--text-primary)', display: 'block', fontSize: '0.92rem', fontWeight: '700' }}>Contatos e leads</strong>
+                  <span style={{ color: 'var(--text-secondary)', fontSize: '0.82rem', lineHeight: 1.4, display: 'block', marginTop: '2px' }}>Importe listas, filtre por tags e organize seus leads perfeitamente.</span>
+                </div>
+              </div>
             </div>
           </div>
 
-          {view === 'login' && (
-            <form onSubmit={handleSubmit} style={styles.form}>
-              <h2 style={{ fontSize: '1.75rem', fontWeight: '800', margin: '0 0 1.5rem 0', textAlign: 'center' }}>Faça o seu login</h2>
+          {/* Footer */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-secondary)', fontSize: '0.78rem' }}>
+            <span>• Plataforma online</span>
+            <span>Todos os sistemas operacionais</span>
+          </div>
+        </div>
+      )}
 
-              <div className="input-group">
-                <label style={styles.label}>usuário</label>
-                <div style={{ position: 'relative' }}>
-                  <span style={styles.inputIcon}>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                      <circle cx="12" cy="7" r="4"></circle>
-                    </svg>
-                  </span>
-                  <input
-                    type="text"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    placeholder="Qualquer usuário"
-                    style={{ ...styles.input, paddingLeft: '2.8rem' }}
-                    required
-                  />
-                </div>
+      {/* Right Column: Form Panel */}
+      <div style={{
+        flex: 1,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: isMobile ? '1.5rem' : '2.5rem',
+        background: '#FFFFFF',
+        backgroundImage: 'radial-gradient(rgba(168, 85, 247, 0.08) 1.5px, transparent 1.5px)',
+        backgroundSize: '24px 24px',
+        boxSizing: 'border-box'
+      }}>
+        <div style={{
+          background: '#FFFFFF',
+          border: '1px solid var(--border-glass)',
+          borderRadius: '16px',
+          padding: isMobile ? '2rem 1.5rem' : '2.5rem',
+          width: '100%',
+          maxWidth: '420px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '24px',
+          boxShadow: 'none',
+          boxSizing: 'border-box'
+        }}>
+          {/* Form Header */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <span style={{
+              width: '6px', height: '6px', borderRadius: '50%', backgroundColor: 'var(--accent-primary)'
+            }} />
+            <span style={{
+              fontSize: '0.75rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.05em',
+              color: 'var(--text-secondary)'
+            }}>
+              MassFlow
+            </span>
+          </div>
+
+          {view === 'login' && (
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div>
+                <h2 style={{ fontSize: '1.4rem', fontWeight: '800', margin: '0 0 4px 0', color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>
+                  Bem-vindo de volta
+                </h2>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.82rem', margin: 0, lineHeight: 1.4 }}>
+                  Entre com seu usuário e senha para acessar o painel administrativo.
+                </p>
               </div>
-              <div className="input-group" style={{ marginBottom: '1.5rem' }}>
-                <label style={styles.label}>senha</label>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '0.72rem', color: 'var(--text-secondary)', fontWeight: '700', letterSpacing: '0.05em', marginBottom: '6px', textTransform: 'uppercase' }}>
+                  Usuário
+                </label>
+                <input
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="Seu usuário"
+                  style={{
+                    width: '100%',
+                    padding: '10px 12px',
+                    background: 'transparent',
+                    border: '1px solid var(--border-glass)',
+                    borderRadius: '8px',
+                    color: 'var(--text-primary)',
+                    boxSizing: 'border-box',
+                    outline: 'none',
+                    fontSize: '0.92rem',
+                    transition: 'all 0.22s ease'
+                  }}
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--accent-primary)';
+                    e.currentTarget.style.boxShadow = '0 0 0 3px rgba(168, 85, 247, 0.1)';
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--border-glass)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
+                  required
+                />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '0.72rem', color: 'var(--text-secondary)', fontWeight: '700', letterSpacing: '0.05em', marginBottom: '6px', textTransform: 'uppercase' }}>
+                  Senha
+                </label>
                 <div style={{ position: 'relative' }}>
-                  <span style={styles.inputIcon}>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                      <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                    </svg>
-                  </span>
                   <input
                     type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Qualquer senha"
-                    style={{ ...styles.input, paddingLeft: '2.8rem', paddingRight: '2.8rem' }}
+                    placeholder="Sua senha"
+                    style={{
+                      width: '100%',
+                      padding: '10px 40px 10px 12px',
+                      background: 'transparent',
+                      border: '1px solid var(--border-glass)',
+                      borderRadius: '8px',
+                      color: 'var(--text-primary)',
+                      boxSizing: 'border-box',
+                      outline: 'none',
+                      fontSize: '0.92rem',
+                      transition: 'all 0.22s ease'
+                    }}
+                    onFocus={(e) => {
+                      e.currentTarget.style.borderColor = 'var(--accent-primary)';
+                      e.currentTarget.style.boxShadow = '0 0 0 3px rgba(168, 85, 247, 0.1)';
+                    }}
+                    onBlur={(e) => {
+                      e.currentTarget.style.borderColor = 'var(--border-glass)';
+                      e.currentTarget.style.boxShadow = 'none';
+                    }}
                     required
                   />
                   <button
                     type="button"
-                    className="eye-btn"
                     onClick={() => setShowPassword(!showPassword)}
-                    style={styles.eyeToggleBtn}
-                    title={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
+                    style={{
+                      position: 'absolute',
+                      right: '8px',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      background: 'transparent',
+                      border: 'none',
+                      color: 'var(--text-secondary)',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      padding: '6px',
+                      boxShadow: 'none',
+                      borderRadius: 0
+                    }}
                   >
                     {showPassword ? (
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
                         <line x1="1" y1="1" x2="23" y2="23"></line>
                       </svg>
                     ) : (
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                         <circle cx="12" cy="12" r="3"></circle>
                       </svg>
@@ -175,38 +390,101 @@ const Login = ({ onLogin }) => {
                 </div>
               </div>
 
-              {/* Remember me & Forgot password simulation row */}
-              <div style={styles.extraRow}>
-                <label style={styles.checkboxLabel}>
+              <div style={{ 
+                display: 'flex', 
+                justifyContent: 'space-between', 
+                alignItems: 'center', 
+                fontSize: '0.82rem', 
+                marginTop: '4px',
+                width: '100%',
+                flexWrap: 'wrap',
+                gap: '8px'
+              }}>
+                <label style={{ 
+                  display: 'inline-flex', 
+                  alignItems: 'center', 
+                  gap: '6px', 
+                  cursor: 'pointer', 
+                  color: 'var(--text-secondary)', 
+                  fontWeight: '600',
+                  userSelect: 'none',
+                  textTransform: 'none',
+                  letterSpacing: 'normal',
+                  marginBottom: 0,
+                  fontSize: '0.82rem'
+                }}>
                   <input
                     type="checkbox"
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
-                    style={styles.checkboxInput}
+                    style={{ 
+                      cursor: 'pointer', 
+                      margin: 0,
+                      width: '14px',
+                      height: '14px',
+                      accentColor: 'var(--accent-primary)'
+                    }}
                   />
-                  <span>Lembrar meu acesso</span>
+                  <span>Lembrar acesso</span>
                 </label>
-                <a href="#forgot" onClick={(e) => { e.preventDefault(); setView('forgot'); setError(''); }} style={styles.forgotLink}>
-                  esqueci minha senha
+                <a 
+                  href="#forgot" 
+                  onClick={(e) => { e.preventDefault(); setView('forgot'); setError(''); }} 
+                  style={{ 
+                    color: 'var(--accent-primary)', 
+                    textDecoration: 'none', 
+                    fontWeight: '700',
+                    transition: 'color 0.2s ease'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent-primary-hover)'}
+                  onMouseLeave={(e) => e.currentTarget.style.color = 'var(--accent-primary)'}
+                >
+                  Esqueci minha senha
                 </a>
               </div>
 
-              {error && <p className="error-message" style={styles.error}>{error}</p>}
-              {success && <p className="success-message" style={styles.success}>{success}</p>}
+              {error && <p style={{ color: '#ef4444', fontSize: '0.82rem', margin: 0, fontWeight: '600' }}>{error}</p>}
+              {success && <p style={{ color: '#10b981', fontSize: '0.82rem', margin: 0, fontWeight: '600' }}>{success}</p>}
 
-              <button type="submit" disabled={loading} style={styles.button}>
-                {loading ? 'Autenticando...' : 'Entrar'}
+              <button 
+                type="submit" 
+                disabled={loading} 
+                style={{
+                  width: '100%',
+                  background: 'var(--accent-primary)',
+                  color: '#FFFFFF',
+                  border: 'none',
+                  padding: '12px',
+                  borderRadius: '10px',
+                  fontWeight: '700',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  boxShadow: 'none',
+                  transition: 'background 0.2s ease',
+                  marginTop: '8px'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.background = 'var(--accent-primary-hover)'}
+                onMouseLeave={(e) => e.currentTarget.style.background = 'var(--accent-primary)'}
+              >
+                {loading ? 'Entrando...' : 'Entrar'}
                 {!loading && (
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <line x1="5" y1="12" x2="19" y2="12"></line>
                     <polyline points="12 5 19 12 12 19"></polyline>
                   </svg>
                 )}
               </button>
 
-              <div style={{ marginTop: '1.75rem', textAlign: 'center' }}>
-                <span style={{ color: '#ffffff', fontSize: '0.85rem' }}>Ainda não possui uma conta? </span>
-                <a href="/register" onClick={(e) => { e.preventDefault(); window.location.href = '/register'; }} style={{ ...styles.forgotLink, textDecoration: 'underline' }}>
+              <div style={{ textAlign: 'center', fontSize: '0.82rem', color: 'var(--text-secondary)', marginTop: '8px' }}>
+                Não possui conta?{' '}
+                <a 
+                  href="/register" 
+                  onClick={(e) => { e.preventDefault(); window.location.href = '/register'; }} 
+                  style={{ color: 'var(--accent-primary)', textDecoration: 'none', fontWeight: '700' }}
+                >
                   Cadastre-se
                 </a>
               </div>
@@ -214,33 +492,65 @@ const Login = ({ onLogin }) => {
           )}
 
           {view === 'login_2fa' && (
-            <form onSubmit={handle2FASubmit} style={styles.form}>
-              <h2 style={{ fontSize: '1.75rem', fontWeight: '800', margin: '0 0 1.5rem 0', textAlign: 'center' }}>autenticação <span style={{ color: '#A855F7' }}>•</span></h2>
-
-              <div className="input-group" style={{ marginBottom: '2rem', textAlign: 'center' }}>
-                <label style={{ ...styles.label, textAlign: 'center' }}>código 2fa</label>
-                <div style={{ position: 'relative' }}>
-                  <input
-                    type="text"
-                    className="input-2fa"
-                    value={code2fa}
-                    onChange={(e) => setCode2fa(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                    placeholder="000000"
-                    required
-                  />
-                </div>
-                <small style={{ color: 'var(--text-tertiary)', display: 'block', marginTop: '10px', textAlign: 'center' }}>
-                  Insira o código enviado para seu dispositivo.
-                </small>
+            <form onSubmit={handle2FASubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div>
+                <h2 style={{ fontSize: '1.4rem', fontWeight: '800', margin: '0 0 4px 0', color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>
+                  Autenticação
+                </h2>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.82rem', margin: 0, lineHeight: 1.4 }}>
+                  Insira o código de 6 dígitos enviado para seu dispositivo.
+                </p>
               </div>
 
-              {error && <p className="error-message" style={styles.error}>{error}</p>}
+              <div style={{ textAlign: 'center' }}>
+                <input
+                  type="text"
+                  value={code2fa}
+                  onChange={(e) => setCode2fa(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                  placeholder="000000"
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    background: 'transparent',
+                    border: '1px solid var(--border-glass)',
+                    borderRadius: '8px',
+                    color: 'var(--text-primary)',
+                    textAlign: 'center',
+                    fontSize: '1.4rem',
+                    letterSpacing: '0.5em',
+                    fontWeight: '800',
+                    outline: 'none'
+                  }}
+                  required
+                />
+              </div>
 
-              <button type="submit" disabled={loading} style={styles.button}>
+              {error && <p style={{ color: '#ef4444', fontSize: '0.82rem', margin: 0, fontWeight: '600' }}>{error}</p>}
+
+              <button 
+                type="submit" 
+                disabled={loading} 
+                style={{
+                  width: '100%',
+                  background: 'var(--accent-primary)',
+                  color: '#FFFFFF',
+                  border: 'none',
+                  padding: '12px',
+                  borderRadius: '10px',
+                  fontWeight: '700',
+                  cursor: 'pointer',
+                  boxShadow: 'none'
+                }}
+              >
                 {loading ? 'Verificando...' : 'Confirmar Acesso'}
               </button>
-              <div style={{ marginTop: '1.75rem', textAlign: 'center' }}>
-                <a href="#login" onClick={(e) => { e.preventDefault(); setView('login'); setError(''); setCode2fa(''); }} style={styles.forgotLink}>
+              
+              <div style={{ textAlign: 'center', marginTop: '8px' }}>
+                <a 
+                  href="#back" 
+                  onClick={(e) => { e.preventDefault(); setView('login'); setError(''); setCode2fa(''); }} 
+                  style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '0.85rem', fontWeight: '600' }}
+                >
                   Voltar
                 </a>
               </div>
@@ -248,43 +558,66 @@ const Login = ({ onLogin }) => {
           )}
 
           {view === 'forgot' && (
-            <form onSubmit={handleForgotSubmit} style={styles.form}>
-              <h2 style={{ fontSize: '1.75rem', fontWeight: '800', margin: '0 0 1.5rem 0', textAlign: 'center' }}>recuperar senha <span style={{ color: '#A855F7' }}>•</span></h2>
-
-              <div className="input-group" style={{ marginBottom: '2rem' }}>
-                <label style={styles.label}>e-mail cadastrado</label>
-                <div style={{ position: 'relative' }}>
-                  <span style={styles.inputIcon}>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                      <polyline points="22,6 12,13 2,6"></polyline>
-                    </svg>
-                  </span>
-                  <input
-                    type="email"
-                    value={forgotEmail}
-                    onChange={(e) => setForgotEmail(e.target.value)}
-                    placeholder="seu-email@dominio.com"
-                    style={{ ...styles.input, paddingLeft: '2.8rem' }}
-                    required
-                  />
-                </div>
+            <form onSubmit={handleForgotSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div>
+                <h2 style={{ fontSize: '1.4rem', fontWeight: '800', margin: '0 0 4px 0', color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>
+                  Recuperar senha
+                </h2>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.82rem', margin: 0, lineHeight: 1.4 }}>
+                  Insira seu e-mail cadastrado para redefinir sua senha.
+                </p>
               </div>
 
-              {error && <p className="error-message" style={styles.error}>{error}</p>}
+              <div>
+                <label style={{ display: 'block', fontSize: '0.72rem', color: 'var(--text-secondary)', fontWeight: '700', letterSpacing: '0.05em', marginBottom: '6px', textTransform: 'uppercase' }}>
+                  E-mail cadastrado
+                </label>
+                <input
+                  type="email"
+                  value={forgotEmail}
+                  onChange={(e) => setForgotEmail(e.target.value)}
+                  placeholder="seu-email@dominio.com"
+                  style={{
+                    width: '100%',
+                    padding: '10px 12px',
+                    background: 'transparent',
+                    border: '1px solid var(--border-glass)',
+                    borderRadius: '8px',
+                    color: 'var(--text-primary)',
+                    boxSizing: 'border-box',
+                    outline: 'none',
+                    fontSize: '0.92rem'
+                  }}
+                  required
+                />
+              </div>
 
-              <button type="submit" disabled={forgotLoading} style={{ ...styles.button, whiteSpace: 'nowrap' }}>
-                {forgotLoading ? 'Enviando Instruções...' : 'Enviar Link de Redefinição'}
-                {!forgotLoading && (
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                    <polyline points="12 5 19 12 12 19"></polyline>
-                  </svg>
-                )}
+              {error && <p style={{ color: '#ef4444', fontSize: '0.82rem', margin: 0, fontWeight: '600' }}>{error}</p>}
+
+              <button 
+                type="submit" 
+                disabled={forgotLoading} 
+                style={{
+                  width: '100%',
+                  background: 'var(--accent-primary)',
+                  color: '#FFFFFF',
+                  border: 'none',
+                  padding: '12px',
+                  borderRadius: '10px',
+                  fontWeight: '700',
+                  cursor: 'pointer',
+                  boxShadow: 'none'
+                }}
+              >
+                {forgotLoading ? 'Enviando...' : 'Enviar link de redefinição'}
               </button>
-
-              <div style={{ marginTop: '1.75rem', textAlign: 'center' }}>
-                <a href="#login" onClick={(e) => { e.preventDefault(); setView('login'); setError(''); }} style={styles.forgotLink}>
+              
+              <div style={{ textAlign: 'center', marginTop: '8px' }}>
+                <a 
+                  href="#back" 
+                  onClick={(e) => { e.preventDefault(); setView('login'); setError(''); }} 
+                  style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '0.85rem', fontWeight: '600' }}
+                >
                   Voltar para o Login
                 </a>
               </div>
@@ -292,33 +625,65 @@ const Login = ({ onLogin }) => {
           )}
 
           {view === 'forgot_2fa' && (
-            <form onSubmit={handleForgot2FASubmit} style={styles.form}>
-              <h2 style={{ fontSize: '1.75rem', fontWeight: '800', margin: '0 0 1.5rem 0', textAlign: 'center' }}>autenticação <span style={{ color: '#A855F7' }}>•</span></h2>
-
-              <div className="input-group" style={{ marginBottom: '2rem', textAlign: 'center' }}>
-                <label style={{ ...styles.label, textAlign: 'center' }}>código de recuperação</label>
-                <div style={{ position: 'relative' }}>
-                  <input
-                    type="text"
-                    className="input-2fa"
-                    value={code2fa}
-                    onChange={(e) => setCode2fa(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                    placeholder="000000"
-                    required
-                  />
-                </div>
-                <small style={{ color: 'var(--text-tertiary)', display: 'block', marginTop: '10px', textAlign: 'center' }}>
-                  Insira o código de 6 dígitos enviado para o seu e-mail.
-                </small>
+            <form onSubmit={handleForgot2FASubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div>
+                <h2 style={{ fontSize: '1.4rem', fontWeight: '800', margin: '0 0 4px 0', color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>
+                  Verificar Código
+                </h2>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.82rem', margin: 0, lineHeight: 1.4 }}>
+                  Insira o código de 6 dígitos enviado para seu e-mail.
+                </p>
               </div>
 
-              {error && <p className="error-message" style={styles.error}>{error}</p>}
+              <div style={{ textAlign: 'center' }}>
+                <input
+                  type="text"
+                  value={code2fa}
+                  onChange={(e) => setCode2fa(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                  placeholder="000000"
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    background: 'transparent',
+                    border: '1px solid var(--border-glass)',
+                    borderRadius: '8px',
+                    color: 'var(--text-primary)',
+                    textAlign: 'center',
+                    fontSize: '1.4rem',
+                    letterSpacing: '0.5em',
+                    fontWeight: '800',
+                    outline: 'none'
+                  }}
+                  required
+                />
+              </div>
 
-              <button type="submit" disabled={forgotLoading} style={styles.button}>
+              {error && <p style={{ color: '#ef4444', fontSize: '0.82rem', margin: 0, fontWeight: '600' }}>{error}</p>}
+
+              <button 
+                type="submit" 
+                disabled={forgotLoading} 
+                style={{
+                  width: '100%',
+                  background: 'var(--accent-primary)',
+                  color: '#FFFFFF',
+                  border: 'none',
+                  padding: '12px',
+                  borderRadius: '10px',
+                  fontWeight: '700',
+                  cursor: 'pointer',
+                  boxShadow: 'none'
+                }}
+              >
                 {forgotLoading ? 'Verificando...' : 'Verificar Código'}
               </button>
-              <div style={{ marginTop: '1.75rem', textAlign: 'center' }}>
-                <a href="#forgot" onClick={(e) => { e.preventDefault(); setView('forgot'); setError(''); setCode2fa(''); }} style={styles.forgotLink}>
+              
+              <div style={{ textAlign: 'center', marginTop: '8px' }}>
+                <a 
+                  href="#back" 
+                  onClick={(e) => { e.preventDefault(); setView('forgot'); setError(''); setCode2fa(''); }} 
+                  style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '0.85rem', fontWeight: '600' }}
+                >
                   Voltar
                 </a>
               </div>
@@ -326,40 +691,50 @@ const Login = ({ onLogin }) => {
           )}
 
           {view === 'forgot_success' && (
-            <div style={{ textAlign: 'center', padding: '1rem 0' }}>
+            <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <div style={{
-                width: '64px',
-                height: '64px',
+                width: '56px',
+                height: '56px',
                 borderRadius: '50%',
-                background: 'rgba(168, 85, 247,0.1)',
-                color: '#A855F7',
+                background: 'rgba(16, 185, 129, 0.1)',
+                color: '#10b981',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                margin: '0 auto 1.5rem auto',
-                boxShadow: '0 0 22px rgba(168, 85, 247,0.18)',
-                border: '1px solid rgba(168, 85, 247,0.2)'
+                margin: '0 auto'
               }}>
-                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                   <polyline points="20 6 9 17 4 12"></polyline>
                 </svg>
               </div>
-              <h3 style={{ fontSize: '1.25rem', fontWeight: '800', marginBottom: '0.75rem', letterSpacing: '-0.01em' }}>Instruções Enviadas!</h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: '1.6', margin: '0 0 2rem 0' }}>
-                Enviamos um link seguro de redefinição de senha para o endereço de e-mail informado. Por favor, verifique sua caixa de entrada e spam.
-              </p>
-              <button type="button" onClick={() => { setView('login'); setForgotEmail(''); }} style={{ ...styles.button, width: '100%' }}>
+              <div>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: '800', margin: '0 0 4px 0', color: 'var(--text-primary)' }}>
+                  Sucesso!
+                </h3>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.82rem', margin: 0, lineHeight: 1.4 }}>
+                  As instruções de recuperação foram enviadas para o seu e-mail cadastrado.
+                </p>
+              </div>
+              <button 
+                type="button" 
+                onClick={() => { setView('login'); setForgotEmail(''); }} 
+                style={{
+                  width: '100%',
+                  background: 'var(--accent-primary)',
+                  color: '#FFFFFF',
+                  border: 'none',
+                  padding: '12px',
+                  borderRadius: '10px',
+                  fontWeight: '700',
+                  cursor: 'pointer',
+                  boxShadow: 'none'
+                }}
+              >
                 Voltar para o Login
               </button>
             </div>
           )}
-
-          <div style={styles.footer}>
-          </div>
         </div>
-
-        {/* Right Side: Image Sidebar */}
-        <div className="auth-image-side" style={{ backgroundImage: `url(${authBgImage})` }} />
       </div>
     </div>
   );

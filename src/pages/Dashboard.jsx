@@ -381,7 +381,7 @@ const Dashboard = ({ token }) => {
     },
     {
       label: 'Disparos Realizados', value: (stats.totalSent ?? 0).toLocaleString(), badge: 'Envios', detail: 'totais',
-      badgeOk: true, iconColor: '#10b981', iconType: 'sent', bg: 'rgba(16, 185, 129, 0.22)'
+      badgeOk: true, iconColor: '#f97316', iconType: 'sent', bg: 'rgba(249, 115, 22, 0.22)'
     },
     {
       label: 'Taxa de Leitura', value: `${stats.readRate || '0'}%`, badge: 'Média', detail: 'engajamento',
@@ -402,10 +402,9 @@ const Dashboard = ({ token }) => {
 
       {/* KPI */}
       <div>
-        <SLabel>Visão Geral</SLabel>
         <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(175px, 1fr))', gap:'0.875rem' }}>
           {kpis.map((k, i) => (
-            <Card key={i} hoverable style={{ padding:'1.6rem 1.25rem 1.3rem', display:'flex', flexDirection:'column', gap:'0.8rem' }}>
+            <Card key={i} style={{ padding:'1.6rem 1.25rem 1.3rem', display:'flex', flexDirection:'column', gap:'0.8rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
                   <p style={{ fontSize:'0.7rem', fontWeight:'700', color:B.subtle, textTransform:'uppercase', letterSpacing:'0.07em', margin:'0 0 0.3rem 0' }}>{k.label}</p>

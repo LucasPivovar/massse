@@ -412,7 +412,7 @@ export default function BotFlowDetail() {
 
   useEffect(() => {
     const load = async () => {
-      const data = await fetchBotFlowById(Number(id));
+      const data = await fetchBotFlowById(isNaN(id) ? id : Number(id));
       setFlow(data);
       setLoading(false);
     };

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
+import EmojiPicker from 'emoji-picker-react';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
@@ -14,7 +15,7 @@ const B = {
   borderHov: 'var(--accent-primary)'
 };
 
-const Chat = ({ token }) => {
+const Chat = ({ token, onClose }) => {
   const [campaigns, setCampaigns] = useState([]);
   const [selectedCampaignId, setSelectedCampaignId] = useState('');
   const [conversations, setConversations] = useState([]);
@@ -31,6 +32,14 @@ const Chat = ({ token }) => {
   const [selectedTemplateSid, setSelectedTemplateSid] = useState('');
   const [templateVariables, setTemplateVariables] = useState({});
   const [loadingTemplates, setLoadingTemplates] = useState(false);
+
+  // Mídia: Emoji e Áudio
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordingTime, setRecordingTime] = useState(0);
+  const mediaRecorderRef = useRef(null);
+  const audioChunksRef = useRef([]);
+  const recordingTimerRef = useRef(null);
 
   const messagesEndRef = useRef(null);
 
@@ -67,8 +76,8 @@ const Chat = ({ token }) => {
       setLoadingConversations(true);
       try {
         const mockConversations = [
-          { sid: 'CH123', clientPhone: 'whatsapp:+5511999999999', createdAt: new Date().toISOString() },
-          { sid: 'CH124', clientPhone: 'whatsapp:+5511888888888', createdAt: new Date(Date.now() - 3600000).toISOString() }
+          { sid: 'CH123', clientPhone: 'whatsapp:+5511999999999', clientName: 'Lucas Pivovar', origin: 'Facebook Ads', sourceTag: 'black-friday-promo', labels: ['VIP', 'Lead Quente'], createdAt: new Date().toISOString() },
+          { sid: 'CH124', clientPhone: 'whatsapp:+5511888888888', clientName: 'Ana Silva', origin: 'Orgânico', sourceTag: 'link-na-bio', labels: ['Suporte'], createdAt: new Date(Date.now() - 3600000).toISOString() }
         ];
         setConversations(mockConversations);
         if (mockConversations.length > 0) {
@@ -175,7 +184,7 @@ const Chat = ({ token }) => {
 
   // Send a free-form message
   const handleSendFreeForm = async (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     if (!newMessage.trim() || !selectedConversation) return;
 
     const payload = {
@@ -193,6 +202,70 @@ const Chat = ({ token }) => {
       fetchMessages();
     } catch (err) {
       alert(err.response?.data?.message || 'Erro ao enviar mensagem.');
+    }
+  };
+
+  // Funções de Gravação de Áudio
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorderRef.current = new MediaRecorder(stream);
+      audioChunksRef.current = [];
+
+      mediaRecorderRef.current.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          audioChunksRef.current.push(event.data);
+        }
+      };
+
+      mediaRecorderRef.current.start();
+      setIsRecording(true);
+      setRecordingTime(0);
+
+      recordingTimerRef.current = setInterval(() => {
+        setRecordingTime((prev) => prev + 1);
+      }, 1000);
+    } catch (err) {
+      console.error('Erro ao acessar microfone:', err);
+      alert('Não foi possível acessar o microfone.');
+    }
+  };
+
+  const stopRecording = (cancel = false) => {
+    if (mediaRecorderRef.current && isRecording) {
+      mediaRecorderRef.current.stop();
+      mediaRecorderRef.current.stream.getTracks().forEach(track => track.stop());
+      clearInterval(recordingTimerRef.current);
+      setIsRecording(false);
+      
+      if (cancel) {
+        audioChunksRef.current = [];
+      }
+    }
+  };
+
+  const handleSendAudio = async () => {
+    stopRecording(false);
+    
+    // Simula o envio do áudio
+    // Em um cenário real, você criaria um Blob:
+    // const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+    // const formData = new FormData();
+    // formData.append('file', audioBlob, 'audio.webm');
+    // await axios.post(...)
+
+    try {
+      // Mock de envio de áudio no painel
+      const mockAudioMessage = { 
+        sid: 'MS_AUDIO_' + Date.now(), 
+        author: 'whatsapp:+14155238886', 
+        body: '🎵 Áudio enviado (' + Math.floor(recordingTime / 60).toString().padStart(2, '0') + ':' + (recordingTime % 60).toString().padStart(2, '0') + ')', 
+        date_created: new Date().toISOString() 
+      };
+      setMessages(prev => [...prev, mockAudioMessage]);
+      audioChunksRef.current = [];
+    } catch (err) {
+      console.error('Erro ao enviar áudio', err);
     }
   };
 
@@ -266,9 +339,14 @@ const Chat = ({ token }) => {
   };
 
   return (
-    <div className="page-container" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', height: 'calc(100vh - 4.5rem)', overflow: 'hidden' }}>
-      
-      {/* Header & Selector */}
+    <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.6)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(6px)' }}>
+      <div className="card-gradient" style={{ position: 'relative', width: '85vw', maxWidth: '1400px', height: '85vh', background: 'var(--bg-main)', borderRadius: '20px', display: 'flex', flexDirection: 'column', gap: '1.5rem', overflow: 'hidden', padding: '2rem', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)', border: '1px solid var(--border-glass)' }}>
+        
+        <button onClick={onClose} style={{ position: 'absolute', top: '16px', right: '16px', background: 'transparent', color: '#000', border: 'none', padding: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10, outline: 'none', boxShadow: 'none', borderRadius: 0 }} onMouseOver={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.boxShadow = 'none'; }} onMouseOut={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.boxShadow = 'none'; }}>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+
+        {/* Header & Selector */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', flexShrink: 0 }}>
         <div>
           <h1 style={{ margin: 0, fontSize: '1.8rem' }}>Bate-papo WhatsApp</h1>
@@ -309,7 +387,7 @@ const Chat = ({ token }) => {
       </div>
 
       {/* Main Chat Area Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: '300px 1fr', gap: '1.25rem', flex: 1, minHeight: 0, overflow: 'hidden' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: selectedConversation ? '300px 1fr 280px' : '300px 1fr', gap: '1.25rem', flex: 1, minHeight: 0, overflow: 'hidden' }}>
         
         {/* Sidebar: Chats List */}
         <div className="card-gradient" style={{ display: 'flex', flexDirection: 'column', borderRadius: '14px', border: '1px solid var(--border-glass)', overflow: 'hidden', minHeight: 0 }}>
@@ -343,8 +421,13 @@ const Chat = ({ token }) => {
                     }}
                   >
                     <div style={{ fontWeight: '700', fontSize: '0.92rem', color: isSelected ? B.lime : B.text, display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
-                      <span>{formattedPhone}</span>
+                      <span>{c.clientName || formattedPhone}</span>
                     </div>
+                    {c.clientName && (
+                      <div style={{ fontSize: '0.78rem', color: B.subtle, marginBottom: '2px', fontWeight: '500' }}>
+                        {formattedPhone}
+                      </div>
+                    )}
                     <div style={{ fontSize: '0.74rem', color: B.subtle }}>
                       Criado em {new Date(c.createdAt).toLocaleDateString()}
                     </div>
@@ -363,9 +446,12 @@ const Chat = ({ token }) => {
               <div className="card-gradient" style={{ padding: '0.85rem 1.25rem', borderRadius: '12px', border: '1px solid var(--border-glass)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
                 <div>
                   <h2 style={{ margin: 0, fontSize: '1rem', fontWeight: '700' }}>
-                    {selectedConversation.clientPhone.replace('whatsapp:', '')}
+                    {selectedConversation.clientName || selectedConversation.clientPhone.replace('whatsapp:', '')}
                   </h2>
-                  <span style={{ fontSize: '0.76rem', color: B.subtle }}>SID: <code>{selectedConversation.sid}</code></span>
+                  <span style={{ fontSize: '0.76rem', color: B.subtle }}>
+                    {selectedConversation.clientName ? `${selectedConversation.clientPhone.replace('whatsapp:', '')} • ` : ''}
+                    SID: <code>{selectedConversation.sid}</code>
+                  </span>
                 </div>
                 
                 {/* 24h Window Badge */}
@@ -433,26 +519,55 @@ const Chat = ({ token }) => {
               <div className="card-gradient" style={{ padding: '1rem 1.25rem', borderRadius: '14px', border: '1px solid var(--border-glass)', flexShrink: 0 }}>
                 {windowStatus.active ? (
                   /* Active 24h window: Free text input */
-                  <form onSubmit={handleSendFreeForm} style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
-                    <input
-                      type="text"
-                      placeholder="Digite sua resposta de formato livre..."
-                      value={newMessage}
-                      onChange={(e) => setNewMessage(e.target.value)}
-                      style={{
-                        flex: 1,
-                        background: '#F3F4F6',
-                        color: B.text,
-                        border: '1px solid var(--border-glass)',
-                        padding: '0.75rem 1.25rem',
-                        borderRadius: '10px',
-                        outline: 'none',
-                        fontSize: '0.92rem'
-                      }}
-                      required
-                    />
+                  <form onSubmit={handleSendFreeForm} style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', position: 'relative' }}>
+                    {showEmojiPicker && (
+                      <div style={{ position: 'absolute', bottom: 'calc(100% + 10px)', left: '0', zIndex: 50 }}>
+                        <EmojiPicker onEmojiClick={(emojiData) => {
+                          setNewMessage(prev => prev + emojiData.emoji);
+                          setShowEmojiPicker(false);
+                        }} />
+                      </div>
+                    )}
+                    
+                    {isRecording ? (
+                      <div style={{ flex: 1, display: 'flex', alignItems: 'center', background: '#F3F4F6', border: '1px solid var(--border-glass)', padding: '0.75rem 1.25rem', borderRadius: '10px', gap: '1rem' }}>
+                        <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#ef4444', animation: 'pulse 1.5s infinite' }}></div>
+                        <span style={{ fontSize: '0.92rem', color: '#ef4444', fontWeight: 'bold' }}>Gravando Áudio... {Math.floor(recordingTime / 60).toString().padStart(2, '0')}:{(recordingTime % 60).toString().padStart(2, '0')}</span>
+                        <div style={{ flex: 1 }}></div>
+                        <button type="button" onClick={() => stopRecording(true)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: B.subtle, padding: 0, display: 'flex', alignItems: 'center', boxShadow: 'none', borderRadius: 0 }} title="Cancelar Gravação">
+                           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                        </button>
+                      </div>
+                    ) : (
+                      <div style={{ position: 'relative', flex: 1, display: 'flex', alignItems: 'center' }}>
+                        <button type="button" onClick={() => setShowEmojiPicker(!showEmojiPicker)} style={{ position: 'absolute', left: '12px', background: 'none', border: 'none', cursor: 'pointer', color: B.subtle, padding: 0, display: 'flex', alignItems: 'center', boxShadow: 'none', borderRadius: 0 }} title="Adicionar Emoji">
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+                        </button>
+                        <input
+                          type="text"
+                          placeholder="Digite sua mensagem..."
+                          value={newMessage}
+                          onChange={(e) => setNewMessage(e.target.value)}
+                          style={{
+                            flex: 1,
+                            background: '#F3F4F6',
+                            color: B.text,
+                            border: '1px solid var(--border-glass)',
+                            padding: '0.75rem 1.25rem 0.75rem 2.75rem',
+                            borderRadius: '10px',
+                            outline: 'none',
+                            fontSize: '0.92rem'
+                          }}
+                          required={!isRecording}
+                        />
+                        <button type="button" onClick={startRecording} style={{ position: 'absolute', right: '12px', background: 'none', border: 'none', cursor: 'pointer', color: B.subtle, padding: 0, display: 'flex', alignItems: 'center', boxShadow: 'none', borderRadius: 0 }} title="Gravar Áudio">
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
+                        </button>
+                      </div>
+                    )}
                     <button
-                      type="submit"
+                      type="button"
+                      onClick={isRecording ? handleSendAudio : handleSendFreeForm}
                       style={{
                         background: 'var(--accent-primary)',
                         color: 'white',
@@ -466,7 +581,7 @@ const Chat = ({ token }) => {
                         width: 'auto'
                       }}
                     >
-                      Enviar
+                      {isRecording ? 'Enviar Áudio' : 'Enviar'}
                     </button>
                   </form>
                 ) : (
@@ -581,8 +696,90 @@ const Chat = ({ token }) => {
           )}
         </div>
 
-      </div>
+        {/* Right Sidebar: Lead Details */}
+        {selectedConversation && (
+          <div className="card-gradient" style={{ display: 'flex', flexDirection: 'column', borderRadius: '14px', border: '1px solid var(--border-glass)', overflowY: 'auto', minHeight: 0 }}>
+            <div style={{ padding: '1.25rem', borderBottom: '1px solid var(--border-glass)', background: '#F9FAFB' }}>
+              <h3 style={{ fontSize: '0.9rem', margin: 0, fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.04em', color: B.muted }}>Detalhes do Lead</h3>
+            </div>
+            
+            <div style={{ padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+              
+              {/* Profile Info */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', alignItems: 'center', textAlign: 'center' }}>
+                <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'var(--accent-primary)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '8px' }}>
+                  {selectedConversation.clientName ? selectedConversation.clientName.charAt(0).toUpperCase() : '#'}
+                </div>
+                <span style={{ fontSize: '1.1rem', fontWeight: '700', color: B.text }}>{selectedConversation.clientName || 'Lead Desconhecido'}</span>
+                <span style={{ fontSize: '0.85rem', color: B.subtle }}>{selectedConversation.clientPhone.replace('whatsapp:', '')}</span>
+              </div>
 
+              {/* Botões de Ação */}
+              <div style={{ borderTop: '1px solid var(--border-glass)', paddingTop: '1.5rem' }}>
+                <button style={{
+                  width: '100%',
+                  background: 'var(--bg-card)',
+                  color: B.text,
+                  border: '1px solid var(--border-glass)',
+                  padding: '0.75rem',
+                  borderRadius: '8px',
+                  fontWeight: '600',
+                  fontSize: '0.85rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  transition: 'all 0.2s ease',
+                  boxShadow: 'none'
+                }}
+                onMouseOver={(e) => { e.currentTarget.style.borderColor = B.lime; e.currentTarget.style.color = B.lime; e.currentTarget.style.background = 'rgba(168, 85, 247, 0.05)'; e.currentTarget.style.boxShadow = 'none'; }}
+                onMouseOut={(e) => { e.currentTarget.style.borderColor = 'var(--border-glass)'; e.currentTarget.style.color = B.text; e.currentTarget.style.background = 'var(--bg-card)'; e.currentTarget.style.boxShadow = 'none'; }}
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+                  Acionar Fluxo de Bot
+                </button>
+              </div>
+
+              {/* Origem e Tag */}
+              <div style={{ borderTop: '1px solid var(--border-glass)', paddingTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                <div>
+                  <span style={{ fontSize: '0.75rem', color: B.subtle, fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.04em', display: 'block', marginBottom: '4px' }}>Origem</span>
+                  <span style={{ fontSize: '0.9rem', color: B.text, fontWeight: '500' }}>{selectedConversation.origin || 'Desconhecida'}</span>
+                </div>
+                <div>
+                  <span style={{ fontSize: '0.75rem', color: B.subtle, fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.04em', display: 'block', marginBottom: '4px' }}>Tag de Origem</span>
+                  <span style={{ fontSize: '0.85rem', color: B.text, background: '#F3F4F6', padding: '4px 8px', borderRadius: '4px', display: 'inline-block' }}>{selectedConversation.sourceTag || 'Nenhuma'}</span>
+                </div>
+              </div>
+
+              {/* Etiquetas */}
+              <div style={{ borderTop: '1px solid var(--border-glass)', paddingTop: '1.5rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                  <span style={{ fontSize: '0.75rem', color: B.subtle, fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Etiquetas</span>
+                  <button style={{ background: 'none', border: 'none', color: B.lime, cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center', fontSize: '0.85rem', fontWeight: '600', boxShadow: 'none', borderRadius: 0 }}>
+                    + Add
+                  </button>
+                </div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                  {selectedConversation.labels && selectedConversation.labels.length > 0 ? (
+                    selectedConversation.labels.map((label, idx) => (
+                      <span key={idx} style={{ background: 'rgba(168, 85, 247, 0.1)', color: B.lime, border: '1px solid rgba(168, 85, 247, 0.2)', padding: '4px 10px', borderRadius: '99px', fontSize: '0.75rem', fontWeight: '600' }}>
+                        {label}
+                      </span>
+                    ))
+                  ) : (
+                    <span style={{ fontSize: '0.8rem', color: B.subtle, fontStyle: 'italic' }}>Nenhuma etiqueta</span>
+                  )}
+                </div>
+              </div>
+
+            </div>
+          </div>
+        )}
+
+      </div>
+      </div>
     </div>
   );
 };

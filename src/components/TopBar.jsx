@@ -59,13 +59,21 @@ const Icons = {
       <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
       <polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
     </svg>
+  ),
+  Planos: () => (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+    </svg>
   )
 };
 
-const TopBar = ({ onLogout }) => {
+const TopBar = ({ onLogout, onOpenChat, onCloseChat }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+
+  const selectedExpert = localStorage.getItem('selectedExpert') || 'Usuário';
+  const expertInitial = selectedExpert.charAt(0).toUpperCase();
 
   // Se a rota for raiz, estamos no Hub e não mostramos os menus de Sender.
   const isHubPage = location.pathname === '/';
@@ -74,10 +82,8 @@ const TopBar = ({ onLogout }) => {
     { path: '/sender/dashboard', label: 'Visão Geral', icon: <Icons.Dashboard /> },
     { path: '/contacts',         label: 'Contatos',    icon: <Icons.Contacts /> },
     { path: '/campaigns',        label: 'Campanhas',   icon: <Icons.Campaigns /> },
-    { path: '/chat',             label: 'Bate-papo',   icon: <Icons.Chat /> },
     { path: '/bot-builder',      label: 'Meus Fluxos', icon: <Icons.Bot /> },
     { path: '/reports',          label: 'Relatórios',  icon: <Icons.Reports /> },
-    { path: '/settings',         label: 'Configurações', icon: <Icons.Settings /> },
   ];
 
   return (
@@ -101,7 +107,10 @@ const TopBar = ({ onLogout }) => {
       }}>
         <div style={{ display: 'flex', alignItems: 'center', flex: 1 }}>
           {/* Logo */}
-          <div style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }} onClick={() => navigate('/')}>
+          <div style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }} onClick={() => {
+            if (onCloseChat) onCloseChat();
+            navigate('/');
+          }}>
             <img src={logoImage} alt="MassFlow Logo" style={{ height: '50px', width: 'auto', objectFit: 'contain' }} />
           </div>
         </div>
@@ -133,16 +142,50 @@ const TopBar = ({ onLogout }) => {
         {/* Right Section */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flex: 1, justifyContent: 'flex-end' }}>
           
-          <button onClick={onLogout} className="topbar-logout-btn desktop-only" style={{ background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: 'none', padding: '8px 16px', borderRadius: '10px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }} title="Sair">
-            <Icons.Logout />
-            <span style={{ fontSize: '0.85rem', fontWeight: 700 }}>Sair</span>
-          </button>
+          {!isHubPage && (
+            <button onClick={onOpenChat} className="topbar-chat-btn" style={{ background: 'var(--accent-primary)', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '10px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', boxShadow: 'var(--shadow-sm)' }} title="Abrir Chat">
+              <Icons.Chat />
+              <span style={{ fontSize: '0.85rem', fontWeight: 700 }} className="desktop-only">Chat</span>
+            </button>
+          )}
+
+          {/* Profile Dropdown (Desktop Only) */}
+          <div className="profile-dropdown-container desktop-only" style={{ position: 'relative' }}>
+            <button 
+              onClick={() => {
+                const el = document.getElementById('profile-menu');
+                if (el) el.style.display = el.style.display === 'block' ? 'none' : 'block';
+              }} 
+              style={{ background: 'rgba(168, 85, 247, 0.1)', color: 'var(--accent-primary)', border: 'none', padding: '8px', borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '40px', height: '40px', boxShadow: 'none' }} title="Perfil">
+              <span style={{ fontWeight: 'bold', fontSize: '1rem' }}>{expertInitial}</span>
+            </button>
+
+            {/* Dropdown Menu */}
+            <div id="profile-menu" style={{ display: 'none', position: 'absolute', top: '100%', right: '0', marginTop: '10px', background: 'var(--bg-card)', border: '1px solid var(--border-glass)', borderRadius: '12px', boxShadow: 'var(--shadow-md)', minWidth: '180px', overflow: 'hidden', zIndex: 100 }}>
+              <div style={{ padding: '1rem', borderBottom: '1px solid var(--border-glass)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <span style={{ fontSize: '0.9rem', fontWeight: 'bold', color: 'var(--text-primary)' }}>{selectedExpert}</span>
+                <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>admin@massflow.com</span>
+              </div>
+              <button onClick={() => { navigate('/planos'); document.getElementById('profile-menu').style.display='none'; }} style={{ width: '100%', padding: '0.75rem 1rem', background: 'transparent', border: 'none', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-primary)', fontSize: '0.85rem', boxShadow: 'none', borderRadius: 0 }} onMouseOver={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.boxShadow = 'none'; }} onMouseOut={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.boxShadow = 'none'; }}>
+                <Icons.Planos />
+                Planos
+              </button>
+              <button onClick={() => { navigate('/settings'); document.getElementById('profile-menu').style.display='none'; }} style={{ width: '100%', padding: '0.75rem 1rem', background: 'transparent', border: 'none', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-primary)', fontSize: '0.85rem', boxShadow: 'none', borderRadius: 0 }} onMouseOver={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.boxShadow = 'none'; }} onMouseOut={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.boxShadow = 'none'; }}>
+                <Icons.Settings />
+                Configurações
+              </button>
+              <button onClick={onLogout} style={{ width: '100%', padding: '0.75rem 1rem', background: 'transparent', border: 'none', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', color: '#ef4444', fontSize: '0.85rem', boxShadow: 'none', borderRadius: 0 }} onMouseOver={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.boxShadow = 'none'; }} onMouseOut={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.boxShadow = 'none'; }}>
+                <Icons.Logout />
+                Sair
+              </button>
+            </div>
+          </div>
 
           {/* Mobile Menu Toggle */}
           <button 
             className="mobile-only menu-toggle-btn"
             onClick={() => setMenuOpen(!menuOpen)}
-            style={{ background: 'transparent', border: 'none', outline: 'none', color: 'var(--text-primary)', cursor: 'pointer', display: 'none', padding: '8px' }}
+            style={{ background: 'transparent', border: 'none', outline: 'none', color: 'var(--text-primary)', cursor: 'pointer', display: 'none', padding: '8px', boxShadow: 'none', borderRadius: 0 }}
           >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <line x1="3" y1="12" x2="21" y2="12"></line>
@@ -174,7 +217,15 @@ const TopBar = ({ onLogout }) => {
             ))}
             <div style={{ flex: 1 }}></div>
             <hr style={{ borderColor: 'var(--border-glass)', margin: '1rem 0' }} />
-            <button onClick={() => { onLogout(); setMenuOpen(false); }} className="mobile-drawer-link" style={{ color: '#ef4444', background: 'rgba(239, 68, 68, 0.1)', border: 'none', textAlign: 'left', width: '100%', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+            <button onClick={() => { navigate('/planos'); setMenuOpen(false); }} className="mobile-drawer-link" style={{ color: 'var(--text-primary)', background: 'transparent', border: 'none', textAlign: 'left', width: '100%', cursor: 'pointer', display: 'flex', alignItems: 'center', marginBottom: '8px', boxShadow: 'none', borderRadius: 0 }}>
+              <span style={{ marginRight: '12px' }}><Icons.Planos /></span>
+              Planos
+            </button>
+            <button onClick={() => { navigate('/settings'); setMenuOpen(false); }} className="mobile-drawer-link" style={{ color: 'var(--text-primary)', background: 'transparent', border: 'none', textAlign: 'left', width: '100%', cursor: 'pointer', display: 'flex', alignItems: 'center', marginBottom: '8px', boxShadow: 'none', borderRadius: 0 }}>
+              <span style={{ marginRight: '12px' }}><Icons.Settings /></span>
+              Configurações
+            </button>
+            <button onClick={() => { onLogout(); setMenuOpen(false); }} className="mobile-drawer-link" style={{ color: '#ef4444', background: 'transparent', border: 'none', textAlign: 'left', width: '100%', cursor: 'pointer', display: 'flex', alignItems: 'center', boxShadow: 'none', borderRadius: 0 }}>
               <span style={{ marginRight: '12px' }}><Icons.Logout /></span>
               Sair
             </button>

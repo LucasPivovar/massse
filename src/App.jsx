@@ -10,6 +10,7 @@ import Reports from './pages/Reports';
 import Settings from './pages/Settings';
 import Register from './pages/Register';
 import Financeiro from './pages/Financeiro';
+import Planos from './pages/Planos';
 import ClientDashboard from './pages/ClientDashboard';
 import BotBuilder from './pages/BotBuilder';
 import BotCreateFlow from './pages/BotCreateFlow';
@@ -23,6 +24,7 @@ import logoImage from './assets/logo_massflow.png';
 function App() {
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   useEffect(() => {
     if (theme === 'light') {
@@ -68,7 +70,7 @@ function App() {
         </Routes>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', width: '100%', minHeight: '100vh' }}>
-          <TopBar onLogout={handleLogout} />
+          <TopBar onLogout={handleLogout} onOpenChat={() => setIsChatOpen(true)} onCloseChat={() => setIsChatOpen(false)} />
 
           <div className="app-container" style={{ flex: 1 }}>
             <main className="main-content">
@@ -77,7 +79,6 @@ function App() {
                 <Route path="/sender/dashboard" element={<Dashboard token={token} />} />
                 <Route path="/contacts" element={<Contacts token={token} />} />
                 <Route path="/campaigns" element={<Campaigns token={token} />} />
-                <Route path="/chat" element={<Chat token={token} />} />
                 <Route path="/bot-builder" element={<BotBuilder />} />
                 <Route path="/bot-builder/new" element={<BotCreateFlow />} />
                 <Route path="/bot-builder/:id/edit" element={<BotFlowEditor />} />
@@ -86,11 +87,19 @@ function App() {
                 <Route path="/client-dashboard" element={<ClientDashboard token={token} />} />
                 <Route path="/reports" element={<Reports token={token} />} />
                 <Route path="/settings" element={<Settings token={token} theme={theme} setTheme={setTheme} />} />
+                <Route path="/planos" element={<Planos />} />
                 <Route path="/financial" element={<Financeiro token={token} />} />
                 <Route path="*" element={<Navigate to="/" />} />
               </Routes>
             </main>
           </div>
+          {isChatOpen && 
+            window.location.pathname !== '/' && 
+            window.location.pathname !== '/disparos' && 
+            window.location.pathname !== '/disparos/' && (
+              <Chat token={token} onClose={() => setIsChatOpen(false)} />
+            )
+          }
         </div>
       )}
     </Router>
