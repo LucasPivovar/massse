@@ -43,7 +43,7 @@ const UnifiedNode = ({ category, icon, color, note, draggable, selected, customH
   return (
     <div style={{
       background: '#ffffff',
-      border: selected ? '2.5px solid #a855f7' : '1.5px solid #cbd5e1',
+      border: selected ? '2.5px solid #a855f7' : '2px solid #0f172a',
       boxShadow: selected ? '0 0 18px rgba(168, 85, 247, 0.4)' : '0 10px 25px rgba(0,0,0,0.06)',
       borderRadius: '14px',
       padding: '16px',
@@ -68,7 +68,7 @@ const UnifiedNode = ({ category, icon, color, note, draggable, selected, customH
       </div>
 
       {note && (
-        <div style={{ background: '#fef3c7', border: '1px dashed #f59e0b', borderRadius: '8px', padding: '6px 10px', fontSize: '10px', color: '#b45309', margin: '4px 0', display: 'flex', alignItems: 'center', gap: '4px', flexShrink: 0 }}>
+        <div style={{ background: '#fffbeb', border: '1px dashed #d97706', borderRadius: '8px', padding: '6px 10px', fontSize: '10px', color: '#b45309', margin: '4px 0', display: 'flex', alignItems: 'center', gap: '4px', flexShrink: 0 }}>
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
           <span style={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>{note}</span>
         </div>
@@ -81,7 +81,7 @@ const UnifiedNode = ({ category, icon, color, note, draggable, selected, customH
         background: '#f8fafc',
         padding: '10px 12px',
         borderRadius: '10px',
-        border: '1px solid #e2e8f0',
+        border: '1px solid #94a3b8',
         lineHeight: '1.4'
       }}>
         {children}
@@ -114,7 +114,7 @@ const MessageNode = ({ data, draggable, selected }) => {
           {buttons.map((btn, idx) => (
             <div key={idx} style={{
               background: '#ffffff',
-              border: '1px solid #cbd5e1',
+              border: '1px solid #94a3b8',
               borderRadius: '8px',
               padding: '6px 10px',
               fontSize: '11px',
@@ -151,7 +151,7 @@ const QuestionNode = ({ data, draggable, selected }) => {
       {fields.length > 0 ? (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
           {fields.map((f, idx) => (
-            <div key={idx} style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '6px', padding: '6px 8px', fontSize: '11px', fontWeight: '700', color: '#475569' }}>
+            <div key={idx} style={{ background: '#ffffff', border: '1px solid #94a3b8', borderRadius: '6px', padding: '6px 8px', fontSize: '11px', fontWeight: '700', color: '#475569' }}>
               [{f.type.toUpperCase()}] {f.label || 'Campo'}
             </div>
           ))}
@@ -226,7 +226,7 @@ const ConditionNode = ({ id, data, draggable, selected }) => {
               fontWeight: '800', 
               color: '#0f172a', 
               paddingBottom: '6px', 
-              borderBottom: '1px solid #e2e8f0',
+              borderBottom: '1px solid #94a3b8',
               position: 'relative'
             }}>
               <span style={{ color: '#0d9488' }}>Condição {idx + 1}: {cond.value || 'Contém'}</span>
@@ -372,19 +372,43 @@ const DelayNode = ({ data, draggable, selected }) => {
 // ── INNER FLOW EDITOR CONTENT COMPONENT ──────────────────────────────────────
 
 function FlowEditorContent({ token, setIsSidebarOpen }) {
-  const { platform } = useParams();
+  const { id } = useParams();
+  const flowId = isNaN(id) ? id : Number(id);
   const navigate = useNavigate();
   const { zoomIn, zoomOut, fitView, setCenter, screenToFlowPosition } = useReactFlow();
 
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [flowName, setFlowName] = useState('');
+  const [flowActive, setFlowActive] = useState(true);
+  const [loadingFlow, setLoadingFlow] = useState(true);
 
   useEffect(() => {
-    if (platform) {
-      setNodes(initialNodesByPlatform[platform] || []);
-      setEdges(initialEdgesByPlatform[platform] || []);
+    if (!flowId) {
+      navigate('/bot-builder');
+      return;
     }
-  }, [platform, setNodes, setEdges]);
+    const loadFlow = async () => {
+      const flow = await fetchBotFlowById(flowId);
+      if (!flow) {
+        toast.error('Fluxo não encontrado');
+        navigate('/bot-builder');
+        return;
+      }
+      setFlowName(flow.name);
+      setFlowActive(flow.isActive);
+      if (flow.nodes?.length) {
+        setNodes(flow.nodes.map(n => ({ ...n, draggable: n.draggable !== false })));
+      } else {
+        setNodes([
+          { id: '1', type: 'message', position: { x: 150, y: 150 }, data: { label: 'Boas-vindas', content: 'Olá! Como posso ajudar você?' }, draggable: true }
+        ]);
+      }
+      if (flow.edges?.length) setEdges(flow.edges);
+      setLoadingFlow(false);
+    };
+    loadFlow();
+  }, [flowId, navigate, setNodes, setEdges]);
 
   // States
   const [selectedNode, setSelectedNode] = useState(null);
@@ -421,10 +445,6 @@ function FlowEditorContent({ token, setIsSidebarOpen }) {
   const [isAiGenerating, setIsAiGenerating] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
-  if (loadingFlow) {
-    return <div style={{ padding: '2rem', color: '#9CA3AF', background: '#000', minHeight: '100vh' }}>Carregando editor...</div>;
-  }
-  
   // Global AI Flow Creator states
   const [isGlobalAiOpen, setIsGlobalAiOpen] = useState(false);
   const [globalAiPrompt, setGlobalAiPrompt] = useState('');
@@ -945,12 +965,25 @@ Layout guidelines:
   const onPaneContextMenu = useCallback((event) => {
     event.preventDefault();
     const rect = event.currentTarget.getBoundingClientRect();
-    setClickCoords({
-      x: event.clientX - rect.left,
-      y: event.clientY - rect.top
-    });
+    const clickX = event.clientX - rect.left;
+    const clickY = event.clientY - rect.top;
+    
+    const popupWidth = 320;
+    const popupHeight = nodes.length > 0 ? 520 : 380;
+    
+    let x = clickX;
+    if (clickX + popupWidth > rect.width) {
+      x = Math.max(10, clickX - popupWidth);
+    }
+    
+    let y = clickY;
+    if (clickY + popupHeight > rect.height) {
+      y = Math.max(10, clickY - popupHeight);
+    }
+    
+    setClickCoords({ x, y });
     setIsAddStepOpen(true);
-  }, []);
+  }, [nodes]);
 
   const addNewStep = (type) => {
     const id = (nodes.length + 1).toString();
@@ -998,37 +1031,51 @@ Layout guidelines:
     setIsAddStepOpen(false);
   };
 
-  const handleSave = () => {
-    toast.success('Automação publicada com sucesso! 🎉', {
-      duration: 3000,
-      style: {
-        background: 'rgba(10, 16, 6, 0.97)',
-        color: '#E5E5E5',
-        border: '1px solid rgba(168, 85, 247, 0.3)',
-        backdropFilter: 'blur(12px)',
-        fontFamily: 'Outfit, sans-serif',
-        fontWeight: '600',
-        fontSize: '14px'
-      },
-      iconTheme: { primary: '#a855f7', secondary: '#000' }
+  const handleSave = async () => {
+    const ok = await saveBotFlow(flowId, {
+      nodes,
+      edges,
+      isActive: flowActive,
     });
+    if (ok) {
+      toast.success('Automação publicada com sucesso! 🎉', {
+        duration: 3000,
+        style: {
+          background: 'rgba(10, 16, 6, 0.97)',
+          color: '#E5E5E5',
+          border: '1px solid rgba(168, 85, 247, 0.3)',
+          backdropFilter: 'blur(12px)',
+          fontFamily: 'Outfit, sans-serif',
+          fontWeight: '600',
+          fontSize: '14px'
+        },
+        iconTheme: { primary: '#a855f7', secondary: '#000' }
+      });
+      navigate('/bot-builder');
+    } else {
+      toast.error('Erro ao salvar o fluxo');
+    }
   };
 
+  if (loadingFlow) {
+    return <div style={{ padding: '2rem', color: '#9CA3AF', background: '#000', minHeight: '100vh' }}>Carregando editor...</div>;
+  }
+
   return (
-    <div className="page-container flow-editor-container" style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 4.5rem)', padding: '2rem 3rem', background: '#000000', color: '#E5E5E5', position: 'relative', overflow: 'hidden' }}>
+    <div className="page-container flow-editor-container" style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 4.5rem)', padding: '2rem 3rem', background: '#f8fafc', color: '#0f172a', position: 'relative', overflow: 'hidden' }}>
       
       {/* CSS configurations: Solid whites, zoom functionality and visual styles */}
       <style dangerouslySetInnerHTML={{ __html: `
-        /* Premium dark glassmorphic button configuration */
+        /* Premium light button configuration (no dark metalized glass effects) */
         .flow-editor-container button {
-          background: rgba(18, 18, 18, 0.8) !important;
-          border: 1px solid rgba(255, 255, 255, 0.08) !important;
-          color: #9CA3AF !important;
+          background: #ffffff !important;
+          border: 1px solid #94a3b8 !important;
+          color: #334155 !important;
           padding: 0.6rem 1.2rem !important;
           border-radius: 10px !important;
           font-size: 0.85rem !important;
           font-weight: 600 !important;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
+          box-shadow: 0 1px 2px rgba(0,0,0,0.05) !important;
           cursor: pointer !important;
           display: inline-flex !important;
           align-items: center !important;
@@ -1037,36 +1084,53 @@ Layout guidelines:
           transition: all 0.2s ease !important;
         }
 
+        /* Transparent close button styles ('x') to prevent white background boxes */
+        .flow-editor-container button.transparent-close-btn {
+          background: transparent !important;
+          border: none !important;
+          box-shadow: none !important;
+          padding: 4px 8px !important;
+          color: inherit !important;
+          display: inline-flex !important;
+          min-width: auto !important;
+          width: auto !important;
+          height: auto !important;
+          cursor: pointer !important;
+        }
+
+        .flow-editor-container button.transparent-close-btn:hover {
+          background: transparent !important;
+          border: none !important;
+          opacity: 0.7 !important;
+        }
+
         .flow-editor-container button:hover {
-          background: rgba(26, 26, 26, 0.95) !important;
-          border-color: rgba(168, 85, 247, 0.4) !important;
+          background: #f8fafc !important;
+          border-color: #a855f7 !important;
           color: #a855f7 !important;
-          transform: translateY(-1px) !important;
         }
 
         .flow-editor-container button.publish-btn {
           background: #a855f7 !important;
-          color: #000000 !important;
+          color: #ffffff !important;
           border: 1px solid #a855f7 !important;
           font-weight: 800 !important;
-          box-shadow: 0 0 15px rgba(168, 85, 247, 0.3) !important;
+          box-shadow: 0 4px 12px rgba(168, 85, 247, 0.2) !important;
         }
 
         .flow-editor-container button.publish-btn:hover {
           background: #9333ea !important;
           border-color: #9333ea !important;
-          box-shadow: 0 0 20px rgba(168, 85, 247, 0.5) !important;
-          color: #000000 !important;
+          box-shadow: 0 6px 16px rgba(168, 85, 247, 0.3) !important;
+          color: #ffffff !important;
         }
 
         /* Tools menu */
         .flow-editor-container .floating-tools-bar {
-          background: rgba(10, 10, 10, 0.8) !important;
-          backdrop-filter: blur(12px) !important;
-          -webkit-backdrop-filter: blur(12px) !important;
-          border: 1px solid rgba(255, 255, 255, 0.08) !important;
+          background: #ffffff !important;
+          border: 1px solid #94a3b8 !important;
           border-radius: 12px !important;
-          box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important;
+          box-shadow: 0 4px 20px rgba(0,0,0,0.06) !important;
           padding: 8px 12px !important;
           display: flex !important;
           gap: 12px !important;
@@ -1079,7 +1143,7 @@ Layout guidelines:
           border: none !important;
           box-shadow: none !important;
           padding: 6px !important;
-          color: #9CA3AF !important;
+          color: #64748b !important;
           cursor: pointer !important;
           display: flex !important;
           align-items: center !important;
@@ -1090,23 +1154,22 @@ Layout guidelines:
           color: #a855f7 !important;
         }
 
-        /* 🛠️ PREMIUM 400px DARK SIDEBAR DRAWER */
+        /* 🛠️ PREMIUM 400px LIGHT SIDEBAR DRAWER */
         .flow-editor-container .node-edit-sidebar {
           position: absolute !important;
           top: 0 !important;
           right: 0 !important;
           width: 400px !important;
           height: 100% !important;
-          background: rgba(10, 10, 10, 0.95) !important;
-          backdrop-filter: blur(16px) !important;
-          -webkit-backdrop-filter: blur(16px) !important;
-          border-left: 1px solid rgba(255, 255, 255, 0.08) !important;
-          box-shadow: -15px 0 40px rgba(0,0,0,0.7) !important;
+          background: #ffffff !important;
+          border-left: 1px solid #94a3b8 !important;
+          box-shadow: -5px 0 25px rgba(0,0,0,0.05) !important;
           z-index: 100 !important;
           display: flex !important;
           flex-direction: column !important;
           animation: slideIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) both !important;
           font-family: 'Plus Jakarta Sans', sans-serif !important;
+          color: #0f172a !important;
         }
 
         @keyframes slideIn {
@@ -1118,11 +1181,10 @@ Layout guidelines:
         .flow-editor-container .add-step-overlay {
           position: fixed !important;
           width: 320px !important;
-          background: rgba(15, 15, 15, 0.95) !important;
-          backdrop-filter: blur(16px) !important;
-          border: 1px solid rgba(255, 255, 255, 0.08) !important;
+          background: #ffffff !important;
+          border: 1px solid #94a3b8 !important;
           border-radius: 16px !important;
-          box-shadow: 0 20px 50px rgba(0,0,0,0.7), 0 0 25px rgba(168, 85, 247, 0.05) !important;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.08) !important;
           z-index: 200 !important;
           padding: 20px !important;
           font-family: 'Plus Jakarta Sans', sans-serif !important;
@@ -1139,19 +1201,19 @@ Layout guidelines:
           align-items: center !important;
           gap: 14px !important;
           padding: 10px 14px !important;
-          border: 1px dashed rgba(255, 255, 255, 0.08) !important;
+          border: 1px dashed #94a3b8 !important;
           border-radius: 10px !important;
           margin-bottom: 8px !important;
           cursor: pointer !important;
           transition: all 0.2s !important;
-          background: rgba(255,255,255,0.02) !important;
-          color: #cbd5e1 !important;
+          background: #f8fafc !important;
+          color: #334155 !important;
         }
 
         .flow-editor-container .add-step-item:hover {
           border-color: #a855f7 !important;
           background: rgba(168, 85, 247, 0.05) !important;
-          color: #ffffff !important;
+          color: #a855f7 !important;
           transform: translateY(-1px) !important;
         }
 
@@ -1162,36 +1224,38 @@ Layout guidelines:
           display: flex !important;
           align-items: center !important;
           justify-content: center !important;
+          background: #f1f5f9 !important;
+          color: #475569 !important;
         }
 
         .flow-editor-container .premium-dark-input {
-          background: rgba(0, 0, 0, 0.5) !important;
-          border: 1px solid rgba(255,255,255,0.08) !important;
+          background: #ffffff !important;
+          border: 1px solid #94a3b8 !important;
           border-radius: 8px !important;
-          color: #fff !important;
+          color: #0f172a !important;
           padding: 10px 12px !important;
           font-size: 0.85rem !important;
-          box-shadow: inset 0 2px 4px rgba(0,0,0,0.5) !important;
+          box-shadow: inset 0 1px 2px rgba(0,0,0,0.05) !important;
           box-sizing: border-box !important;
           width: 100% !important;
           transition: all 0.2s !important;
         }
 
         .flow-editor-container .premium-dark-input:focus {
-          border-color: rgba(168, 85, 247, 0.4) !important;
-          background: rgba(10, 16, 6, 0.8) !important;
-          box-shadow: inset 0 2px 4px rgba(0,0,0,0.5), 0 0 8px rgba(168, 85, 247,0.15) !important;
+          border-color: #a855f7 !important;
+          background: #ffffff !important;
+          box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.15) !important;
           outline: none !important;
         }
 
         /* Custom MiniMap inside bottom left overlaying canvas */
         .flow-editor-container .react-flow__minimap {
-          background: rgba(10, 10, 10, 0.85) !important;
+          background: #000000 !important;
           backdrop-filter: blur(12px) !important;
           -webkit-backdrop-filter: blur(12px) !important;
-          border: 1px solid rgba(255, 255, 255, 0.08) !important;
+          border: 2px solid #000000 !important;
           border-radius: 12px !important;
-          box-shadow: 0 8px 24px rgba(0,0,0,0.5) !important;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
           overflow: hidden !important;
           position: absolute !important;
           bottom: 20px !important;
@@ -1201,7 +1265,9 @@ Layout guidelines:
         }
 
         .flow-editor-container .react-flow__minimap-mask {
-          fill: rgba(0, 0, 0, 0.55) !important;
+          fill: rgba(255, 255, 255, 0.15) !important;
+          stroke: #a855f7 !important;
+          stroke-width: 1.5px !important;
         }
 
         /* Remove hand cursor from node cards on hover, keep standard arrow cursor */
@@ -1232,26 +1298,32 @@ Layout guidelines:
           left: 0 !important;
           transform: none !important;
           border-radius: 14px !important;
-          background: rgba(168, 85, 247, 0.04) !important;
-          border: 2px dashed rgba(168, 85, 247, 0.25) !important;
-          box-shadow: 0 0 12px rgba(168, 85, 247, 0.12) !important;
+          background: rgba(168, 85, 247, 0.08) !important;
+          border: 2.5px dashed #a855f7 !important;
+          box-shadow: 0 0 15px rgba(168, 85, 247, 0.25) !important;
           z-index: 9999 !important;
-          opacity: 0.75 !important;
+          opacity: 0.85 !important;
           transition: background 0.15s, border-color 0.15s !important;
         }
 
         .flow-editor-container .react-flow__connection-connecting .react-flow__handle.react-flow__handle-target:hover {
-          background: rgba(168, 85, 247, 0.1) !important;
+          background: rgba(168, 85, 247, 0.12) !important;
           border-color: #a855f7 !important;
-          box-shadow: 0 0 15px rgba(168, 85, 247, 0.3) !important;
+          box-shadow: 0 0 20px rgba(168, 85, 247, 0.45) !important;
+        }
+
+        /* Make dragged connection line bold and highly visible */
+        .flow-editor-container .react-flow__connection-path {
+          stroke: #a855f7 !important;
+          stroke-width: 3.5px !important;
         }
 
         /* Grid elements inside node editors */
         .flow-editor-container .dashed-grid-btn {
-          border: 1px dashed rgba(255,255,255,0.08) !important;
+          border: 1px dashed #94a3b8 !important;
           border-radius: 8px !important;
-          background: rgba(255,255,255,0.01) !important;
-          color: #9CA3AF !important;
+          background: #f8fafc !important;
+          color: #475569 !important;
           padding: 8px 10px !important;
           font-size: 11px !important;
           font-weight: 700 !important;
@@ -1264,7 +1336,7 @@ Layout guidelines:
 
         .flow-editor-container .dashed-grid-btn:hover {
           border-color: #a855f7 !important;
-          color: #fff !important;
+          color: #a855f7 !important;
           background: rgba(168, 85, 247, 0.03) !important;
         }
 
@@ -1377,17 +1449,40 @@ Layout guidelines:
         marginBottom: '10px',
         flexShrink: 0
       }}>
+        {/* Back and Title */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginRight: '16px' }}>
+          <button 
+            type="button" 
+            onClick={() => navigate('/bot-builder')} 
+            style={{ 
+              background: '#ffffff', 
+              border: '1px solid #cbd5e1',
+              color: '#475569',
+              padding: '6px 12px',
+              borderRadius: '8px',
+              fontSize: '12px'
+            }}
+          >
+            ← Voltar
+          </button>
+          <span style={{ fontSize: '14px', fontWeight: '800', color: '#0f172a', whiteSpace: 'nowrap' }}>
+            {flowName || 'Editor de Fluxo'}
+          </span>
+        </div>
 
         {/* Tool buttons group */}
         <div style={{
           display: 'flex', alignItems: 'center', gap: '2px',
-          background: 'rgba(255,255,255,0.03)',
-          border: '1px solid rgba(255,255,255,0.07)',
+          background: '#ffffff',
+          border: '1px solid #cbd5e1',
           borderRadius: '10px', padding: '4px 6px'
         }}>
           {/* Add step */}
           <button
-            onClick={() => setIsAddStepOpen(true)}
+            onClick={() => {
+              setClickCoords({ x: 50, y: 50 });
+              setIsAddStepOpen(true);
+            }}
             className="tool-icon-btn"
             title="Adicionar Etapa"
             style={{ gap: '5px', padding: '5px 9px', borderRadius: '7px' }}
@@ -1396,7 +1491,7 @@ Layout guidelines:
             <span style={{ fontSize: '11px', fontWeight: '700' }}>Etapa</span>
           </button>
 
-          <div style={{ width: '1px', height: '16px', background: 'rgba(255,255,255,0.08)', margin: '0 2px' }} />
+          <div style={{ width: '1px', height: '16px', background: '#cbd5e1', margin: '0 2px' }} />
 
           {/* Zoom Out */}
           <button onClick={() => zoomOut()} className="tool-icon-btn" title="Diminuir Zoom" style={{ borderRadius: '7px', padding: '5px 8px' }}>
@@ -1414,64 +1509,8 @@ Layout guidelines:
           </button>
         </div>
 
-        {/* Search bar */}
-        <div style={{
-          flex: 1, maxWidth: '220px', display: 'flex', alignItems: 'center', gap: '6px',
-          background: 'rgba(255,255,255,0.03)',
-          border: '1px solid rgba(255,255,255,0.07)',
-          borderRadius: '8px', padding: '3px 8px'
-        }}>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-          <input
-            type="text"
-            placeholder="Buscar nó..."
-            value={searchQuery}
-            onChange={(e) => handleSearch(e.target.value)}
-            style={{
-              background: 'transparent', border: 'none', outline: 'none',
-              color: '#E5E5E5', fontSize: '11.5px', fontWeight: '600',
-              fontFamily: 'Outfit, sans-serif', width: '100%'
-            }}
-          />
-        </div>
-
         {/* Spacer */}
         <div style={{ flex: 1 }} />
-
-        {/* Gerar com IA */}
-        <button 
-          onClick={() => {
-            toast.error("Gerador por IA em desenvolvimento! 🚀", {
-              duration: 3000,
-              style: {
-                background: 'rgba(20, 20, 20, 0.95)',
-                color: '#cbd5e1',
-                border: '1px solid rgba(124, 58, 237, 0.3)',
-                fontFamily: 'Outfit, sans-serif',
-                fontWeight: '700'
-              }
-            });
-          }}
-          className="tool-icon-btn" 
-          title="Criar Fluxo Inteligente com IA" 
-          style={{ 
-            gap: '6px', 
-            padding: '6px 14px', 
-            borderRadius: '8px', 
-            background: 'linear-gradient(135deg, #7c3aed, #4f46e5)',
-            color: '#ffffff',
-            border: 'none',
-            fontSize: '11.5px',
-            fontWeight: '800',
-            boxShadow: '0 4px 12px rgba(124, 58, 237, 0.3)',
-            display: 'flex',
-            alignItems: 'center',
-            cursor: 'pointer',
-            marginRight: '8px'
-          }}
-        >
-          <span style={{ fontSize: '12px' }}>✨</span> Gerar com IA
-        </button>
 
         {/* Publish */}
         <button onClick={handleSave} className="publish-btn" style={{ padding: '0.45rem 1.3rem', borderRadius: '8px', fontSize: '12px' }}>
@@ -1482,12 +1521,12 @@ Layout guidelines:
       {/* Editor Canvas Container */}
       <div style={{
         flex: 1,
-        background: '#161824',
-        border: '1px solid rgba(255, 255, 255, 0.08)',
+        background: '#f8fafc',
+        border: '1px solid #e2e8f0',
         borderRadius: '20px',
         overflow: 'hidden',
         position: 'relative',
-        boxShadow: 'inset 0 4px 30px rgba(0,0,0,0.5)'
+        boxShadow: 'inset 0 2px 10px rgba(0,0,0,0.03)'
       }}>
         
         <ReactFlow
@@ -1523,7 +1562,7 @@ Layout guidelines:
             }}
             position="bottom-left"
           />
-          <Background variant="dots" color="rgba(255, 255, 255, 0.22)" gap={20} size={1.5} />
+          <Background variant="dots" color="#475569" gap={20} size={1.5} style={{ opacity: 0.7 }} />
         </ReactFlow>
 
         {/* 🛠️ STEP SELECTOR OVERLAY (Screenshot 2 popup - Click coordinates) */}
@@ -1538,10 +1577,10 @@ Layout guidelines:
             onClick={(e) => e.stopPropagation()}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
-              <span style={{ fontSize: '14px', fontWeight: '800', color: '#ffffff' }}>Adicionar etapa</span>
+              <span style={{ fontSize: '14px', fontWeight: '800', color: '#0f172a' }}>Adicionar etapa</span>
               <button 
                 onClick={() => setIsAddStepOpen(false)}
-                style={{ background: 'rgba(255,255,255,0.05)', border: 'none', color: '#cbd5e1', padding: '4px 10px', fontSize: '11px', borderRadius: '6px', cursor: 'pointer' }}
+                style={{ background: '#f1f5f9', border: '1px solid #cbd5e1', color: '#475569', padding: '4px 10px', fontSize: '11px', borderRadius: '6px', cursor: 'pointer' }}
               >
                 Cancelar
               </button>
@@ -1551,7 +1590,7 @@ Layout guidelines:
               
               {/* Mensagem */}
               <div className="add-step-item" onClick={() => addNewStep('message')}>
-                <div className="step-icon-wrapper" style={{ background: 'rgba(255,255,255,0.05)', color: '#ffffff' }}>
+                <div className="step-icon-wrapper" style={{ background: '#f1f5f9', color: '#475569' }}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                 </div>
                 <div style={{ fontSize: '12.5px', fontWeight: '700' }}>Mensagem</div>
@@ -1559,7 +1598,7 @@ Layout guidelines:
 
               {/* Pergunta */}
               <div className="add-step-item" onClick={() => addNewStep('question')}>
-                <div className="step-icon-wrapper" style={{ background: 'rgba(59, 130, 246, 0.15)', color: '#60a5fa' }}>
+                <div className="step-icon-wrapper" style={{ background: 'rgba(59, 130, 246, 0.15)', color: '#2563eb' }}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                 </div>
                 <div style={{ fontSize: '12.5px', fontWeight: '700' }}>Pergunta</div>
@@ -1567,7 +1606,7 @@ Layout guidelines:
 
               {/* Ação */}
               <div className="add-step-item" onClick={() => addNewStep('action')}>
-                <div className="step-icon-wrapper" style={{ background: 'rgba(245, 158, 11, 0.15)', color: '#f59e0b' }}>
+                <div className="step-icon-wrapper" style={{ background: 'rgba(245, 158, 11, 0.15)', color: '#d97706' }}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
                 </div>
                 <div style={{ fontSize: '12.5px', fontWeight: '700' }}>Ação</div>
@@ -1575,7 +1614,7 @@ Layout guidelines:
 
               {/* Condição */}
               <div className="add-step-item" onClick={() => addNewStep('condition')}>
-                <div className="step-icon-wrapper" style={{ background: 'rgba(20, 184, 166, 0.15)', color: '#2dd4bf' }}>
+                <div className="step-icon-wrapper" style={{ background: 'rgba(20, 184, 166, 0.15)', color: '#0d9488' }}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
                 </div>
                 <div style={{ fontSize: '12.5px', fontWeight: '700' }}>Condição</div>
@@ -1583,7 +1622,7 @@ Layout guidelines:
 
               {/* Dividir Teste A/B */}
               <div className="add-step-item" onClick={() => addNewStep('split')}>
-                <div className="step-icon-wrapper" style={{ background: 'rgba(168, 85, 247, 0.15)', color: '#c084fc' }}>
+                <div className="step-icon-wrapper" style={{ background: 'rgba(168, 85, 247, 0.15)', color: '#9333ea' }}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M4 12V4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8M12 2v20M2 18l10 4 10-4"/></svg>
                 </div>
                 <div style={{ fontSize: '12.5px', fontWeight: '700' }}>Dividir (Teste A/B)</div>
@@ -1591,7 +1630,7 @@ Layout guidelines:
 
               {/* E-mail */}
               <div className="add-step-item" onClick={() => addNewStep('email')} style={{ position: 'relative' }}>
-                <div className="step-icon-wrapper" style={{ background: 'rgba(219, 39, 119, 0.15)', color: '#f472b6' }}>
+                <div className="step-icon-wrapper" style={{ background: 'rgba(219, 39, 119, 0.15)', color: '#db2777' }}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
                 </div>
                 <div style={{ fontSize: '12.5px', fontWeight: '700' }}>E-mail</div>
@@ -1599,7 +1638,7 @@ Layout guidelines:
 
               {/* Ir Para */}
               <div className="add-step-item" onClick={() => addNewStep('goto')}>
-                <div className="step-icon-wrapper" style={{ background: 'rgba(236, 72, 153, 0.15)', color: '#f472b6' }}>
+                <div className="step-icon-wrapper" style={{ background: 'rgba(236, 72, 153, 0.15)', color: '#db2777' }}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M18 8h6v6"/><path d="M24 8L14 18l-6-6-8 8"/></svg>
                 </div>
                 <div style={{ fontSize: '12.5px', fontWeight: '700' }}>Ir para</div>
@@ -1607,7 +1646,7 @@ Layout guidelines:
 
                {/* Atraso */}
               <div className="add-step-item" onClick={() => addNewStep('delay')}>
-                <div className="step-icon-wrapper" style={{ background: 'rgba(245, 158, 11, 0.15)', color: '#fbbf24' }}>
+                <div className="step-icon-wrapper" style={{ background: 'rgba(245, 158, 11, 0.15)', color: '#d97706' }}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                 </div>
                 <div style={{ fontSize: '12.5px', fontWeight: '700' }}>Atraso Inteligente</div>
@@ -1617,8 +1656,8 @@ Layout guidelines:
 
             {/* Etapas existentes section matching Screenshot 1 */}
             {nodes.length > 0 && (
-              <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', marginTop: '14px', paddingTop: '14px' }}>
-                <span style={{ fontSize: '11px', fontWeight: '800', color: '#9CA3AF', display: 'block', marginBottom: '8px' }}>Etapas existentes</span>
+              <div style={{ borderTop: '1px solid #e2e8f0', marginTop: '14px', paddingTop: '14px' }}>
+                <span style={{ fontSize: '11px', fontWeight: '800', color: '#64748b', display: 'block', marginBottom: '8px' }}>Etapas existentes</span>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', maxHeight: '120px', overflowY: 'auto' }}>
                   {nodes.map(n => (
                     <div 
@@ -1647,16 +1686,14 @@ Layout guidelines:
           <div className="node-edit-sidebar">
             
             {/* Sidebar Tab Header */}
-            <div style={{ display: 'flex', borderBottom: '1px solid rgba(255,255,255,0.06)', background: 'rgba(20,20,20,0.5)', height: '48px', alignItems: 'center', padding: '0 8px', justifyContent: 'space-between', flexShrink: 0 }}>
+            <div style={{ display: 'flex', borderBottom: '1px solid #94a3b8', background: '#f1f5f9', height: '48px', alignItems: 'center', padding: '0 8px', justifyContent: 'space-between', flexShrink: 0 }}>
               <div style={{ display: 'flex', flex: 1 }}>
-                {['Editar', 'Gerar por IA ✨', 'Guia'].map((tab) => {
-                  const tabKey = tab.replace(' ✨', '');
-                  const isActive = activeTab === tabKey || (tab === 'Gerar por IA ✨' && activeTab === 'IA');
-                  const tabId = tab === 'Gerar por IA ✨' ? 'IA' : tab;
+                {['Editar', 'Guia'].map((tab) => {
+                  const isActive = activeTab === tab;
                   return (
                     <span
                       key={tab}
-                      onClick={() => setActiveTab(tabId)}
+                      onClick={() => setActiveTab(tab)}
                       style={{
                         flex: 1,
                         textAlign: 'center',
@@ -1679,7 +1716,8 @@ Layout guidelines:
               </div>
               <button 
                 onClick={closeSidebar}
-                style={{ background: 'transparent', border: 'none', color: '#64748b', fontSize: '18px', cursor: 'pointer', padding: '4px 8px', display: 'flex', alignItems: 'center', flexShrink: 0 }}
+                className="transparent-close-btn"
+                style={{ fontSize: '18px', color: '#64748b' }}
               >
                 &times;
               </button>
@@ -1691,14 +1729,14 @@ Layout guidelines:
               {activeTab === 'Editar' ? (
                 <>
                   {/* Node Header Info */}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '12px', padding: '12px' }}>
-                    <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'rgba(255, 255, 255, 0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: '#f8fafc', border: '1px solid #94a3b8', borderRadius: '12px', padding: '12px' }}>
+                    <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: '#e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       {selectedNode.type === 'email' ? (
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#db2777" strokeWidth="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
                       ) : selectedNode.type === 'question' ? (
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2.5"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                       ) : (
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#E5E5E5" strokeWidth="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                       )}
                     </div>
                     <div style={{ flex: 1 }}>
@@ -1707,14 +1745,14 @@ Layout guidelines:
                         className="premium-dark-input"
                         value={editLabel} 
                         onChange={(e) => updateSelectedNode('label', e.target.value)}
-                        style={{ border: 'none', fontSize: '13px', fontWeight: '800', color: '#ffffff', width: '100%', padding: 0, background: 'transparent', boxShadow: 'none' }}
+                        style={{ border: 'none', fontSize: '13px', fontWeight: '800', color: '#0f172a', width: '100%', padding: 0, background: 'transparent', boxShadow: 'none' }}
                       />
                       <div style={{ fontSize: '11px', color: '#64748b' }}>Identificação do Bloco</div>
                     </div>
                   </div>
 
                   {/* Dark-Gold Note area */}
-                  <div style={{ background: 'rgba(245, 158, 11, 0.06)', border: '1px dashed rgba(245, 158, 11, 0.3)', borderRadius: '10px', padding: '10px', display: 'flex', alignItems: 'flex-start', gap: '6px' }}>
+                  <div style={{ background: '#fffbeb', border: '1px dashed #d97706', borderRadius: '10px', padding: '10px', display: 'flex', alignItems: 'flex-start', gap: '6px' }}>
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="2.5" style={{ marginTop: '2px' }}><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
                     <textarea 
                       placeholder="adicionar nota ..."
@@ -1723,7 +1761,7 @@ Layout guidelines:
                       style={{
                         background: 'transparent',
                         border: 'none',
-                        color: '#f59e0b',
+                        color: '#b45309',
                         fontSize: '12px',
                         fontFamily: 'inherit',
                         width: '100%',
@@ -1776,7 +1814,7 @@ Layout guidelines:
                       </div>
 
                       {(selectedNode.data.emailTemplate === '==No Template==' || !selectedNode.data.emailTemplate) && (
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '14px' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', borderTop: '1px solid #94a3b8', paddingTop: '14px' }}>
                           <div>
                             <label style={{ fontSize: '12px', fontWeight: '800', color: '#9CA3AF', display: 'block', marginBottom: '6px' }}>Assunto do E-mail</label>
                             <input 
@@ -1824,7 +1862,7 @@ Layout guidelines:
                         {selectedNode.data.fields && selectedNode.data.fields.length > 0 ? (
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '12px' }}>
                             {selectedNode.data.fields.map((field, idx) => (
-                              <div key={idx} style={{ display: 'flex', gap: '6px', alignItems: 'center', background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '8px', padding: '8px 12px' }}>
+                              <div key={idx} style={{ display: 'flex', gap: '6px', alignItems: 'center', background: '#f8fafc', border: '1px solid #94a3b8', borderRadius: '8px', padding: '8px 12px' }}>
                                 <span style={{ fontSize: '10px', fontWeight: '900', color: '#a855f7', textTransform: 'uppercase' }}>{field.type}</span>
                                 <input 
                                   type="text" 
@@ -1834,14 +1872,15 @@ Layout guidelines:
                                     const updated = selectedNode.data.fields.map((f, i) => i === idx ? { ...f, label: e.target.value } : f);
                                     updateSelectedNode('fields', updated);
                                   }}
-                                  style={{ background: 'transparent', border: 'none', fontSize: '12px', fontWeight: '700', color: '#ffffff', flex: 1, padding: 0, boxShadow: 'none' }}
+                                  style={{ background: 'transparent', border: 'none', fontSize: '12px', fontWeight: '700', color: '#0f172a', flex: 1, padding: 0, boxShadow: 'none' }}
                                 />
                                 <button 
                                   onClick={() => {
                                     const updated = selectedNode.data.fields.filter((_, i) => i !== idx);
                                     updateSelectedNode('fields', updated);
                                   }}
-                                  style={{ background: 'transparent', border: 'none', color: '#ef4444', padding: '2px', cursor: 'pointer', fontSize: '14px', boxShadow: 'none' }}
+                                  className="transparent-close-btn"
+                                  style={{ color: '#ef4444', fontSize: '14px' }}
                                 >
                                   &times;
                                 </button>
@@ -1849,7 +1888,7 @@ Layout guidelines:
                             ))}
                           </div>
                         ) : (
-                          <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px dashed rgba(255,255,255,0.1)', borderRadius: '8px', padding: '12px', textAlign: 'center', fontSize: '11px', color: '#64748b', fontStyle: 'italic', marginBottom: '12px' }}>
+                          <div style={{ background: '#f1f5f9', border: '1px dashed #94a3b8', borderRadius: '8px', padding: '12px', textAlign: 'center', fontSize: '11px', color: '#64748b', fontStyle: 'italic', marginBottom: '12px' }}>
                             Nenhum campo de resposta criado ainda
                           </div>
                         )}
@@ -1880,17 +1919,17 @@ Layout guidelines:
                       </div>
 
                       {/* Advanced Settings */}
-                      <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '10px' }}>
+                      <div style={{ borderTop: '1px solid #94a3b8', paddingTop: '10px' }}>
                         <div 
                           onClick={() => setAdvancedOpen(!advancedOpen)}
-                          style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', fontSize: '12px', fontWeight: '800', color: '#E5E5E5' }}
+                          style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', fontSize: '12px', fontWeight: '800', color: '#64748b' }}
                         >
                           <span>Configurações avançadas</span>
                           <span>{advancedOpen ? '▼' : '►'}</span>
                         </div>
                         {advancedOpen && (
                           <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                            <label style={{ fontSize: '10px', color: '#9CA3AF' }}>Tempo para agrupar</label>
+                            <label style={{ fontSize: '10px', color: '#64748b' }}>Tempo para agrupar</label>
                             <select className="premium-dark-input"><option>Nenhum</option></select>
                             <input type="text" className="premium-dark-input" placeholder="adicionar Cabeçalho" />
                             <input type="text" className="premium-dark-input" placeholder="adicionar Footer" />
@@ -1920,18 +1959,19 @@ Layout guidelines:
                         <label style={{ fontSize: '12px', fontWeight: '800', color: '#9CA3AF', display: 'block', marginBottom: '8px' }}>Botões de Ação:</label>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                           {editButtons.map((btn, idx) => (
-                            <div key={idx} style={{ display: 'flex', gap: '6px', alignItems: 'center', background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '8px', padding: '8px 12px' }}>
+                            <div key={idx} style={{ display: 'flex', gap: '6px', alignItems: 'center', background: '#f8fafc', border: '1px solid #94a3b8', borderRadius: '8px', padding: '8px 12px' }}>
                               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
                               <input 
                                 type="text" 
                                 className="premium-dark-input"
                                 value={btn.text} 
                                 onChange={(e) => handleEditButtonText(idx, e.target.value)}
-                                style={{ background: 'transparent', border: 'none', fontSize: '12px', fontWeight: '700', color: '#ffffff', flex: 1, padding: 0, boxShadow: 'none' }}
+                                style={{ background: 'transparent', border: 'none', fontSize: '12px', fontWeight: '700', color: '#0f172a', flex: 1, padding: 0, boxShadow: 'none' }}
                               />
                               <button 
                                 onClick={() => handleRemoveButton(idx)}
-                                style={{ background: 'transparent', border: 'none', color: '#ef4444', padding: '2px', cursor: 'pointer', fontSize: '14px', boxShadow: 'none' }}
+                                className="transparent-close-btn"
+                                style={{ color: '#ef4444', fontSize: '14px' }}
                               >
                                 &times;
                               </button>
@@ -1939,9 +1979,9 @@ Layout guidelines:
                           ))}
                           <div 
                             onClick={handleAddButton}
-                            style={{ border: '2px dashed rgba(255, 255, 255, 0.1)', borderRadius: '8px', padding: '10px', textAlign: 'center', fontSize: '12px', fontWeight: '700', color: '#9CA3AF', cursor: 'pointer', background: 'rgba(255,255,255,0.02)', transition: 'all 0.2s' }}
-                            onMouseEnter={(e) => e.currentTarget.style.borderColor = '#a855f7'}
-                            onMouseLeave={(e) => e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)'}
+                            style={{ border: '2px dashed #94a3b8', borderRadius: '8px', padding: '10px', textAlign: 'center', fontSize: '12px', fontWeight: '700', color: '#475569', cursor: 'pointer', background: '#f8fafc', transition: 'all 0.2s' }}
+                            onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#a855f7'; e.currentTarget.style.color = '#a855f7'; }}
+                            onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#94a3b8'; e.currentTarget.style.color = '#475569'; }}
                           >
                             + Adicionar botão
                           </div>
@@ -1960,14 +2000,15 @@ Layout guidelines:
                           <label style={{ fontSize: '11px', fontWeight: '800', color: '#9CA3AF', display: 'block', marginBottom: '8px' }}>Itens de Ação Configurados:</label>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                             {selectedNode.data.actions.map((act, idx) => (
-                              <div key={idx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '8px', padding: '8px 12px' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', fontWeight: '700', color: '#f59e0b' }}>
+                              <div key={idx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#fffbeb', border: '1px solid #d97706', borderRadius: '8px', padding: '8px 12px' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', fontWeight: '700', color: '#b45309' }}>
                                   <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
                                   {act.type === 'tag_add' ? `Adicionar tag: ${act.value}` : act.type === 'tag_remove' ? `Remover tag: ${act.value}` : act.value}
                                 </div>
                                 <button 
                                   onClick={() => handleRemoveActionItem(idx)}
-                                  style={{ background: 'transparent', border: 'none', color: '#ef4444', cursor: 'pointer', fontSize: '16px', padding: 0, boxShadow: 'none' }}
+                                  className="transparent-close-btn"
+                                  style={{ color: '#ef4444', fontSize: '16px' }}
                                 >
                                   &times;
                                 </button>
@@ -1977,7 +2018,7 @@ Layout guidelines:
                         </div>
                       )}
 
-                      <div style={{ background: '#fef3c7', border: '1px solid #f59e0b', borderRadius: '10px', padding: '12px', color: '#b45309', fontSize: '12px', lineHeight: '1.4' }}>
+                      <div style={{ background: '#fffbeb', border: '1px solid #d97706', borderRadius: '10px', padding: '12px', color: '#b45309', fontSize: '12px', lineHeight: '1.4' }}>
                         Use os botões abaixo para adicionar item de ação.
                       </div>
 
@@ -2006,15 +2047,11 @@ Layout guidelines:
                           <span style={{ fontSize: '11px', color: '#9CA3AF' }}>⇅</span>
                           E-commerce
                         </div>
-                        <div className="dashed-grid-btn" onClick={() => handleAddActionItem('ai_prompt', 'Processar com IA')}>
-                          <span style={{ fontSize: '11px', color: '#9CA3AF' }}>⇅</span>
-                          Ações de IA
-                        </div>
                       </div>
 
                       {/* Floating dropdown options reference matching Screenshot 4 */}
-                      <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '14px' }}>
-                        <label style={{ fontSize: '11px', fontWeight: '800', color: '#9CA3AF', display: 'block', marginBottom: '8px' }}>Atalhos de Ação Básica:</label>
+                      <div style={{ borderTop: '1px solid #94a3b8', paddingTop: '14px' }}>
+                        <label style={{ fontSize: '11px', fontWeight: '800', color: '#64748b', display: 'block', marginBottom: '8px' }}>Atalhos de Ação Básica:</label>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                           {['Adicionar tag', 'Remover tag', 'Definir valor da variável', 'Operação JSON'].map((actionText) => (
                             <button 
@@ -2027,7 +2064,7 @@ Layout guidelines:
                                   handleAddActionItem('custom_action', actionText);
                                 }
                               }}
-                              style={{ padding: '8px 12px !important', fontSize: '11px !important', background: 'rgba(255,255,255,0.03) !important', borderColor: 'rgba(255,255,255,0.08) !important', color: '#cbd5e1 !important', width: '100%' }}
+                              style={{ padding: '8px 12px !important', fontSize: '11px !important', background: '#ffffff !important', border: '1px solid #94a3b8 !important', color: '#334155 !important', width: '100% !important' }}
                             >
                               + {actionText}
                             </button>
@@ -2044,16 +2081,15 @@ Layout guidelines:
                       
                       {/* Active Conditions List */}
                       {selectedNode.data.conditions && selectedNode.data.conditions.length > 0 && (
-                        <div>
-                          <label style={{ fontSize: '11px', fontWeight: '800', color: '#9CA3AF', display: 'block', marginBottom: '8px' }}>Condições de Bifurcação:</label>
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                            {selectedNode.data.conditions.map((cond, idx) => (
-                              <div key={idx} style={{ background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '8px', padding: '10px', position: 'relative' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                          {selectedNode.data.conditions.map((cond, idx) => (
+                            <div key={idx} style={{ background: '#f0fdfa', border: '1px solid #0d9488', borderRadius: '8px', padding: '10px', position: 'relative' }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                                   <span style={{ fontSize: '11px', fontWeight: '900', color: '#0d9488' }}>CASO #{idx + 1}</span>
                                   <button 
                                     onClick={() => handleRemoveConditionCase(idx)}
-                                    style={{ background: 'transparent', border: 'none', color: '#ef4444', cursor: 'pointer', fontSize: '14px', padding: 0, boxShadow: 'none' }}
+                                    className="transparent-close-btn"
+                                    style={{ color: '#ef4444', fontSize: '14px' }}
                                   >
                                     &times;
                                   </button>
@@ -2061,7 +2097,7 @@ Layout guidelines:
 
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                                   <div>
-                                    <label style={{ fontSize: '10px', color: '#9CA3AF', display: 'block', marginBottom: '4px' }}>Origem da variável</label>
+                                    <label style={{ fontSize: '10px', color: '#64748b', display: 'block', marginBottom: '4px' }}>Origem da variável</label>
                                     <select 
                                       value={cond.variable || 'Mensagem atual'} 
                                       onChange={(e) => handleEditConditionCase(idx, 'variable', e.target.value)}
@@ -2074,7 +2110,7 @@ Layout guidelines:
                                   </div>
 
                                   <div>
-                                    <label style={{ fontSize: '10px', color: '#9CA3AF', display: 'block', marginBottom: '4px' }}>Critério lógico</label>
+                                    <label style={{ fontSize: '10px', color: '#64748b', display: 'block', marginBottom: '4px' }}>Critério lógico</label>
                                     <select 
                                       value={cond.operator || 'Contém'} 
                                       onChange={(e) => handleEditConditionCase(idx, 'operator', e.target.value)}
@@ -2089,7 +2125,7 @@ Layout guidelines:
                                   </div>
 
                                   <div>
-                                    <label style={{ fontSize: '10px', color: '#9CA3AF', display: 'block', marginBottom: '4px' }}>Valor Comparativo</label>
+                                    <label style={{ fontSize: '10px', color: '#64748b', display: 'block', marginBottom: '4px' }}>Valor Comparativo</label>
                                     <input 
                                       type="text" 
                                       className="premium-dark-input"
@@ -2107,24 +2143,23 @@ Layout guidelines:
                                 </div>
                               </div>
                             ))}
-                          </div>
                         </div>
                       )}
 
                       {/* Add Group button */}
                       <div 
                         onClick={handleAddConditionCase}
-                        style={{ border: '2px dashed rgba(255, 255, 255, 0.1)', borderRadius: '8px', padding: '12px', textAlign: 'center', fontSize: '12.5px', fontWeight: '700', color: '#cbd5e1', cursor: 'pointer', background: 'rgba(255,255,255,0.02)', transition: 'all 0.2s' }}
-                        onMouseEnter={(e) => e.currentTarget.style.borderColor = '#a855f7'}
-                        onMouseLeave={(e) => e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)'}
+                        style={{ border: '2px dashed #94a3b8', borderRadius: '8px', padding: '12px', textAlign: 'center', fontSize: '12.5px', fontWeight: '700', color: '#475569', cursor: 'pointer', background: '#f8fafc', transition: 'all 0.2s' }}
+                        onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#a855f7'; e.currentTarget.style.color = '#a855f7'; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#94a3b8'; e.currentTarget.style.color = '#475569'; }}
                       >
                         + Adicionar caso de condição
                       </div>
 
                       {/* Else case */}
-                      <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '14px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                        <label style={{ fontSize: '12px', fontWeight: '800', color: '#9CA3AF', display: 'block' }}>Caso contrário (Else)</label>
-                        <div style={{ border: '1.5px dashed rgba(255,255,255,0.08)', borderRadius: '10px', padding: '14px', textAlign: 'center', color: '#9CA3AF', fontSize: '12px', fontWeight: '700', background: 'rgba(255,255,255,0.01)' }}>
+                      <div style={{ borderTop: '1px solid #94a3b8', paddingTop: '14px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        <label style={{ fontSize: '12px', fontWeight: '800', color: '#64748b', display: 'block' }}>Caso contrário (Else)</label>
+                        <div style={{ border: '1.5px dashed #cbd5e1', borderRadius: '10px', padding: '14px', textAlign: 'center', color: '#475569', fontSize: '12px', fontWeight: '700', background: '#f8fafc' }}>
                           Direciona para a parte inferior/saída secundária se nenhuma condição bater.
                         </div>
                       </div>
@@ -2311,76 +2346,9 @@ Layout guidelines:
                   )}
 
                 </>
-              ) : activeTab === 'IA' ? (
-                <div style={{ fontSize: '13px', color: '#E5E5E5', lineHeight: '1.6', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                  <div style={{ background: 'rgba(168, 85, 247, 0.04)', border: '1px solid rgba(168, 85, 247, 0.2)', borderRadius: '12px', padding: '14px', display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
-                    <span style={{ fontSize: '20px' }}>✨</span>
-                    <div>
-                      <h4 style={{ fontSize: '14px', fontWeight: '850', color: '#a855f7', margin: '0 0 4px 0' }}>Assistente de IA MassFlow</h4>
-                      <p style={{ margin: 0, fontSize: '11.5px', color: '#9CA3AF' }}>Otimize ou gere copies de alta conversão para essa etapa automaticamente utilizando nossa IA.</p>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label style={{ fontSize: '12px', fontWeight: '800', color: '#9CA3AF', display: 'block', marginBottom: '8px' }}>O que você deseja que a IA escreva?</label>
-                    <textarea 
-                      className="premium-dark-input"
-                      value={aiPrompt}
-                      onChange={(e) => setAiPrompt(e.target.value)}
-                      placeholder="Ex: Crie uma copy persuasiva de conversão para público frio..."
-                      style={{ width: '100%', minHeight: '80px', lineHeight: '1.4' }}
-                    />
-                  </div>
-
-                  {/* Suggestion tags */}
-                  <div>
-                    <span style={{ fontSize: '11px', fontWeight: '800', color: '#64748b', display: 'block', marginBottom: '8px' }}>Sugestões rápidas:</span>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                      {['Copy Emocional 💡', 'Urgência Máxima ⏳', 'Tom Amigável 😊', 'Resolver Objeção 🛡️'].map(tag => (
-                        <div 
-                          key={tag}
-                          onClick={() => setAiPrompt(`Escreva com o estilo: ${tag}`)}
-                          style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '20px', padding: '6px 12px', fontSize: '11px', fontWeight: '750', color: '#cbd5e1', cursor: 'pointer', transition: 'all 0.2s' }}
-                          onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#a855f7'; e.currentTarget.style.color = '#a855f7'; }}
-                          onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.color = '#cbd5e1'; }}
-                        >
-                          {tag}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <button 
-                    onClick={handleAiGenerate}
-                    disabled={isAiGenerating}
-                    style={{ 
-                      width: '100%', 
-                      background: '#a855f7 !important', 
-                      color: '#000000 !important', 
-                      fontWeight: '800 !important',
-                      opacity: isAiGenerating ? 0.7 : 1,
-                      pointerEvents: isAiGenerating ? 'none' : 'auto',
-                      boxShadow: '0 0 15px rgba(168, 85, 247, 0.2) !important'
-                    }}
-                  >
-                    {isAiGenerating ? 'IA escrevendo...' : 'Gerar com IA ✨'}
-                  </button>
-
-                  {isAiGenerating && (
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '10px', background: 'rgba(255,255,255,0.02)', border: '1px dashed rgba(255,255,255,0.08)', borderRadius: '8px' }}>
-                      <div className="spinner" style={{ width: '14px', height: '14px', border: '2px solid rgba(168, 85, 247,0.2)', borderTopColor: '#a855f7', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
-                      <span style={{ fontSize: '11px', color: '#9CA3AF', fontWeight: '600' }}>Pensando e redigindo copy perfeita...</span>
-                      <style dangerouslySetInnerHTML={{ __html: `
-                        @keyframes spin {
-                          to { transform: rotate(360deg); }
-                        }
-                      `}} />
-                    </div>
-                  )}
-                </div>
               ) : (
-                <div style={{ fontSize: '13px', color: '#9CA3AF', lineHeight: '1.6' }}>
-                  <h3 style={{ fontSize: '15px', color: '#ffffff', margin: '0 0 10px 0' }}>Guia de Automação de Canais</h3>
+                <div style={{ fontSize: '13px', color: '#334155', lineHeight: '1.6' }}>
+                  <h3 style={{ fontSize: '15px', color: '#0f172a', margin: '0 0 10px 0' }}>Guia de Automação de Canais</h3>
                   <p>Este bloco permite configurar o envio automático de mensagens interativas e a sincronização de tags com a sua corretora e canais oficiais.</p>
                   <ul style={{ paddingLeft: '18px', margin: '10px 0' }}>
                     <li style={{ marginBottom: '6px' }}>Configure <strong>botões</strong> com links personalizados de indicação (referrals).</li>
@@ -2393,10 +2361,10 @@ Layout guidelines:
             </div>
 
             {/* Delete button footer matching user request "deve dar para tirar o card" */}
-            <div style={{ padding: '20px', borderTop: '1px solid rgba(255,255,255,0.06)', background: 'rgba(10,10,10,0.8)', display: 'flex', gap: '10px', flexShrink: 0 }}>
+            <div style={{ padding: '20px', borderTop: '1px solid #94a3b8', background: '#f8fafc', display: 'flex', gap: '10px', flexShrink: 0 }}>
               <button 
                 onClick={deleteSelectedNode}
-                style={{ width: '100%', background: 'rgba(239, 68, 68, 0.15) !important', borderColor: 'rgba(239, 68, 68, 0.3) !important', color: '#f87171 !important' }}
+                style={{ width: '100%', background: '#fef2f2 !important', borderColor: '#fecaca !important', color: '#ef4444 !important' }}
               >
                 Excluir Etapa
               </button>
@@ -2409,13 +2377,14 @@ Layout guidelines:
         {isGlobalAiOpen && (
           <div className="node-edit-sidebar">
             {/* Sidebar Tab Header */}
-            <div style={{ display: 'flex', borderBottom: '1px solid rgba(255,255,255,0.06)', background: 'rgba(20,20,20,0.5)', height: '48px', alignItems: 'center', padding: '0 16px', justifyContent: 'space-between', flexShrink: 0 }}>
+            <div style={{ display: 'flex', borderBottom: '1px solid #94a3b8', background: '#f1f5f9', height: '48px', alignItems: 'center', padding: '0 16px', justifyContent: 'space-between', flexShrink: 0 }}>
               <span style={{ fontSize: '13px', fontWeight: '800', color: '#a855f7' }}>
                 Gerador de Fluxos por IA ✨
               </span>
               <button 
                 onClick={() => setIsGlobalAiOpen(false)}
-                style={{ background: 'transparent', border: 'none', color: '#64748b', fontSize: '18px', cursor: 'pointer', padding: '4px 8px', display: 'flex', alignItems: 'center', flexShrink: 0 }}
+                className="transparent-close-btn"
+                style={{ fontSize: '18px', color: '#64748b' }}
               >
                 &times;
               </button>
@@ -2477,8 +2446,8 @@ Layout guidelines:
                       key={item.label}
                       onClick={() => setGlobalAiPrompt(item.desc)}
                       style={{ 
-                        background: 'rgba(255,255,255,0.02)', 
-                        border: '1px solid rgba(255,255,255,0.06)', 
+                        background: '#f8fafc', 
+                        border: '1px solid #94a3b8', 
                         borderRadius: '8px', 
                         padding: '8px 10px', 
                         cursor: 'pointer', 
@@ -2486,9 +2455,9 @@ Layout guidelines:
                         textAlign: 'left'
                       }}
                       onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#7c3aed'; e.currentTarget.style.background = 'rgba(124, 58, 237, 0.05)'; }}
-                      onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)'; e.currentTarget.style.background = 'rgba(255,255,255,0.02)'; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#94a3b8'; e.currentTarget.style.background = '#f8fafc'; }}
                     >
-                      <div style={{ fontSize: '11px', fontWeight: '800', color: '#cbd5e1' }}>{item.label}</div>
+                      <div style={{ fontSize: '11px', fontWeight: '800', color: '#334155' }}>{item.label}</div>
                       <div style={{ fontSize: '9.5px', color: '#64748b', marginTop: '2px', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>{item.desc}</div>
                     </div>
                   ))}
@@ -2496,7 +2465,7 @@ Layout guidelines:
               </div>
             </div>
 
-            <div style={{ padding: '20px', borderTop: '1px solid rgba(255,255,255,0.06)', background: 'rgba(10,10,10,0.8)', display: 'flex', gap: '10px', flexShrink: 0 }}>
+            <div style={{ padding: '20px', borderTop: '1px solid #cbd5e1', background: '#f8fafc', display: 'flex', gap: '10px', flexShrink: 0 }}>
               <button 
                 onClick={handleGlobalAiGenerate}
                 disabled={isGlobalAiGenerating}
@@ -2516,6 +2485,7 @@ Layout guidelines:
                 {isGlobalAiGenerating ? 'IA Estruturando Funil...' : 'Criar Fluxo Completo ✨'}
               </button>
             </div>
+
           </div>
         )}
 
@@ -2524,8 +2494,7 @@ Layout guidelines:
   );
 }
 
-// Wrap FlowEditor content in Provider to expose Screen Coordinates helper screenToFlowPosition
-export default function BotFlowEditor({ token, setIsSidebarOpen }) {
+function BotFlowEditor({ token, setIsSidebarOpen }) {
   return (
     <ReactFlowProvider>
       <FlowEditorContent token={token} setIsSidebarOpen={setIsSidebarOpen} />
@@ -2533,128 +2502,4 @@ export default function BotFlowEditor({ token, setIsSidebarOpen }) {
   );
 }
 
-// ── DATA TEMPLATES FOR PLATFORMS (RICH HORIZONTAL FLOWS WITH MORE THAN 10 STEPS EACH) ──────
-
-// ── DATA TEMPLATES FOR PLATFORMS (RICH HORIZONTAL FLOWS WITH MORE THAN 10 STEPS EACH) ──────
-
-const initialNodesByPlatform = {
-  tiktok: [
-    { id: '1', type: 'message', position: { x: 100, y: 150 }, data: { label: 'TikTok Início #1Boas-vindas', content: 'Fala parceiro! Se liga nessa oportunidade única. 🚀\nIdentificamos que você tem interesse em escalar seus resultados com robôs de disparo e automação.\n\nQuer ter acesso imediato ao nosso Script VIP de Vendas Completo 100% grátis?', buttons: [{ text: 'Quero Acesso VIP' }, { text: 'Quero Saber Mais' }] }, draggable: true },
-    { id: '2', type: 'question', position: { x: 450, y: 150 }, data: { label: 'Nome Lead #2', questionText: 'Excelente escolha! Para personalizar seu atendimento, qual é o seu primeiro nome?' }, draggable: true },
-    { id: '3', type: 'question', position: { x: 800, y: 150 }, data: { label: 'Email Corporativo #3', questionText: 'Obrigado! E qual é o seu melhor e-mail profissional para enviarmos o material de suporte VIP?', fields: [{ type: 'email', label: 'E-mail profissional' }] }, draggable: true },
-    { id: '4', type: 'action', position: { x: 1150, y: 150 }, data: { label: 'Tag Origem TikTok #4', actions: [{ type: 'tag_add', value: 'TikTok_Lead_Frio' }, { type: 'tag_add', value: 'Aguardando_Aprovacao' }] }, draggable: true },
-    { id: '5', type: 'split', position: { x: 1500, y: 150 }, data: { label: 'Divisor Teste A/B #5', splitPercent: 50, labelA: 'Copy Emocional (A)', labelB: 'Copy Técnica (B)' }, draggable: true },
-    { id: '6', type: 'message', position: { x: 1850, y: 50 }, data: { label: 'Oferta Emocional A #6', content: 'Parabéns! Você acaba de garantir 50% de desconto imediato. 🎉\n\nEssa é a sua chance de mudar de vida, automatizar sua operação inteira e finalmente ter a liberdade geográfica e de tempo que sempre sonhou!', buttons: [{ text: 'Garantir Vaga 50%' }] }, draggable: true },
-    { id: '7', type: 'message', position: { x: 1850, y: 280 }, data: { label: 'Oferta Técnica B #7', content: 'Parabéns! Liberamos o Frete Grátis e um Super Bônus de Integração API VIP. ⚙️\n\nAcelere suas integrações em menos de 5 minutos com nossa documentação robusta, webhooks ilimitados e estabilidade garantida de 99.9% uptime!', buttons: [{ text: 'Garantir Bônus VIP' }] }, draggable: true },
-    { id: '8', type: 'delay', position: { x: 2200, y: 150 }, data: { label: 'Atraso Inteligente #8', time: '10 minutos' }, draggable: true },
-    { id: '9', type: 'condition', position: { x: 2550, y: 150 }, data: { label: 'Validador Nível Lead #9', conditions: [{ value: 'Nicho é marketing' }] }, draggable: true },
-    { id: '10', type: 'email', position: { x: 2900, y: 50 }, data: { label: 'Script VIP Comercial #10', subject: '✨ Aqui está seu Script VIP de Vendas PDF Completo!', body: 'Olá {{lead_name}},\n\nComo prometido no TikTok, aqui está o seu Script VIP completo para turbinar suas conversões nas primeiras 24 horas!\n\nUse com moderação.' }, draggable: true },
-    { id: '11', type: 'message', position: { x: 2900, y: 280 }, data: { label: 'WhatsApp Redirecionamento #11', content: 'Notamos que seu nicho não é marketing direto. Quer falar com nosso gerente comercial para adaptarmos a ferramenta?', buttons: [{ text: 'Chamar Gerente' }] }, draggable: true },
-    { id: '12', type: 'goto', position: { x: 3250, y: 150 }, data: { label: 'Loop Central #12', targetNodeId: '1' }, draggable: true }
-  ],
-  instagram: [
-    { id: '1', type: 'message', position: { x: 100, y: 150 }, data: { label: 'Mensagem Direct Reels #1', content: 'Que show que você curtiu nosso Reels! 📸\n\nPreparamos um funil de conversão automático incrível. Digite seu principal segmento abaixo para podermos te dar a recomendação perfeita:', buttons: [{ text: 'Marketing de Afiliados' }, { text: 'E-commerce / Drop' }] }, draggable: true },
-    { id: '2', type: 'question', position: { x: 450, y: 150 }, data: { label: 'Qualificação Equipe #2', questionText: 'Sensacional! Qual é o tamanho atual da sua equipe de vendas e suporte?' }, draggable: true },
-    { id: '3', type: 'condition', position: { x: 800, y: 150 }, data: { label: 'Filtro Tamanho VIP #3', conditions: [{ value: 'Equipe > 5' }] }, draggable: true },
-    { id: '4', type: 'action', position: { x: 1150, y: 50 }, data: { label: 'Marcar como Enterprise #4', actions: [{ type: 'tag_add', value: 'Insta_VIP_Enterprise' }, { type: 'tag_add', value: 'CRM_Sync_Urgente' }] }, draggable: true },
-    { id: '5', type: 'action', position: { x: 1150, y: 280 }, data: { label: 'Marcar como Padrão #5', actions: [{ type: 'tag_add', value: 'Insta_Lead_Regular' }] }, draggable: true },
-    { id: '6', type: 'delay', position: { x: 1500, y: 150 }, data: { label: 'Atraso Estratégico #6', time: '1 hora' }, draggable: true },
-    { id: '7', type: 'message', position: { x: 1850, y: 150 }, data: { label: 'Oferta Especial Direct #7', content: 'Temos uma oferta exclusiva e personalizada para o tamanho da sua operação com a MassFlow! 🤖\n\nQue tal dar uma olhada e começar a disparar hoje mesmo?', buttons: [{ text: 'Ver Planos Promocionais' }] }, draggable: true },
-    { id: '8', type: 'split', position: { x: 2200, y: 150 }, data: { label: 'Divisor Split Checkout #8', splitPercent: 50, labelA: 'Checkout Direto', labelB: 'Mentoria Inclusa' }, draggable: true },
-    { id: '9', type: 'message', position: { x: 2550, y: 50 }, data: { label: 'Link Desconto Direto #9', content: 'Feche agora o plano básico com 50% de desconto imediato usando o link abaixo:', buttons: [{ text: 'Garantir Licença' }] }, draggable: true },
-    { id: '10', type: 'message', position: { x: 2550, y: 280 }, data: { label: 'Link Bônus Mentoria #10', content: 'Feche o plano premium hoje e ganhe uma mentoria individual de configuração da API!', buttons: [{ text: 'Garantir Plano Premium' }] }, draggable: true },
-    { id: '11', type: 'goto', position: { x: 2900, y: 150 }, data: { label: 'Voltar Início Funil #11', targetNodeId: '1' }, draggable: true }
-  ],
-  whatsapp: [
-    { id: '1', type: 'message', position: { x: 100, y: 150 }, data: { label: 'Boas-vindas WhatsApp #1', content: 'Olá! Sou o consultor virtual da MassFlow. 🤖\nPronto para escalar sua operação e multiplicar seus disparos de mensagens em minutos?\n\nEscolha uma das opções abaixo para iniciarmos:', buttons: [{ text: 'Planos Corporativos B2B' }, { text: 'Falar com Atendente' }] }, draggable: true },
-    { id: '2', type: 'question', position: { x: 450, y: 150 }, data: { label: 'Capturar Dados Lead #2', questionText: 'Perfeito! Digite seu e-mail profissional para podermos validar sua conta:', fields: [{ type: 'email', label: 'E-mail Corporativo' }] }, draggable: true },
-    { id: '3', type: 'condition', position: { x: 800, y: 150 }, data: { label: 'Filtro Domínio E-mail #3', conditions: [{ value: 'Email contém "@"' }] }, draggable: true },
-    { id: '4', type: 'action', position: { x: 1150, y: 50 }, data: { label: 'Definir Lead Quente #4', actions: [{ type: 'tag_add', value: 'WhatsApp_Lead_Hot' }, { type: 'tag_add', value: 'Valido' }] }, draggable: true },
-    { id: '5', type: 'message', position: { x: 1150, y: 280 }, data: { label: 'Erro Validação E-mail #5', content: 'Ops! O e-mail digitado parece inválido. Certifique-se de digitar um e-mail válido com "@" e domínio correto.', buttons: [{ text: 'Tentar Novamente' }] }, draggable: true },
-    { id: '6', type: 'delay', position: { x: 1500, y: 150 }, data: { label: 'Atraso Inteligente #6', time: '5 minutos' }, draggable: true },
-    { id: '7', type: 'message', position: { x: 1850, y: 150 }, data: { label: 'Envio Catálogo Oficial #7', content: 'Show de bola! Dê uma olhada no nosso catálogo de planos e taxas de disparo da API:', buttons: [{ text: 'Ver Catálogo Completo' }] }, draggable: true },
-    { id: '8', type: 'question', position: { x: 2200, y: 150 }, data: { label: 'Chave Pix Faturamento #8', questionText: 'Excelente. Qual é o seu número de telefone celular cadastrado no Pix para podermos liberar sua licença teste?' }, draggable: true },
-    { id: '9', type: 'split', position: { x: 2550, y: 150 }, data: { label: 'Split Notificação Urgência #9', splitPercent: 50, labelA: 'Urgência 24h', labelB: 'Brinde VIP' }, draggable: true },
-    { id: '10', type: 'message', position: { x: 2900, y: 50 }, data: { label: 'Notificação Urgente A #10', content: 'Atenção! Seu acesso ao plano de testes expira nas próximas 24 horas. Garanta sua vaga imediata!', buttons: [{ text: 'Liberar Licença' }] }, draggable: true },
-    { id: '11', type: 'message', position: { x: 2900, y: 280 }, data: { label: 'Oferta Mentoria Grátis B #11', content: 'Compre hoje sua assinatura anual e ganhe mentoria de infraestrutura grátis!', buttons: [{ text: 'Garantir Licença + Bônus' }] }, draggable: true },
-    { id: '12', type: 'goto', position: { x: 3250, y: 150 }, data: { label: 'Falar Comercial #12', targetNodeId: '1' }, draggable: true }
-  ],
-  linkedin: [
-    { id: '1', type: 'message', position: { x: 100, y: 150 }, data: { label: 'Conexão Inicial LinkedIn #1', content: 'Olá! Agradeço por aceitar minha conexão no LinkedIn. 💼\n\nVi seu perfil e achei super alinhado com nossa solução corporativa de vendas corporativas. Gostaria de receber nossa apresentação?', buttons: [{ text: 'Ver Apresentação B2B' }] }, draggable: true },
-    { id: '2', type: 'question', position: { x: 450, y: 150 }, data: { label: 'Cargo & Segmento #2', questionText: 'Excelente! Qual é o seu cargo atual e o segmento principal da sua empresa?' }, draggable: true },
-    { id: '3', type: 'condition', position: { x: 800, y: 150 }, data: { label: 'Filtro Decisor Cargo #3', conditions: [{ value: 'Cargo contém "Diretor"' }, { value: 'Cargo contém "CEO"' }] }, draggable: true },
-    { id: '4', type: 'action', position: { x: 1150, y: 50 }, data: { label: 'Marcar Decisor VIP #4', actions: [{ type: 'tag_add', value: 'LinkedIn_Decisor_B2B' }, { type: 'tag_add', value: 'Alta_Prioridade' }] }, draggable: true },
-    { id: '5', type: 'action', position: { x: 1150, y: 280 }, data: { label: 'Marcar Lead Geral #5', actions: [{ type: 'tag_add', value: 'LinkedIn_Lead_Geral' }] }, draggable: true },
-    { id: '6', type: 'delay', position: { x: 1500, y: 150 }, data: { label: 'Atraso Proposta #6', time: '1 hora' }, draggable: true },
-    { id: '7', type: 'message', position: { x: 1850, y: 150 }, data: { label: 'Envio Apresentação PDF #7', content: 'Aqui está nossa proposta e apresentação completa em formato PDF para análise de custos!', buttons: [{ text: 'Baixar PDF Corporativo' }] }, draggable: true },
-    { id: '8', type: 'split', position: { x: 2200, y: 150 }, data: { label: 'Split Teste Reunião A/B #8', splitPercent: 50, labelA: 'Reunião Direta Zoom', labelB: 'WhatsApp Gerente' }, draggable: true },
-    { id: '9', type: 'message', position: { x: 2550, y: 50 }, data: { label: 'Convite Reunião Zoom #9', content: 'Que tal marcarmos uma demonstração rápida de 15 minutos pelo Zoom para avaliarmos sua demanda?', buttons: [{ text: 'Agendar pelo Calendly' }] }, draggable: true },
-    { id: '10', type: 'message', position: { x: 2550, y: 280 }, data: { label: 'WhatsApp Gerente B2B #10', content: 'Prefere tirar dúvidas pelo WhatsApp corporativo rápido? Fale diretamente com nosso gerente abaixo:', buttons: [{ text: 'Chamar no WhatsApp B2B' }] }, draggable: true },
-    { id: '11', type: 'goto', position: { x: 2900, y: 150 }, data: { label: 'Fim Funil LinkedIn #11', targetNodeId: '1' }, draggable: true }
-  ],
-  sandbox: []
-};
-
-
-
-const initialEdgesByPlatform = {
-  tiktok: [
-    { id: 'e-tk-1', source: '1', target: '2', sourceHandle: 'right-source', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } },
-    { id: 'e-tk-2', source: '2', target: '3', sourceHandle: 'right-source', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } },
-    { id: 'e-tk-3', source: '3', target: '4', sourceHandle: 'right-source', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } },
-    { id: 'e-tk-4', source: '4', target: '5', sourceHandle: 'right-source', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } },
-    { id: 'e-tk-5', source: '5', target: '6', sourceHandle: 'right-source', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } },
-    { id: 'e-tk-6', source: '5', target: '7', sourceHandle: 'right-source', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } },
-    { id: 'e-tk-7', source: '6', target: '8', sourceHandle: 'right-source', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } },
-    { id: 'e-tk-8', source: '7', target: '8', sourceHandle: 'right-source', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } },
-    { id: 'e-tk-9', source: '8', target: '9', sourceHandle: 'right-source', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } },
-    { id: 'e-tk-10', source: '9', target: '10', sourceHandle: 'cond-source-0', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } },
-    { id: 'e-tk-11', source: '9', target: '11', sourceHandle: 'cond-source-else', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } },
-    { id: 'e-tk-12', source: '10', target: '12', sourceHandle: 'right-source', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } },
-    { id: 'e-tk-13', source: '11', target: '12', sourceHandle: 'right-source', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } }
-  ],
-  instagram: [
-    { id: 'e-in-1', source: '1', target: '2', sourceHandle: 'right-source', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } },
-    { id: 'e-in-2', source: '2', target: '3', sourceHandle: 'right-source', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } },
-    { id: 'e-in-3', source: '3', target: '4', sourceHandle: 'cond-source-0', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } },
-    { id: 'e-in-4', source: '3', target: '5', sourceHandle: 'cond-source-else', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } },
-    { id: 'e-in-5', source: '4', target: '6', sourceHandle: 'right-source', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } },
-    { id: 'e-in-6', source: '5', target: '6', sourceHandle: 'right-source', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } },
-    { id: 'e-in-7', source: '6', target: '7', sourceHandle: 'right-source', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } },
-    { id: 'e-in-8', source: '7', target: '8', sourceHandle: 'right-source', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } },
-    { id: 'e-in-9', source: '8', target: '9', sourceHandle: 'right-source', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } },
-    { id: 'e-in-10', source: '8', target: '10', sourceHandle: 'right-source', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } },
-    { id: 'e-in-11', source: '9', target: '11', sourceHandle: 'right-source', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } },
-    { id: 'e-in-12', source: '10', target: '11', sourceHandle: 'right-source', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } }
-  ],
-  whatsapp: [
-    { id: 'e-wa-1', source: '1', target: '2', sourceHandle: 'right-source', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } },
-    { id: 'e-wa-2', source: '2', target: '3', sourceHandle: 'right-source', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } },
-    { id: 'e-wa-3', source: '3', target: '4', sourceHandle: 'cond-source-0', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } },
-    { id: 'e-wa-4', source: '3', target: '5', sourceHandle: 'cond-source-else', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } },
-    { id: 'e-wa-5', source: '4', target: '6', sourceHandle: 'right-source', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } },
-    { id: 'e-wa-6', source: '5', target: '6', sourceHandle: 'right-source', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } },
-    { id: 'e-wa-7', source: '6', target: '7', sourceHandle: 'right-source', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } },
-    { id: 'e-wa-8', source: '7', target: '8', sourceHandle: 'right-source', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } },
-    { id: 'e-wa-9', source: '8', target: '9', sourceHandle: 'right-source', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } },
-    { id: 'e-wa-10', source: '9', target: '10', sourceHandle: 'right-source', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } },
-    { id: 'e-wa-11', source: '9', target: '11', sourceHandle: 'right-source', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } },
-    { id: 'e-wa-12', source: '10', target: '12', sourceHandle: 'right-source', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } },
-    { id: 'e-wa-13', source: '11', target: '12', sourceHandle: 'right-source', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } }
-  ],
-  linkedin: [
-    { id: 'e-li-1', source: '1', target: '2', sourceHandle: 'right-source', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } },
-    { id: 'e-li-2', source: '2', target: '3', sourceHandle: 'right-source', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } },
-    { id: 'e-li-3', source: '3', target: '4', sourceHandle: 'cond-source-0', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } },
-    { id: 'e-li-4', source: '3', target: '5', sourceHandle: 'cond-source-else', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } },
-    { id: 'e-li-5', source: '4', target: '6', sourceHandle: 'right-source', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } },
-    { id: 'e-li-6', source: '5', target: '6', sourceHandle: 'right-source', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } },
-    { id: 'e-li-7', source: '6', target: '7', sourceHandle: 'right-source', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } },
-    { id: 'e-li-8', source: '7', target: '8', sourceHandle: 'right-source', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } },
-    { id: 'e-li-9', source: '8', target: '9', sourceHandle: 'right-source', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } },
-    { id: 'e-li-10', source: '8', target: '10', sourceHandle: 'right-source', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } },
-    { id: 'e-li-11', source: '9', target: '11', sourceHandle: 'right-source', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } },
-    { id: 'e-li-12', source: '10', target: '11', sourceHandle: 'right-source', targetHandle: 'left-target', animated: true, style: { stroke: '#a855f7', strokeWidth: 2 } }
-  ],
-  sandbox: []
-};
+export default BotFlowEditor;

@@ -375,7 +375,7 @@ const mockFlowsList = [
   },
   {
     "id": "mock2",
-    "name": "Carrinho Abandonado (Instagram)",
+    "name": "Suporte Técnico Automático (WhatsApp)",
     "channel": "whatsapp_qr",
     "isActive": true,
     "nodeCount": 11,
@@ -383,20 +383,13 @@ const mockFlowsList = [
       {
         "id": "1",
         "type": "message",
-        "position": {
-          "x": 100,
-          "y": 150
-        },
+        "position": { "x": 100, "y": 150 },
         "data": {
-          "label": "Mensagem Direct Reels #1",
-          "content": "Que show que você curtiu nosso Reels! 📸\n\nPreparamos um funil de conversão automático incrível. Digite seu principal segmento abaixo para podermos te dar a recomendação perfeita:",
+          "label": "Boas-vindas Suporte #1",
+          "content": "Olá! Bem-vindo ao Canal de Suporte Técnico da MassFlow. 🛠️\nComo podemos te ajudar hoje? Escolha uma das opções abaixo para iniciarmos o atendimento:",
           "buttons": [
-            {
-              "text": "Marketing de Afiliados"
-            },
-            {
-              "text": "E-commerce / Drop"
-            }
+            { "text": "Problema com Disparo" },
+            { "text": "Dúvida sobre Faturas" }
           ]
         },
         "draggable": true
@@ -404,29 +397,21 @@ const mockFlowsList = [
       {
         "id": "2",
         "type": "question",
-        "position": {
-          "x": 450,
-          "y": 150
-        },
+        "position": { "x": 450, "y": 150 },
         "data": {
-          "label": "Qualificação Equipe #2",
-          "questionText": "Sensacional! Qual é o tamanho atual da sua equipe de vendas e suporte?"
+          "label": "Detalhamento do Problema #2",
+          "questionText": "Para agilizarmos seu atendimento, descreva brevemente qual o erro apresentado:"
         },
         "draggable": true
       },
       {
         "id": "3",
         "type": "condition",
-        "position": {
-          "x": 800,
-          "y": 150
-        },
+        "position": { "x": 800, "y": 150 },
         "data": {
-          "label": "Filtro Tamanho VIP #3",
+          "label": "Filtro Urgência #3",
           "conditions": [
-            {
-              "value": "Equipe > 5"
-            }
+            { "value": "conexão" }
           ]
         },
         "draggable": true
@@ -434,21 +419,12 @@ const mockFlowsList = [
       {
         "id": "4",
         "type": "action",
-        "position": {
-          "x": 1150,
-          "y": 50
-        },
+        "position": { "x": 1150, "y": 50 },
         "data": {
-          "label": "Marcar como Enterprise #4",
+          "label": "Marcar Suporte Urgente #4",
           "actions": [
-            {
-              "type": "tag_add",
-              "value": "Insta_VIP_Enterprise"
-            },
-            {
-              "type": "tag_add",
-              "value": "CRM_Sync_Urgente"
-            }
+            { "type": "tag_add", "value": "Suporte_Urgente" },
+            { "type": "tag_add", "value": "CRM_Sync_Urgente" }
           ]
         },
         "draggable": true
@@ -456,17 +432,11 @@ const mockFlowsList = [
       {
         "id": "5",
         "type": "action",
-        "position": {
-          "x": 1150,
-          "y": 280
-        },
+        "position": { "x": 1150, "y": 280 },
         "data": {
-          "label": "Marcar como Padrão #5",
+          "label": "Marcar Suporte Padrão #5",
           "actions": [
-            {
-              "type": "tag_add",
-              "value": "Insta_Lead_Regular"
-            }
+            { "type": "tag_add", "value": "Suporte_Regular" }
           ]
         },
         "draggable": true
@@ -474,30 +444,22 @@ const mockFlowsList = [
       {
         "id": "6",
         "type": "delay",
-        "position": {
-          "x": 1500,
-          "y": 150
-        },
+        "position": { "x": 1500, "y": 150 },
         "data": {
-          "label": "Atraso Estratégico #6",
-          "time": "1 hora"
+          "label": "Atraso Suporte #6",
+          "time": "5 minutos"
         },
         "draggable": true
       },
       {
         "id": "7",
         "type": "message",
-        "position": {
-          "x": 1850,
-          "y": 150
-        },
+        "position": { "x": 1850, "y": 150 },
         "data": {
-          "label": "Oferta Especial Direct #7",
-          "content": "Temos uma oferta exclusiva e personalizada para o tamanho da sua operação com a MassFlow! 🤖\n\nQue tal dar uma olhada e começar a disparar hoje mesmo?",
+          "label": "Mensagem Resposta Suporte #7",
+          "content": "Entendido! Nossa equipe técnica já foi notificada. Enquanto analisamos o seu caso, consulte nosso Guia Rápido de Solução no botão abaixo:",
           "buttons": [
-            {
-              "text": "Ver Planos Promocionais"
-            }
+            { "text": "Ver Guia de Solução" }
           ]
         },
         "draggable": true
@@ -505,32 +467,24 @@ const mockFlowsList = [
       {
         "id": "8",
         "type": "split",
-        "position": {
-          "x": 2200,
-          "y": 150
-        },
+        "position": { "x": 2200, "y": 150 },
         "data": {
-          "label": "Divisor Split Checkout #8",
+          "label": "Split Roteamento #8",
           "splitPercent": 50,
-          "labelA": "Checkout Direto",
-          "labelB": "Mentoria Inclusa"
+          "labelA": "Agente A",
+          "labelB": "Agente B"
         },
         "draggable": true
       },
       {
         "id": "9",
         "type": "message",
-        "position": {
-          "x": 2550,
-          "y": 50
-        },
+        "position": { "x": 2550, "y": 50 },
         "data": {
-          "label": "Link Desconto Direto #9",
-          "content": "Feche agora o plano básico com 50% de desconto imediato usando o link abaixo:",
+          "label": "Roteamento Agente A #9",
+          "content": "Você foi direcionado para a fila de atendimento do Agente A. Por favor, aguarde um momento.",
           "buttons": [
-            {
-              "text": "Garantir Licença"
-            }
+            { "text": "Falar com Agente A" }
           ]
         },
         "draggable": true
@@ -538,17 +492,12 @@ const mockFlowsList = [
       {
         "id": "10",
         "type": "message",
-        "position": {
-          "x": 2550,
-          "y": 280
-        },
+        "position": { "x": 2550, "y": 280 },
         "data": {
-          "label": "Link Bônus Mentoria #10",
-          "content": "Feche o plano premium hoje e ganhe uma mentoria individual de configuração da API!",
+          "label": "Roteamento Agente B #10",
+          "content": "Você foi direcionado para a fila de atendimento do Agente B. Por favor, aguarde um momento.",
           "buttons": [
-            {
-              "text": "Garantir Plano Premium"
-            }
+            { "text": "Falar com Agente B" }
           ]
         },
         "draggable": true
@@ -556,167 +505,32 @@ const mockFlowsList = [
       {
         "id": "11",
         "type": "goto",
-        "position": {
-          "x": 2900,
-          "y": 150
-        },
+        "position": { "x": 2900, "y": 150 },
         "data": {
-          "label": "Voltar Início Funil #11",
+          "label": "Fim Atendimento #11",
           "targetNodeId": "1"
         },
         "draggable": true
       }
     ],
     "edges": [
-      {
-        "id": "e-in-1",
-        "source": "1",
-        "target": "2",
-        "sourceHandle": "right-source",
-        "targetHandle": "left-target",
-        "animated": true,
-        "style": {
-          "stroke": "#a855f7",
-          "strokeWidth": 2
-        }
-      },
-      {
-        "id": "e-in-2",
-        "source": "2",
-        "target": "3",
-        "sourceHandle": "right-source",
-        "targetHandle": "left-target",
-        "animated": true,
-        "style": {
-          "stroke": "#a855f7",
-          "strokeWidth": 2
-        }
-      },
-      {
-        "id": "e-in-3",
-        "source": "3",
-        "target": "4",
-        "sourceHandle": "cond-source-0",
-        "targetHandle": "left-target",
-        "animated": true,
-        "style": {
-          "stroke": "#a855f7",
-          "strokeWidth": 2
-        }
-      },
-      {
-        "id": "e-in-4",
-        "source": "3",
-        "target": "5",
-        "sourceHandle": "cond-source-else",
-        "targetHandle": "left-target",
-        "animated": true,
-        "style": {
-          "stroke": "#a855f7",
-          "strokeWidth": 2
-        }
-      },
-      {
-        "id": "e-in-5",
-        "source": "4",
-        "target": "6",
-        "sourceHandle": "right-source",
-        "targetHandle": "left-target",
-        "animated": true,
-        "style": {
-          "stroke": "#a855f7",
-          "strokeWidth": 2
-        }
-      },
-      {
-        "id": "e-in-6",
-        "source": "5",
-        "target": "6",
-        "sourceHandle": "right-source",
-        "targetHandle": "left-target",
-        "animated": true,
-        "style": {
-          "stroke": "#a855f7",
-          "strokeWidth": 2
-        }
-      },
-      {
-        "id": "e-in-7",
-        "source": "6",
-        "target": "7",
-        "sourceHandle": "right-source",
-        "targetHandle": "left-target",
-        "animated": true,
-        "style": {
-          "stroke": "#a855f7",
-          "strokeWidth": 2
-        }
-      },
-      {
-        "id": "e-in-8",
-        "source": "7",
-        "target": "8",
-        "sourceHandle": "right-source",
-        "targetHandle": "left-target",
-        "animated": true,
-        "style": {
-          "stroke": "#a855f7",
-          "strokeWidth": 2
-        }
-      },
-      {
-        "id": "e-in-9",
-        "source": "8",
-        "target": "9",
-        "sourceHandle": "right-source",
-        "targetHandle": "left-target",
-        "animated": true,
-        "style": {
-          "stroke": "#a855f7",
-          "strokeWidth": 2
-        }
-      },
-      {
-        "id": "e-in-10",
-        "source": "8",
-        "target": "10",
-        "sourceHandle": "right-source",
-        "targetHandle": "left-target",
-        "animated": true,
-        "style": {
-          "stroke": "#a855f7",
-          "strokeWidth": 2
-        }
-      },
-      {
-        "id": "e-in-11",
-        "source": "9",
-        "target": "11",
-        "sourceHandle": "right-source",
-        "targetHandle": "left-target",
-        "animated": true,
-        "style": {
-          "stroke": "#a855f7",
-          "strokeWidth": 2
-        }
-      },
-      {
-        "id": "e-in-12",
-        "source": "10",
-        "target": "11",
-        "sourceHandle": "right-source",
-        "targetHandle": "left-target",
-        "animated": true,
-        "style": {
-          "stroke": "#a855f7",
-          "strokeWidth": 2
-        }
-      }
+      { "id": "e-su-1", "source": "1", "target": "2", "sourceHandle": "right-source", "targetHandle": "left-target", "animated": true, "style": { "stroke": "#a855f7", "strokeWidth": 2 } },
+      { "id": "e-su-2", "source": "2", "target": "3", "sourceHandle": "right-source", "targetHandle": "left-target", "animated": true, "style": { "stroke": "#a855f7", "strokeWidth": 2 } },
+      { "id": "e-su-3", "source": "3", "target": "4", "sourceHandle": "cond-source-0", "targetHandle": "left-target", "animated": true, "style": { "stroke": "#a855f7", "strokeWidth": 2 } },
+      { "id": "e-su-4", "source": "3", "target": "5", "sourceHandle": "cond-source-else", "targetHandle": "left-target", "animated": true, "style": { "stroke": "#a855f7", "strokeWidth": 2 } },
+      { "id": "e-su-5", "source": "4", "target": "6", "sourceHandle": "right-source", "targetHandle": "left-target", "animated": true, "style": { "stroke": "#a855f7", "strokeWidth": 2 } },
+      { "id": "e-su-6", "source": "5", "target": "6", "sourceHandle": "right-source", "targetHandle": "left-target", "animated": true, "style": { "stroke": "#a855f7", "strokeWidth": 2 } },
+      { "id": "e-su-7", "source": "6", "target": "7", "sourceHandle": "right-source", "targetHandle": "left-target", "animated": true, "style": { "stroke": "#a855f7", "strokeWidth": 2 } },
+      { "id": "e-su-8", "source": "7", "target": "8", "sourceHandle": "right-source", "targetHandle": "left-target", "animated": true, "style": { "stroke": "#a855f7", "strokeWidth": 2 } },
+      { "id": "e-su-9", "source": "8", "target": "9", "sourceHandle": "right-source", "targetHandle": "left-target", "animated": true, "style": { "stroke": "#a855f7", "strokeWidth": 2 } },
+      { "id": "e-su-10", "source": "8", "target": "10", "sourceHandle": "right-source", "targetHandle": "left-target", "animated": true, "style": { "stroke": "#a855f7", "strokeWidth": 2 } },
+      { "id": "e-su-11", "source": "9", "target": "11", "sourceHandle": "right-source", "targetHandle": "left-target", "animated": true, "style": { "stroke": "#a855f7", "strokeWidth": 2 } },
+      { "id": "e-su-12", "source": "10", "target": "11", "sourceHandle": "right-source", "targetHandle": "left-target", "animated": true, "style": { "stroke": "#a855f7", "strokeWidth": 2 } }
     ]
   },
   {
     "id": "mock3",
-    "name": "FAQ Automático (TikTok)",
+    "name": "Lançamento VIP & Turmas (WhatsApp)",
     "channel": "whatsapp_qr",
     "isActive": true,
     "nodeCount": 12,
@@ -724,20 +538,13 @@ const mockFlowsList = [
       {
         "id": "1",
         "type": "message",
-        "position": {
-          "x": 100,
-          "y": 150
-        },
+        "position": { "x": 100, "y": 150 },
         "data": {
-          "label": "TikTok Início #1Boas-vindas",
-          "content": "Fala parceiro! Se liga nessa oportunidade única. 🚀\nIdentificamos que você tem interesse em escalar seus resultados com robôs de disparo e automação.\n\nQuer ter acesso imediato ao nosso Script VIP de Vendas Completo 100% grátis?",
+          "label": "Boas-vindas Lançamento #1",
+          "content": "Olá! Obrigado por demonstrar interesse no Lançamento da Nova Turma VIP MassFlow! 🚀\n\nQuer garantir sua vaga com desconto exclusivo na pré-venda e receber materiais VIP?",
           "buttons": [
-            {
-              "text": "Quero Acesso VIP"
-            },
-            {
-              "text": "Quero Saber Mais"
-            }
+            { "text": "Quero Acesso VIP" },
+            { "text": "Quero Saber Mais" }
           ]
         },
         "draggable": true
@@ -745,31 +552,22 @@ const mockFlowsList = [
       {
         "id": "2",
         "type": "question",
-        "position": {
-          "x": 450,
-          "y": 150
-        },
+        "position": { "x": 450, "y": 150 },
         "data": {
           "label": "Nome Lead #2",
-          "questionText": "Excelente escolha! Para personalizar seu atendimento, qual é o seu primeiro nome?"
+          "questionText": "Excelente escolha! Para personalizar seu atendimento, qual é o seu nome?"
         },
         "draggable": true
       },
       {
         "id": "3",
         "type": "question",
-        "position": {
-          "x": 800,
-          "y": 150
-        },
+        "position": { "x": 800, "y": 150 },
         "data": {
-          "label": "Email Corporativo #3",
-          "questionText": "Obrigado! E qual é o seu melhor e-mail profissional para enviarmos o material de suporte VIP?",
+          "label": "Email Lançamento #3",
+          "questionText": "Qual é o seu melhor e-mail para enviarmos os links das aulas ao vivo?",
           "fields": [
-            {
-              "type": "email",
-              "label": "E-mail profissional"
-            }
+            { "type": "email", "label": "E-mail" }
           ]
         },
         "draggable": true
@@ -777,21 +575,12 @@ const mockFlowsList = [
       {
         "id": "4",
         "type": "action",
-        "position": {
-          "x": 1150,
-          "y": 150
-        },
+        "position": { "x": 1150, "y": 150 },
         "data": {
-          "label": "Tag Origem TikTok #4",
+          "label": "Tag Origem WhatsApp #4",
           "actions": [
-            {
-              "type": "tag_add",
-              "value": "TikTok_Lead_Frio"
-            },
-            {
-              "type": "tag_add",
-              "value": "Aguardando_Aprovacao"
-            }
+            { "type": "tag_add", "value": "WhatsApp_Lançamento_VIP" },
+            { "type": "tag_add", "value": "Aguardando_Aprovacao" }
           ]
         },
         "draggable": true
@@ -799,32 +588,24 @@ const mockFlowsList = [
       {
         "id": "5",
         "type": "split",
-        "position": {
-          "x": 1500,
-          "y": 150
-        },
+        "position": { "x": 1500, "y": 150 },
         "data": {
-          "label": "Divisor Teste A/B #5",
+          "label": "Divisor Lançamento A/B #5",
           "splitPercent": 50,
-          "labelA": "Copy Emocional (A)",
-          "labelB": "Copy Técnica (B)"
+          "labelA": "Oferta Antecipada",
+          "labelB": "Bônus Exclusivo"
         },
         "draggable": true
       },
       {
         "id": "6",
         "type": "message",
-        "position": {
-          "x": 1850,
-          "y": 50
-        },
+        "position": { "x": 1850, "y": 50 },
         "data": {
-          "label": "Oferta Emocional A #6",
-          "content": "Parabéns! Você acaba de garantir 50% de desconto imediato. 🎉\n\nEssa é a sua chance de mudar de vida, automatizar sua operação inteira e finalmente ter a liberdade geográfica e de tempo que sempre sonhou!",
+          "label": "Oferta Antecipada #6",
+          "content": "Parabéns! Liberamos a pré-venda com 50% de desconto imediato. 🎉\n\nEssa é a sua única chance de se inscrever antes de todo mundo!",
           "buttons": [
-            {
-              "text": "Garantir Vaga 50%"
-            }
+            { "text": "Garantir Vaga 50%" }
           ]
         },
         "draggable": true
@@ -832,17 +613,12 @@ const mockFlowsList = [
       {
         "id": "7",
         "type": "message",
-        "position": {
-          "x": 1850,
-          "y": 280
-        },
+        "position": { "x": 1850, "y": 280 },
         "data": {
-          "label": "Oferta Técnica B #7",
-          "content": "Parabéns! Liberamos o Frete Grátis e um Super Bônus de Integração API VIP. ⚙️\n\nAcelere suas integrações em menos de 5 minutos com nossa documentação robusta, webhooks ilimitados e estabilidade garantida de 99.9% uptime!",
+          "label": "Bônus Exclusivo #7",
+          "content": "Parabéns! Garanta sua vaga com o Super Bônus de Mentoria de Configuração MassFlow! ⚙️\n\nAprenda a estruturar seu funil em minutos.",
           "buttons": [
-            {
-              "text": "Garantir Bônus VIP"
-            }
+            { "text": "Garantir Bônus VIP" }
           ]
         },
         "draggable": true
@@ -850,12 +626,9 @@ const mockFlowsList = [
       {
         "id": "8",
         "type": "delay",
-        "position": {
-          "x": 2200,
-          "y": 150
-        },
+        "position": { "x": 2200, "y": 150 },
         "data": {
-          "label": "Atraso Inteligente #8",
+          "label": "Atraso Lançamento #8",
           "time": "10 minutos"
         },
         "draggable": true
@@ -863,16 +636,11 @@ const mockFlowsList = [
       {
         "id": "9",
         "type": "condition",
-        "position": {
-          "x": 2550,
-          "y": 150
-        },
+        "position": { "x": 2550, "y": 150 },
         "data": {
-          "label": "Validador Nível Lead #9",
+          "label": "Validador Inscrição #9",
           "conditions": [
-            {
-              "value": "Nicho é marketing"
-            }
+            { "value": "marketing" }
           ]
         },
         "draggable": true
@@ -880,31 +648,23 @@ const mockFlowsList = [
       {
         "id": "10",
         "type": "email",
-        "position": {
-          "x": 2900,
-          "y": 50
-        },
+        "position": { "x": 2900, "y": 50 },
         "data": {
-          "label": "Script VIP Comercial #10",
-          "subject": "✨ Aqui está seu Script VIP de Vendas PDF Completo!",
-          "body": "Olá {{lead_name}},\n\nComo prometido no TikTok, aqui está o seu Script VIP completo para turbinar suas conversões nas primeiras 24 horas!\n\nUse com moderação."
+          "label": "E-mail Confirmação #10",
+          "subject": "✨ Confirmação de inscrição no Lançamento VIP!",
+          "body": "Olá {{lead_name}},\n\nSua vaga na pré-venda está garantida! Em breve enviaremos os detalhes de acesso às aulas."
         },
         "draggable": true
       },
       {
         "id": "11",
         "type": "message",
-        "position": {
-          "x": 2900,
-          "y": 280
-        },
+        "position": { "x": 2900, "y": 280 },
         "data": {
-          "label": "WhatsApp Redirecionamento #11",
-          "content": "Notamos que seu nicho não é marketing direto. Quer falar com nosso gerente comercial para adaptarmos a ferramenta?",
+          "label": "WhatsApp Suporte Lançamento #11",
+          "content": "Ficou com alguma dúvida sobre as aulas ou sobre o plano VIP? Chame nosso suporte rápido:",
           "buttons": [
-            {
-              "text": "Chamar Gerente"
-            }
+            { "text": "Chamar Suporte" }
           ]
         },
         "draggable": true
@@ -912,179 +672,33 @@ const mockFlowsList = [
       {
         "id": "12",
         "type": "goto",
-        "position": {
-          "x": 3250,
-          "y": 150
-        },
+        "position": { "x": 3250, "y": 150 },
         "data": {
-          "label": "Loop Central #12",
+          "label": "Fim Lançamento #12",
           "targetNodeId": "1"
         },
         "draggable": true
       }
     ],
     "edges": [
-      {
-        "id": "e-tk-1",
-        "source": "1",
-        "target": "2",
-        "sourceHandle": "right-source",
-        "targetHandle": "left-target",
-        "animated": true,
-        "style": {
-          "stroke": "#a855f7",
-          "strokeWidth": 2
-        }
-      },
-      {
-        "id": "e-tk-2",
-        "source": "2",
-        "target": "3",
-        "sourceHandle": "right-source",
-        "targetHandle": "left-target",
-        "animated": true,
-        "style": {
-          "stroke": "#a855f7",
-          "strokeWidth": 2
-        }
-      },
-      {
-        "id": "e-tk-3",
-        "source": "3",
-        "target": "4",
-        "sourceHandle": "right-source",
-        "targetHandle": "left-target",
-        "animated": true,
-        "style": {
-          "stroke": "#a855f7",
-          "strokeWidth": 2
-        }
-      },
-      {
-        "id": "e-tk-4",
-        "source": "4",
-        "target": "5",
-        "sourceHandle": "right-source",
-        "targetHandle": "left-target",
-        "animated": true,
-        "style": {
-          "stroke": "#a855f7",
-          "strokeWidth": 2
-        }
-      },
-      {
-        "id": "e-tk-5",
-        "source": "5",
-        "target": "6",
-        "sourceHandle": "right-source",
-        "targetHandle": "left-target",
-        "animated": true,
-        "style": {
-          "stroke": "#a855f7",
-          "strokeWidth": 2
-        }
-      },
-      {
-        "id": "e-tk-6",
-        "source": "5",
-        "target": "7",
-        "sourceHandle": "right-source",
-        "targetHandle": "left-target",
-        "animated": true,
-        "style": {
-          "stroke": "#a855f7",
-          "strokeWidth": 2
-        }
-      },
-      {
-        "id": "e-tk-7",
-        "source": "6",
-        "target": "8",
-        "sourceHandle": "right-source",
-        "targetHandle": "left-target",
-        "animated": true,
-        "style": {
-          "stroke": "#a855f7",
-          "strokeWidth": 2
-        }
-      },
-      {
-        "id": "e-tk-8",
-        "source": "7",
-        "target": "8",
-        "sourceHandle": "right-source",
-        "targetHandle": "left-target",
-        "animated": true,
-        "style": {
-          "stroke": "#a855f7",
-          "strokeWidth": 2
-        }
-      },
-      {
-        "id": "e-tk-9",
-        "source": "8",
-        "target": "9",
-        "sourceHandle": "right-source",
-        "targetHandle": "left-target",
-        "animated": true,
-        "style": {
-          "stroke": "#a855f7",
-          "strokeWidth": 2
-        }
-      },
-      {
-        "id": "e-tk-10",
-        "source": "9",
-        "target": "10",
-        "sourceHandle": "cond-source-0",
-        "targetHandle": "left-target",
-        "animated": true,
-        "style": {
-          "stroke": "#a855f7",
-          "strokeWidth": 2
-        }
-      },
-      {
-        "id": "e-tk-11",
-        "source": "9",
-        "target": "11",
-        "sourceHandle": "cond-source-else",
-        "targetHandle": "left-target",
-        "animated": true,
-        "style": {
-          "stroke": "#a855f7",
-          "strokeWidth": 2
-        }
-      },
-      {
-        "id": "e-tk-12",
-        "source": "10",
-        "target": "12",
-        "sourceHandle": "right-source",
-        "targetHandle": "left-target",
-        "animated": true,
-        "style": {
-          "stroke": "#a855f7",
-          "strokeWidth": 2
-        }
-      },
-      {
-        "id": "e-tk-13",
-        "source": "11",
-        "target": "12",
-        "sourceHandle": "right-source",
-        "targetHandle": "left-target",
-        "animated": true,
-        "style": {
-          "stroke": "#a855f7",
-          "strokeWidth": 2
-        }
-      }
+      { "id": "e-la-1", "source": "1", "target": "2", "sourceHandle": "right-source", "targetHandle": "left-target", "animated": true, "style": { "stroke": "#a855f7", "strokeWidth": 2 } },
+      { "id": "e-la-2", "source": "2", "target": "3", "sourceHandle": "right-source", "targetHandle": "left-target", "animated": true, "style": { "stroke": "#a855f7", "strokeWidth": 2 } },
+      { "id": "e-la-3", "source": "3", "target": "4", "sourceHandle": "right-source", "targetHandle": "left-target", "animated": true, "style": { "stroke": "#a855f7", "strokeWidth": 2 } },
+      { "id": "e-la-4", "source": "4", "target": "5", "sourceHandle": "right-source", "targetHandle": "left-target", "animated": true, "style": { "stroke": "#a855f7", "strokeWidth": 2 } },
+      { "id": "e-la-5", "source": "5", "target": "6", "sourceHandle": "right-source", "targetHandle": "left-target", "animated": true, "style": { "stroke": "#a855f7", "strokeWidth": 2 } },
+      { "id": "e-la-6", "source": "5", "target": "7", "sourceHandle": "right-source", "targetHandle": "left-target", "animated": true, "style": { "stroke": "#a855f7", "strokeWidth": 2 } },
+      { "id": "e-la-7", "source": "6", "target": "8", "sourceHandle": "right-source", "targetHandle": "left-target", "animated": true, "style": { "stroke": "#a855f7", "strokeWidth": 2 } },
+      { "id": "e-la-8", "source": "7", "target": "8", "sourceHandle": "right-source", "targetHandle": "left-target", "animated": true, "style": { "stroke": "#a855f7", "strokeWidth": 2 } },
+      { "id": "e-la-9", "source": "8", "target": "9", "sourceHandle": "right-source", "targetHandle": "left-target", "animated": true, "style": { "stroke": "#a855f7", "strokeWidth": 2 } },
+      { "id": "e-la-10", "source": "9", "target": "10", "sourceHandle": "cond-source-0", "targetHandle": "left-target", "animated": true, "style": { "stroke": "#a855f7", "strokeWidth": 2 } },
+      { "id": "e-la-11", "source": "9", "target": "11", "sourceHandle": "cond-source-else", "targetHandle": "left-target", "animated": true, "style": { "stroke": "#a855f7", "strokeWidth": 2 } },
+      { "id": "e-la-12", "source": "10", "target": "12", "sourceHandle": "right-source", "targetHandle": "left-target", "animated": true, "style": { "stroke": "#a855f7", "strokeWidth": 2 } },
+      { "id": "e-la-13", "source": "11", "target": "12", "sourceHandle": "right-source", "targetHandle": "left-target", "animated": true, "style": { "stroke": "#a855f7", "strokeWidth": 2 } }
     ]
   },
   {
     "id": "mock4",
-    "name": "Prospecção B2B (LinkedIn)",
+    "name": "Recuperação de Vendas & Pix (WhatsApp)",
     "channel": "whatsapp_qr",
     "isActive": true,
     "nodeCount": 11,
@@ -1092,17 +706,13 @@ const mockFlowsList = [
       {
         "id": "1",
         "type": "message",
-        "position": {
-          "x": 100,
-          "y": 150
-        },
+        "position": { "x": 100, "y": 150 },
         "data": {
-          "label": "Conexão Inicial LinkedIn #1",
-          "content": "Olá! Agradeço por aceitar minha conexão no LinkedIn. 💼\n\nVi seu perfil e achei super alinhado com nossa solução corporativa de vendas corporativas. Gostaria de receber nossa apresentação?",
+          "label": "Gatilho Abandono Pix #1",
+          "content": "Olá! Identificamos que você gerou um Pix para a assinatura MassFlow, mas o pagamento ainda não foi processado. 🔔\n\nPrecisa de alguma ajuda para concluir ou tem alguma dúvida?",
           "buttons": [
-            {
-              "text": "Ver Apresentação B2B"
-            }
+            { "text": "Concluir Pagamento" },
+            { "text": "Dúvida sobre Pix" }
           ]
         },
         "draggable": true
@@ -1110,32 +720,21 @@ const mockFlowsList = [
       {
         "id": "2",
         "type": "question",
-        "position": {
-          "x": 450,
-          "y": 150
-        },
+        "position": { "x": 450, "y": 150 },
         "data": {
-          "label": "Cargo & Segmento #2",
-          "questionText": "Excelente! Qual é o seu cargo atual e o segmento principal da sua empresa?"
+          "label": "Motivo do Abandono #2",
+          "questionText": "Sem problemas! Qual foi a principal dificuldade com o pagamento?"
         },
         "draggable": true
       },
       {
         "id": "3",
         "type": "condition",
-        "position": {
-          "x": 800,
-          "y": 150
-        },
+        "position": { "x": 800, "y": 150 },
         "data": {
-          "label": "Filtro Decisor Cargo #3",
+          "label": "Filtro Motivo Pix #3",
           "conditions": [
-            {
-              "value": "Cargo contém \"Diretor\""
-            },
-            {
-              "value": "Cargo contém \"CEO\""
-            }
+            { "value": "desconto" }
           ]
         },
         "draggable": true
@@ -1143,21 +742,12 @@ const mockFlowsList = [
       {
         "id": "4",
         "type": "action",
-        "position": {
-          "x": 1150,
-          "y": 50
-        },
+        "position": { "x": 1150, "y": 50 },
         "data": {
-          "label": "Marcar Decisor VIP #4",
+          "label": "Aplicar Cupom Pix #4",
           "actions": [
-            {
-              "type": "tag_add",
-              "value": "LinkedIn_Decisor_B2B"
-            },
-            {
-              "type": "tag_add",
-              "value": "Alta_Prioridade"
-            }
+            { "type": "tag_add", "value": "Cupom_Pix_Aplicado" },
+            { "type": "tag_add", "value": "Alta_Prioridade" }
           ]
         },
         "draggable": true
@@ -1165,17 +755,11 @@ const mockFlowsList = [
       {
         "id": "5",
         "type": "action",
-        "position": {
-          "x": 1150,
-          "y": 280
-        },
+        "position": { "x": 1150, "y": 280 },
         "data": {
-          "label": "Marcar Lead Geral #5",
+          "label": "Apenas Lembrar Pix #5",
           "actions": [
-            {
-              "type": "tag_add",
-              "value": "LinkedIn_Lead_Geral"
-            }
+            { "type": "tag_add", "value": "Lembrado_Pix" }
           ]
         },
         "draggable": true
@@ -1183,30 +767,22 @@ const mockFlowsList = [
       {
         "id": "6",
         "type": "delay",
-        "position": {
-          "x": 1500,
-          "y": 150
-        },
+        "position": { "x": 1500, "y": 150 },
         "data": {
-          "label": "Atraso Proposta #6",
-          "time": "1 hora"
+          "label": "Atraso Recuperação #6",
+          "time": "30 minutos"
         },
         "draggable": true
       },
       {
         "id": "7",
         "type": "message",
-        "position": {
-          "x": 1850,
-          "y": 150
-        },
+        "position": { "x": 1850, "y": 150 },
         "data": {
-          "label": "Envio Apresentação PDF #7",
-          "content": "Aqui está nossa proposta e apresentação completa em formato PDF para análise de custos!",
+          "label": "Mensagem Cupom Pix #7",
+          "content": "Conseguimos um cupom de 10% de desconto adicional para você fechar a assinatura agora! Aproveite:",
           "buttons": [
-            {
-              "text": "Baixar PDF Corporativo"
-            }
+            { "text": "Pagar com 10% Desconto" }
           ]
         },
         "draggable": true
@@ -1214,32 +790,24 @@ const mockFlowsList = [
       {
         "id": "8",
         "type": "split",
-        "position": {
-          "x": 2200,
-          "y": 150
-        },
+        "position": { "x": 2200, "y": 150 },
         "data": {
-          "label": "Split Teste Reunião A/B #8",
+          "label": "Split Recuperação #8",
           "splitPercent": 50,
-          "labelA": "Reunião Direta Zoom",
-          "labelB": "WhatsApp Gerente"
+          "labelA": "Checkout Direto",
+          "labelB": "Chamar Suporte"
         },
         "draggable": true
       },
       {
         "id": "9",
         "type": "message",
-        "position": {
-          "x": 2550,
-          "y": 50
-        },
+        "position": { "x": 2550, "y": 50 },
         "data": {
-          "label": "Convite Reunião Zoom #9",
-          "content": "Que tal marcarmos uma demonstração rápida de 15 minutos pelo Zoom para avaliarmos sua demanda?",
+          "label": "Checkout Direto Pix #9",
+          "content": "Use o link rápido abaixo para realizar o pagamento do Pix simplificado:",
           "buttons": [
-            {
-              "text": "Agendar pelo Calendly"
-            }
+            { "text": "Pagar Pix" }
           ]
         },
         "draggable": true
@@ -1247,17 +815,12 @@ const mockFlowsList = [
       {
         "id": "10",
         "type": "message",
-        "position": {
-          "x": 2550,
-          "y": 280
-        },
+        "position": { "x": 2550, "y": 280 },
         "data": {
-          "label": "WhatsApp Gerente B2B #10",
-          "content": "Prefere tirar dúvidas pelo WhatsApp corporativo rápido? Fale diretamente com nosso gerente abaixo:",
+          "label": "Suporte Humano Pix #10",
+          "content": "Prefere tirar dúvidas com nosso time financeiro? Fale diretamente no botão abaixo:",
           "buttons": [
-            {
-              "text": "Chamar no WhatsApp B2B"
-            }
+            { "text": "Chamar Financeiro" }
           ]
         },
         "draggable": true
@@ -1265,176 +828,54 @@ const mockFlowsList = [
       {
         "id": "11",
         "type": "goto",
-        "position": {
-          "x": 2900,
-          "y": 150
-        },
+        "position": { "x": 2900, "y": 150 },
         "data": {
-          "label": "Fim Funil LinkedIn #11",
+          "label": "Fim Recuperação #11",
           "targetNodeId": "1"
         },
         "draggable": true
       }
     ],
     "edges": [
-      {
-        "id": "e-li-1",
-        "source": "1",
-        "target": "2",
-        "sourceHandle": "right-source",
-        "targetHandle": "left-target",
-        "animated": true,
-        "style": {
-          "stroke": "#a855f7",
-          "strokeWidth": 2
-        }
-      },
-      {
-        "id": "e-li-2",
-        "source": "2",
-        "target": "3",
-        "sourceHandle": "right-source",
-        "targetHandle": "left-target",
-        "animated": true,
-        "style": {
-          "stroke": "#a855f7",
-          "strokeWidth": 2
-        }
-      },
-      {
-        "id": "e-li-3",
-        "source": "3",
-        "target": "4",
-        "sourceHandle": "cond-source-0",
-        "targetHandle": "left-target",
-        "animated": true,
-        "style": {
-          "stroke": "#a855f7",
-          "strokeWidth": 2
-        }
-      },
-      {
-        "id": "e-li-4",
-        "source": "3",
-        "target": "5",
-        "sourceHandle": "cond-source-else",
-        "targetHandle": "left-target",
-        "animated": true,
-        "style": {
-          "stroke": "#a855f7",
-          "strokeWidth": 2
-        }
-      },
-      {
-        "id": "e-li-5",
-        "source": "4",
-        "target": "6",
-        "sourceHandle": "right-source",
-        "targetHandle": "left-target",
-        "animated": true,
-        "style": {
-          "stroke": "#a855f7",
-          "strokeWidth": 2
-        }
-      },
-      {
-        "id": "e-li-6",
-        "source": "5",
-        "target": "6",
-        "sourceHandle": "right-source",
-        "targetHandle": "left-target",
-        "animated": true,
-        "style": {
-          "stroke": "#a855f7",
-          "strokeWidth": 2
-        }
-      },
-      {
-        "id": "e-li-7",
-        "source": "6",
-        "target": "7",
-        "sourceHandle": "right-source",
-        "targetHandle": "left-target",
-        "animated": true,
-        "style": {
-          "stroke": "#a855f7",
-          "strokeWidth": 2
-        }
-      },
-      {
-        "id": "e-li-8",
-        "source": "7",
-        "target": "8",
-        "sourceHandle": "right-source",
-        "targetHandle": "left-target",
-        "animated": true,
-        "style": {
-          "stroke": "#a855f7",
-          "strokeWidth": 2
-        }
-      },
-      {
-        "id": "e-li-9",
-        "source": "8",
-        "target": "9",
-        "sourceHandle": "right-source",
-        "targetHandle": "left-target",
-        "animated": true,
-        "style": {
-          "stroke": "#a855f7",
-          "strokeWidth": 2
-        }
-      },
-      {
-        "id": "e-li-10",
-        "source": "8",
-        "target": "10",
-        "sourceHandle": "right-source",
-        "targetHandle": "left-target",
-        "animated": true,
-        "style": {
-          "stroke": "#a855f7",
-          "strokeWidth": 2
-        }
-      },
-      {
-        "id": "e-li-11",
-        "source": "9",
-        "target": "11",
-        "sourceHandle": "right-source",
-        "targetHandle": "left-target",
-        "animated": true,
-        "style": {
-          "stroke": "#a855f7",
-          "strokeWidth": 2
-        }
-      },
-      {
-        "id": "e-li-12",
-        "source": "10",
-        "target": "11",
-        "sourceHandle": "right-source",
-        "targetHandle": "left-target",
-        "animated": true,
-        "style": {
-          "stroke": "#a855f7",
-          "strokeWidth": 2
-        }
-      }
+      { "id": "e-rec-1", "source": "1", "target": "2", "sourceHandle": "right-source", "targetHandle": "left-target", "animated": true, "style": { "stroke": "#a855f7", "strokeWidth": 2 } },
+      { "id": "e-rec-2", "source": "2", "target": "3", "sourceHandle": "right-source", "targetHandle": "left-target", "animated": true, "style": { "stroke": "#a855f7", "strokeWidth": 2 } },
+      { "id": "e-rec-3", "source": "3", "target": "4", "sourceHandle": "cond-source-0", "targetHandle": "left-target", "animated": true, "style": { "stroke": "#a855f7", "strokeWidth": 2 } },
+      { "id": "e-rec-4", "source": "3", "target": "5", "sourceHandle": "cond-source-else", "targetHandle": "left-target", "animated": true, "style": { "stroke": "#a855f7", "strokeWidth": 2 } },
+      { "id": "e-rec-5", "source": "4", "target": "6", "sourceHandle": "right-source", "targetHandle": "left-target", "animated": true, "style": { "stroke": "#a855f7", "strokeWidth": 2 } },
+      { "id": "e-rec-6", "source": "5", "target": "6", "sourceHandle": "right-source", "targetHandle": "left-target", "animated": true, "style": { "stroke": "#a855f7", "strokeWidth": 2 } },
+      { "id": "e-rec-7", "source": "6", "target": "7", "sourceHandle": "right-source", "targetHandle": "left-target", "animated": true, "style": { "stroke": "#a855f7", "strokeWidth": 2 } },
+      { "id": "e-rec-8", "source": "7", "target": "8", "sourceHandle": "right-source", "targetHandle": "left-target", "animated": true, "style": { "stroke": "#a855f7", "strokeWidth": 2 } },
+      { "id": "e-rec-9", "source": "8", "target": "9", "sourceHandle": "right-source", "targetHandle": "left-target", "animated": true, "style": { "stroke": "#a855f7", "strokeWidth": 2 } },
+      { "id": "e-rec-10", "source": "8", "target": "10", "sourceHandle": "right-source", "targetHandle": "left-target", "animated": true, "style": { "stroke": "#a855f7", "strokeWidth": 2 } },
+      { "id": "e-rec-11", "source": "9", "target": "11", "sourceHandle": "right-source", "targetHandle": "left-target", "animated": true, "style": { "stroke": "#a855f7", "strokeWidth": 2 } },
+      { "id": "e-rec-12", "source": "10", "target": "11", "sourceHandle": "right-source", "targetHandle": "left-target", "animated": true, "style": { "stroke": "#a855f7", "strokeWidth": 2 } }
     ]
   }
 ];
 
-function isMockId(id) {
-  return String(id).startsWith('mock');
+const LOCAL_STORAGE_KEY = 'massflow_local_bot_flows';
+
+function getLocalFlows() {
+  // Force reset once to switch from TikTok/Instagram/LinkedIn templates to WhatsApp-only templates
+  if (!localStorage.getItem('massflow_local_bot_flows_v3')) {
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(mockFlowsList));
+    localStorage.setItem('massflow_local_bot_flows_v3', 'true');
+  }
+
+  const data = localStorage.getItem(LOCAL_STORAGE_KEY);
+  if (!data) {
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(mockFlowsList));
+    return mockFlowsList;
+  }
+  try {
+    return JSON.parse(data);
+  } catch {
+    return mockFlowsList;
+  }
 }
 
-function authHeaders() {
-  const token = localStorage.getItem('token');
-  return {
-    Authorization: `Bearer ${token}`,
-    'Content-Type': 'application/json',
-  };
+function saveLocalFlows(flows) {
+  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(flows));
 }
 
 function parseJsonField(value, fallback) {
@@ -1462,234 +903,140 @@ function mapFlowDetail(raw) {
   };
 }
 
-async function parseResponse(res) {
-  const text = await res.text();
-  if (!res.ok) return { ok: false, data: null, text };
-  if (!text.trim()) return { ok: true, data: null, text };
-  return { ok: true, data: JSON.parse(text), text };
-}
-
 export async function fetchBotFlows() {
-  try {
-    const res = await fetch(`${API_BASE}/api/bot-flows`, { headers: authHeaders() });
-    const { ok, data } = await parseResponse(res);
-    if (ok && Array.isArray(data)) {
-      return [...data, ...mockFlowsList];
-    }
-    return mockFlowsList;
-  } catch (err) {
-    console.warn('Backend server connection failed, falling back to mock flows.');
-    return mockFlowsList;
-  }
+  return getLocalFlows().map(mapFlowDetail);
 }
 
 export async function fetchBotFlowById(id) {
-  if (isMockId(id)) {
-    const found = mockFlowsList.find(f => f.id === id);
-    return found ? mapFlowDetail(found) : null;
-  }
-  const res = await fetch(`${API_BASE}/api/bot-flows/${id}`, {
-    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-  });
-  const { ok, data } = await parseResponse(res);
-  return ok && data ? mapFlowDetail(data) : null;
+  const found = getLocalFlows().find(f => String(f.id) === String(id));
+  return found ? mapFlowDetail(found) : null;
 }
 
 export async function createBotFlow(payload) {
-  const res = await fetch(`${API_BASE}/api/bot-flows`, {
-    method: 'POST',
-    headers: authHeaders(),
-    body: JSON.stringify(payload),
-  });
-  const { ok, data } = await parseResponse(res);
-  return ok && data ? mapFlowDetail(data) : null;
+  const flows = getLocalFlows();
+  const newId = 'mock' + (flows.length + 1) + '_' + Math.random().toString(36).substring(2, 9);
+  const newFlow = {
+    id: newId,
+    name: payload.name || 'Novo Fluxo',
+    channel: payload.channel || 'whatsapp_qr',
+    isActive: false,
+    nodes: payload.nodes || [],
+    edges: payload.edges || [],
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  };
+  flows.push(newFlow);
+  saveLocalFlows(flows);
+  return mapFlowDetail(newFlow);
 }
 
 export async function saveBotFlow(id, payload) {
-  if (isMockId(id)) {
-    const found = mockFlowsList.find(f => f.id === id);
-    if (found) {
-      if (payload.nodes) found.nodes = payload.nodes;
-      if (payload.edges) found.edges = payload.edges;
-      if (payload.isActive !== undefined) found.isActive = payload.isActive;
-      found.nodeCount = payload.nodes ? payload.nodes.length : found.nodeCount;
-    }
+  const flows = getLocalFlows();
+  const found = flows.find(f => String(f.id) === String(id));
+  if (found) {
+    if (payload.nodes) found.nodes = payload.nodes;
+    if (payload.edges) found.edges = payload.edges;
+    if (payload.isActive !== undefined) found.isActive = payload.isActive;
+    found.nodeCount = payload.nodes ? payload.nodes.length : 0;
+    found.updatedAt = new Date().toISOString();
+    saveLocalFlows(flows);
     return true;
   }
-  const res = await fetch(`${API_BASE}/api/bot-flows/${id}/save`, {
-    method: 'POST',
-    headers: authHeaders(),
-    body: JSON.stringify(payload),
-  });
-  return res.ok;
+  return false;
 }
 
 export async function updateBotFlowMeta(id, payload) {
-  if (isMockId(id)) {
-    const found = mockFlowsList.find(f => f.id === id);
-    if (found) {
-      Object.assign(found, payload);
-    }
+  const flows = getLocalFlows();
+  const found = flows.find(f => String(f.id) === String(id));
+  if (found) {
+    Object.assign(found, payload);
+    found.updatedAt = new Date().toISOString();
+    saveLocalFlows(flows);
     return true;
   }
-  const res = await fetch(`${API_BASE}/api/bot-flows/${id}`, {
-    method: 'PATCH',
-    headers: authHeaders(),
-    body: JSON.stringify(payload),
-  });
-  return res.ok;
+  return false;
 }
 
 export async function deleteBotFlow(id) {
-  if (isMockId(id)) {
-    const index = mockFlowsList.findIndex(f => f.id === id);
-    if (index !== -1) mockFlowsList.splice(index, 1);
+  const flows = getLocalFlows();
+  const index = flows.findIndex(f => String(f.id) === String(id));
+  if (index !== -1) {
+    flows.splice(index, 1);
+    saveLocalFlows(flows);
     return true;
   }
-  const res = await fetch(`${API_BASE}/api/bot-flows/${id}`, {
-    method: 'DELETE',
-    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-  });
-  return res.ok;
+  return false;
 }
 
 export async function fetchTelegramConnectionStatus(flowId) {
-  if (isMockId(flowId)) {
-    const flow = mockFlowsList.find(f => f.id === flowId);
-    return { connected: flow?.isActive || false, botUsername: flow?.isActive ? 'MockedTelegramBot' : null };
-  }
-  const res = await fetch(`${API_BASE}/api/bot-flows/${flowId}/telegram/status`, {
-    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-  });
-  const { ok, data } = await parseResponse(res);
-  return ok ? data : null;
+  const flows = getLocalFlows();
+  const flow = flows.find(f => String(f.id) === String(flowId));
+  return { connected: flow?.isActive || false, botUsername: flow?.isActive ? 'MockedTelegramBot' : null };
 }
 
 export async function connectTelegramBot(flowId, botToken) {
-  if (isMockId(flowId)) {
-    const flow = mockFlowsList.find(f => f.id === flowId);
-    if (flow) flow.isActive = true;
-    return { success: true, botUsername: 'MockedTelegramBot' };
+  const flows = getLocalFlows();
+  const flow = flows.find(f => String(f.id) === String(flowId));
+  if (flow) {
+    flow.isActive = true;
+    saveLocalFlows(flows);
   }
-  const res = await fetch(`${API_BASE}/api/bot-flows/${flowId}/telegram/connect`, {
-    method: 'POST',
-    headers: authHeaders(),
-    body: JSON.stringify({ botToken }),
-  });
-  const { ok, data, text } = await parseResponse(res);
-  if (!ok) {
-    try {
-      const err = JSON.parse(text);
-      return { success: false, message: err.message || 'Erro ao conectar' };
-    } catch {
-      return { success: false, message: 'Erro ao conectar' };
-    }
-  }
-  return data || { success: true };
+  return { success: true, botUsername: 'MockedTelegramBot' };
 }
 
 export async function disconnectTelegramBot(flowId) {
-  if (isMockId(flowId)) {
-    const flow = mockFlowsList.find(f => f.id === flowId);
-    if (flow) flow.isActive = false;
-    return true;
+  const flows = getLocalFlows();
+  const flow = flows.find(f => String(f.id) === String(flowId));
+  if (flow) {
+    flow.isActive = false;
+    saveLocalFlows(flows);
   }
-  const res = await fetch(`${API_BASE}/api/bot-flows/${flowId}/telegram/disconnect`, {
-    method: 'POST',
-    headers: authHeaders(),
-  });
-  return res.ok;
+  return true;
 }
 
 export async function fetchTelegramDiagnostics(flowId) {
-  if (isMockId(flowId)) {
-    return { baseUrlUsed: 'https://mock.massflow.com', expectedWebhookUrl: 'https://mock.massflow.com/webhook', issues: [] };
-  }
-  const res = await fetch(`${API_BASE}/api/bot-flows/${flowId}/telegram/diagnostics`, {
-    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-  });
-  const { ok, data } = await parseResponse(res);
-  return ok ? data : null;
+  return { baseUrlUsed: 'https://mock.massflow.com', expectedWebhookUrl: 'https://mock.massflow.com/webhook', issues: [] };
 }
 
 export async function reregisterTelegramWebhook(flowId) {
-  if (isMockId(flowId)) {
-    return { success: true };
-  }
-  const res = await fetch(`${API_BASE}/api/bot-flows/${flowId}/telegram/reregister-webhook`, {
-    method: 'POST',
-    headers: authHeaders(),
-  });
-  const { ok, data, text } = await parseResponse(res);
-  if (!ok) {
-    try {
-      const err = JSON.parse(text);
-      return { success: false, message: err.message };
-    } catch {
-      return { success: false, message: 'Erro ao re-registrar webhook' };
-    }
-  }
-  return data || { success: true };
+  return { success: true };
 }
 
 export async function fetchWhatsappConnectionStatus(flowId) {
-  if (isMockId(flowId)) {
-    const flow = mockFlowsList.find(f => f.id === flowId);
-    const hasQrState = localStorage.getItem(`mock_qr_state_${flowId}`) === 'ready';
-    return { 
-      connected: flow?.isActive || false, 
-      status: flow?.isActive ? 'connected' : (hasQrState ? 'qr_ready' : 'disconnected'),
-      botPhoneNumber: flow?.isActive ? '5511999999999' : null,
-      qrCode: hasQrState ? 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23fff" stroke="%23A855F7" stroke-width="2"/><text x="50" y="45" font-family="sans-serif" font-weight="bold" font-size="6" text-anchor="middle" dominant-baseline="middle" fill="%23A855F7">WhatsApp QR Code</text><text x="50" y="55" font-family="sans-serif" font-size="4" text-anchor="middle" dominant-baseline="middle" fill="%236b7280">Escaneie para Conectar</text></svg>' : null
-    };
-  }
-  const res = await fetch(`${API_BASE}/api/bot-flows/${flowId}/whatsapp/status`, {
-    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-  });
-  const { ok, data } = await parseResponse(res);
-  return ok ? data : null;
+  const flows = getLocalFlows();
+  const flow = flows.find(f => String(f.id) === String(flowId));
+  const hasQrState = localStorage.getItem(`mock_qr_state_${flowId}`) === 'ready';
+  return { 
+    connected: flow?.isActive || false, 
+    status: flow?.isActive ? 'connected' : (hasQrState ? 'qr_ready' : 'disconnected'),
+    botPhoneNumber: flow?.isActive ? '5511999999999' : null,
+    qrCode: hasQrState ? 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23fff" stroke="%23A855F7" stroke-width="2"/><text x="50" y="45" font-family="sans-serif" font-weight="bold" font-size="6" text-anchor="middle" dominant-baseline="middle" fill="%23A855F7">WhatsApp QR Code</text><text x="50" y="55" font-family="sans-serif" font-size="4" text-anchor="middle" dominant-baseline="middle" fill="%236b7280">Escaneie para Conectar</text></svg>' : null
+  };
 }
 
 export async function connectWhatsappBot(flowId) {
-  if (isMockId(flowId)) {
-    localStorage.setItem(`mock_qr_state_${flowId}`, 'ready');
-    setTimeout(() => {
-      const flow = mockFlowsList.find(f => f.id === flowId);
-      if (flow) {
-        flow.isActive = true;
-        localStorage.removeItem(`mock_qr_state_${flowId}`);
-      }
-    }, 4000);
-    return { success: true };
-  }
-  const res = await fetch(`${API_BASE}/api/bot-flows/${flowId}/whatsapp/connect`, {
-    method: 'POST',
-    headers: authHeaders(),
-  });
-  const { ok, data, text } = await parseResponse(res);
-  if (!ok) {
-    try {
-      const err = JSON.parse(text);
-      return { success: false, message: err.message || 'Erro ao conectar' };
-    } catch {
-      return { success: false, message: 'Erro ao conectar' };
+  localStorage.setItem(`mock_qr_state_${flowId}`, 'ready');
+  setTimeout(() => {
+    const flows = getLocalFlows();
+    const flow = flows.find(f => String(f.id) === String(flowId));
+    if (flow) {
+      flow.isActive = true;
+      saveLocalFlows(flows);
+      localStorage.removeItem(`mock_qr_state_${flowId}`);
     }
-  }
-  return data || { success: true };
+  }, 4000);
+  return { success: true };
 }
 
 export async function disconnectWhatsappBot(flowId) {
-  if (isMockId(flowId)) {
-    const flow = mockFlowsList.find(f => f.id === flowId);
-    if (flow) flow.isActive = false;
-    localStorage.removeItem(`mock_qr_state_${flowId}`);
-    return true;
+  const flows = getLocalFlows();
+  const flow = flows.find(f => String(f.id) === String(flowId));
+  if (flow) {
+    flow.isActive = false;
+    saveLocalFlows(flows);
   }
-  const res = await fetch(`${API_BASE}/api/bot-flows/${flowId}/whatsapp/disconnect`, {
-    method: 'POST',
-    headers: authHeaders(),
-  });
-  return res.ok;
+  localStorage.removeItem(`mock_qr_state_${flowId}`);
+  return true;
 }
 
 export const BOT_CHANNELS = [

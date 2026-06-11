@@ -11,9 +11,9 @@ const B = {
 };
 
 const mockFolders = [
-  { id: 'fold1', name: 'Campanhas de Vendas', flowIds: ['mock1'], description: 'Fluxos focados em conversão e campanhas de marketing.' },
-  { id: 'fold2', name: 'Atendimento & Suporte', flowIds: ['mock3'], description: 'FAQ automático e roteamento de tickets de suporte.' },
-  { id: 'fold3', name: 'Recuperação & Carrinho', flowIds: ['mock2'], description: 'Mensagens automáticas de pós-venda e abandono.' },
+  { id: 'fold1', name: 'Campanhas de Vendas', flowIds: ['mock1', 'mock3'], description: 'Qualificação e lançamentos de vendas via WhatsApp.' },
+  { id: 'fold2', name: 'Atendimento & Suporte', flowIds: ['mock2'], description: 'FAQ automático e suporte ao cliente via WhatsApp.' },
+  { id: 'fold3', name: 'Recuperação & Carrinho', flowIds: ['mock4'], description: 'Recuperação de vendas abandonadas e cobranças de Pix.' },
 ];
 
 export default function BotBuilder() {
