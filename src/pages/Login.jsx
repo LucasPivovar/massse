@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-import logoImage from '../assets/logo-branco.png';
+import logoImage from '../assets/logo_massflow.png';
 import authBgImage from '../assets/auth_background.png';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
@@ -132,20 +132,13 @@ const Login = ({ onLogin }) => {
           position: 'relative',
           boxSizing: 'border-box'
         }}>
-          {/* Pill Badge */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{
-              background: 'rgba(168, 85, 247, 0.1)',
-              color: 'var(--accent-primary)',
-              padding: '6px 14px',
-              borderRadius: '99px',
-              fontSize: '0.78rem',
-              fontWeight: '800',
-              textTransform: 'uppercase',
-              letterSpacing: '0.05em'
-            }}>
-              • MassFlow Sender
-            </span>
+          {/* Logo */}
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <img 
+              src={logoImage} 
+              alt="MassFlow Logo" 
+              style={{ height: '54px', width: 'auto', objectFit: 'contain' }} 
+            />
           </div>
 
           {/* Heading, Subtext, Features */}

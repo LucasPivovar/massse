@@ -120,20 +120,13 @@ const Register = ({ onLogin }) => {
           position: 'relative',
           boxSizing: 'border-box'
         }}>
-          {/* Pill Badge */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{
-              background: 'rgba(168, 85, 247, 0.1)',
-              color: 'var(--accent-primary)',
-              padding: '6px 14px',
-              borderRadius: '99px',
-              fontSize: '0.78rem',
-              fontWeight: '800',
-              textTransform: 'uppercase',
-              letterSpacing: '0.05em'
-            }}>
-              • MassFlow Sender
-            </span>
+          {/* Logo */}
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <img 
+              src={logoImage} 
+              alt="MassFlow Logo" 
+              style={{ height: '54px', width: 'auto', objectFit: 'contain' }} 
+            />
           </div>
 
           {/* Heading, Subtext, Features */}
