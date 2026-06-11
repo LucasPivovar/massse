@@ -537,12 +537,9 @@ const Login = ({ onLogin }) => {
           {view === 'forgot' && (
             <form onSubmit={handleForgotSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <div>
-                <h2 style={{ fontSize: '1.4rem', fontWeight: '800', margin: '0 0 4px 0', color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>
+                <h2 style={{ fontSize: '1.4rem', fontWeight: '800', margin: '0', color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>
                   Recuperar senha
                 </h2>
-                <p style={{ color: 'var(--text-secondary)', fontSize: '0.82rem', margin: 0, lineHeight: 1.4 }}>
-                  Insira seu e-mail cadastrado para redefinir sua senha.
-                </p>
               </div>
 
               <div>
