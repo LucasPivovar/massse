@@ -1,118 +1,1426 @@
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const mockFlowsList = [
-  { 
-    id: 'mock1', 
-    name: 'Qualificação de Leads', 
-    channel: 'whatsapp_qr', 
-    isActive: true, 
-    nodeCount: 5,
-    nodes: [
+  {
+    "id": "mock1",
+    "name": "Qualificação de Leads (WhatsApp)",
+    "channel": "whatsapp_qr",
+    "isActive": true,
+    "nodeCount": 12,
+    "nodes": [
       {
-        id: 'node_1',
-        type: 'contextNode',
-        position: { x: 250, y: 50 },
-        data: { context: 'Você é a assistente virtual da MassFlow. Seja amigável, prestativa e objetiva. Ajude o lead a entender como nossa plataforma de disparos em massa pode alavancar suas vendas.' }
+        "id": "1",
+        "type": "message",
+        "position": {
+          "x": 100,
+          "y": 150
+        },
+        "data": {
+          "label": "Boas-vindas WhatsApp #1",
+          "content": "Olá! Sou o consultor virtual da MassFlow. 🤖\nPronto para escalar sua operação e multiplicar seus disparos de mensagens em minutos?\n\nEscolha uma das opções abaixo para iniciarmos:",
+          "buttons": [
+            {
+              "text": "Planos Corporativos B2B"
+            },
+            {
+              "text": "Falar com Atendente"
+            }
+          ]
+        },
+        "draggable": true
       },
       {
-        id: 'node_2',
-        type: 'messageNode',
-        position: { x: 250, y: 250 },
-        data: { useAi: true, message: 'Olá! Sou a assistente virtual da MassFlow. 😊\nComo posso ajudar você hoje? Qual é o seu nome e qual o seu negócio?' }
+        "id": "2",
+        "type": "question",
+        "position": {
+          "x": 450,
+          "y": 150
+        },
+        "data": {
+          "label": "Capturar Dados Lead #2",
+          "questionText": "Perfeito! Digite seu e-mail profissional para podermos validar sua conta:",
+          "fields": [
+            {
+              "type": "email",
+              "label": "E-mail Corporativo"
+            }
+          ]
+        },
+        "draggable": true
       },
       {
-        id: 'node_3',
-        type: 'conditionNode',
-        position: { x: 250, y: 480 },
-        data: { conditionType: 'contains', conditionValue: 'disparo' }
+        "id": "3",
+        "type": "condition",
+        "position": {
+          "x": 800,
+          "y": 150
+        },
+        "data": {
+          "label": "Filtro Domínio E-mail #3",
+          "conditions": [
+            {
+              "value": "Email contém \"@\""
+            }
+          ]
+        },
+        "draggable": true
       },
       {
-        id: 'node_4',
-        type: 'messageNode',
-        position: { x: 50, y: 680 },
-        data: { useAi: false, message: 'Perfeito! Se você precisa de disparos automáticos e em massa no WhatsApp, a MassFlow é a escolha ideal. Nós oferecemos suporte a envios instantâneos, relatórios de entrega e construtor de fluxos como este!' }
+        "id": "4",
+        "type": "action",
+        "position": {
+          "x": 1150,
+          "y": 50
+        },
+        "data": {
+          "label": "Definir Lead Quente #4",
+          "actions": [
+            {
+              "type": "tag_add",
+              "value": "WhatsApp_Lead_Hot"
+            },
+            {
+              "type": "tag_add",
+              "value": "Valido"
+            }
+          ]
+        },
+        "draggable": true
       },
       {
-        id: 'node_5',
-        type: 'messageNode',
-        position: { x: 450, y: 680 },
-        data: { useAi: true, message: 'Entendi! Nós também oferecemos suporte completo para atendimento e automações inteligentes. Posso agendar uma demonstração gratuita com um especialista?' }
+        "id": "5",
+        "type": "message",
+        "position": {
+          "x": 1150,
+          "y": 280
+        },
+        "data": {
+          "label": "Erro Validação E-mail #5",
+          "content": "Ops! O e-mail digitado parece inválido. Certifique-se de digitar um e-mail válido com \"@\" e domínio correto.",
+          "buttons": [
+            {
+              "text": "Tentar Novamente"
+            }
+          ]
+        },
+        "draggable": true
+      },
+      {
+        "id": "6",
+        "type": "delay",
+        "position": {
+          "x": 1500,
+          "y": 150
+        },
+        "data": {
+          "label": "Atraso Inteligente #6",
+          "time": "5 minutos"
+        },
+        "draggable": true
+      },
+      {
+        "id": "7",
+        "type": "message",
+        "position": {
+          "x": 1850,
+          "y": 150
+        },
+        "data": {
+          "label": "Envio Catálogo Oficial #7",
+          "content": "Show de bola! Dê uma olhada no nosso catálogo de planos e taxas de disparo da API:",
+          "buttons": [
+            {
+              "text": "Ver Catálogo Completo"
+            }
+          ]
+        },
+        "draggable": true
+      },
+      {
+        "id": "8",
+        "type": "question",
+        "position": {
+          "x": 2200,
+          "y": 150
+        },
+        "data": {
+          "label": "Chave Pix Faturamento #8",
+          "questionText": "Excelente. Qual é o seu número de telefone celular cadastrado no Pix para podermos liberar sua licença teste?"
+        },
+        "draggable": true
+      },
+      {
+        "id": "9",
+        "type": "split",
+        "position": {
+          "x": 2550,
+          "y": 150
+        },
+        "data": {
+          "label": "Split Notificação Urgência #9",
+          "splitPercent": 50,
+          "labelA": "Urgência 24h",
+          "labelB": "Brinde VIP"
+        },
+        "draggable": true
+      },
+      {
+        "id": "10",
+        "type": "message",
+        "position": {
+          "x": 2900,
+          "y": 50
+        },
+        "data": {
+          "label": "Notificação Urgente A #10",
+          "content": "Atenção! Seu acesso ao plano de testes expira nas próximas 24 horas. Garanta sua vaga imediata!",
+          "buttons": [
+            {
+              "text": "Liberar Licença"
+            }
+          ]
+        },
+        "draggable": true
+      },
+      {
+        "id": "11",
+        "type": "message",
+        "position": {
+          "x": 2900,
+          "y": 280
+        },
+        "data": {
+          "label": "Oferta Mentoria Grátis B #11",
+          "content": "Compre hoje sua assinatura anual e ganhe mentoria de infraestrutura grátis!",
+          "buttons": [
+            {
+              "text": "Garantir Licença + Bônus"
+            }
+          ]
+        },
+        "draggable": true
+      },
+      {
+        "id": "12",
+        "type": "goto",
+        "position": {
+          "x": 3250,
+          "y": 150
+        },
+        "data": {
+          "label": "Falar Comercial #12",
+          "targetNodeId": "1"
+        },
+        "draggable": true
       }
     ],
-    edges: [
-      { id: 'e-node_1-node_2', source: 'node_1', target: 'node_2', animated: true },
-      { id: 'e-node_2-node_3', source: 'node_2', target: 'node_3', animated: true },
-      { id: 'e-node_3-node_4', source: 'node_3', target: 'node_4', sourceHandle: 'true', animated: true },
-      { id: 'e-node_3-node_5', source: 'node_3', target: 'node_5', sourceHandle: 'false', animated: true }
+    "edges": [
+      {
+        "id": "e-wa-1",
+        "source": "1",
+        "target": "2",
+        "sourceHandle": "right-source",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      },
+      {
+        "id": "e-wa-2",
+        "source": "2",
+        "target": "3",
+        "sourceHandle": "right-source",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      },
+      {
+        "id": "e-wa-3",
+        "source": "3",
+        "target": "4",
+        "sourceHandle": "cond-source-0",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      },
+      {
+        "id": "e-wa-4",
+        "source": "3",
+        "target": "5",
+        "sourceHandle": "cond-source-else",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      },
+      {
+        "id": "e-wa-5",
+        "source": "4",
+        "target": "6",
+        "sourceHandle": "right-source",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      },
+      {
+        "id": "e-wa-6",
+        "source": "5",
+        "target": "6",
+        "sourceHandle": "right-source",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      },
+      {
+        "id": "e-wa-7",
+        "source": "6",
+        "target": "7",
+        "sourceHandle": "right-source",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      },
+      {
+        "id": "e-wa-8",
+        "source": "7",
+        "target": "8",
+        "sourceHandle": "right-source",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      },
+      {
+        "id": "e-wa-9",
+        "source": "8",
+        "target": "9",
+        "sourceHandle": "right-source",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      },
+      {
+        "id": "e-wa-10",
+        "source": "9",
+        "target": "10",
+        "sourceHandle": "right-source",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      },
+      {
+        "id": "e-wa-11",
+        "source": "9",
+        "target": "11",
+        "sourceHandle": "right-source",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      },
+      {
+        "id": "e-wa-12",
+        "source": "10",
+        "target": "12",
+        "sourceHandle": "right-source",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      },
+      {
+        "id": "e-wa-13",
+        "source": "11",
+        "target": "12",
+        "sourceHandle": "right-source",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      }
     ]
   },
-  { 
-    id: 'mock2', 
-    name: 'Carrinho Abandonado', 
-    channel: 'whatsapp_qr', 
-    isActive: true, 
-    nodeCount: 4,
-    nodes: [
+  {
+    "id": "mock2",
+    "name": "Carrinho Abandonado (Instagram)",
+    "channel": "whatsapp_qr",
+    "isActive": true,
+    "nodeCount": 11,
+    "nodes": [
       {
-        id: 'node_1',
-        type: 'contextNode',
-        position: { x: 250, y: 50 },
-        data: { context: 'Você é um atendente da loja virtual Importados Premium. Ofereça um desconto exclusivo de 10% se o cliente concluir a compra.' }
+        "id": "1",
+        "type": "message",
+        "position": {
+          "x": 100,
+          "y": 150
+        },
+        "data": {
+          "label": "Mensagem Direct Reels #1",
+          "content": "Que show que você curtiu nosso Reels! 📸\n\nPreparamos um funil de conversão automático incrível. Digite seu principal segmento abaixo para podermos te dar a recomendação perfeita:",
+          "buttons": [
+            {
+              "text": "Marketing de Afiliados"
+            },
+            {
+              "text": "E-commerce / Drop"
+            }
+          ]
+        },
+        "draggable": true
       },
       {
-        id: 'node_2',
-        type: 'messageNode',
-        position: { x: 250, y: 220 },
-        data: { useAi: false, message: 'Olá! Vimos que você deixou alguns itens incríveis no seu carrinho. Deseja finalizar sua compra agora com um desconto exclusivo?' }
+        "id": "2",
+        "type": "question",
+        "position": {
+          "x": 450,
+          "y": 150
+        },
+        "data": {
+          "label": "Qualificação Equipe #2",
+          "questionText": "Sensacional! Qual é o tamanho atual da sua equipe de vendas e suporte?"
+        },
+        "draggable": true
       },
       {
-        id: 'node_3',
-        type: 'buttonNode',
-        position: { x: 250, y: 420 },
-        data: { message: 'Escolha uma das opções abaixo para prosseguir:', buttons: ['Sim, quero o desconto!', 'Falar com suporte', 'Não tenho interesse'] }
+        "id": "3",
+        "type": "condition",
+        "position": {
+          "x": 800,
+          "y": 150
+        },
+        "data": {
+          "label": "Filtro Tamanho VIP #3",
+          "conditions": [
+            {
+              "value": "Equipe > 5"
+            }
+          ]
+        },
+        "draggable": true
       },
       {
-        id: 'node_4',
-        type: 'messageNode',
-        position: { x: 250, y: 650 },
-        data: { useAi: true, message: 'Maravilhoso! Use o cupom CLIENTEVIP10 na página de checkout para garantir seus 10% de desconto. Se precisar de ajuda, estou aqui!' }
+        "id": "4",
+        "type": "action",
+        "position": {
+          "x": 1150,
+          "y": 50
+        },
+        "data": {
+          "label": "Marcar como Enterprise #4",
+          "actions": [
+            {
+              "type": "tag_add",
+              "value": "Insta_VIP_Enterprise"
+            },
+            {
+              "type": "tag_add",
+              "value": "CRM_Sync_Urgente"
+            }
+          ]
+        },
+        "draggable": true
+      },
+      {
+        "id": "5",
+        "type": "action",
+        "position": {
+          "x": 1150,
+          "y": 280
+        },
+        "data": {
+          "label": "Marcar como Padrão #5",
+          "actions": [
+            {
+              "type": "tag_add",
+              "value": "Insta_Lead_Regular"
+            }
+          ]
+        },
+        "draggable": true
+      },
+      {
+        "id": "6",
+        "type": "delay",
+        "position": {
+          "x": 1500,
+          "y": 150
+        },
+        "data": {
+          "label": "Atraso Estratégico #6",
+          "time": "1 hora"
+        },
+        "draggable": true
+      },
+      {
+        "id": "7",
+        "type": "message",
+        "position": {
+          "x": 1850,
+          "y": 150
+        },
+        "data": {
+          "label": "Oferta Especial Direct #7",
+          "content": "Temos uma oferta exclusiva e personalizada para o tamanho da sua operação com a MassFlow! 🤖\n\nQue tal dar uma olhada e começar a disparar hoje mesmo?",
+          "buttons": [
+            {
+              "text": "Ver Planos Promocionais"
+            }
+          ]
+        },
+        "draggable": true
+      },
+      {
+        "id": "8",
+        "type": "split",
+        "position": {
+          "x": 2200,
+          "y": 150
+        },
+        "data": {
+          "label": "Divisor Split Checkout #8",
+          "splitPercent": 50,
+          "labelA": "Checkout Direto",
+          "labelB": "Mentoria Inclusa"
+        },
+        "draggable": true
+      },
+      {
+        "id": "9",
+        "type": "message",
+        "position": {
+          "x": 2550,
+          "y": 50
+        },
+        "data": {
+          "label": "Link Desconto Direto #9",
+          "content": "Feche agora o plano básico com 50% de desconto imediato usando o link abaixo:",
+          "buttons": [
+            {
+              "text": "Garantir Licença"
+            }
+          ]
+        },
+        "draggable": true
+      },
+      {
+        "id": "10",
+        "type": "message",
+        "position": {
+          "x": 2550,
+          "y": 280
+        },
+        "data": {
+          "label": "Link Bônus Mentoria #10",
+          "content": "Feche o plano premium hoje e ganhe uma mentoria individual de configuração da API!",
+          "buttons": [
+            {
+              "text": "Garantir Plano Premium"
+            }
+          ]
+        },
+        "draggable": true
+      },
+      {
+        "id": "11",
+        "type": "goto",
+        "position": {
+          "x": 2900,
+          "y": 150
+        },
+        "data": {
+          "label": "Voltar Início Funil #11",
+          "targetNodeId": "1"
+        },
+        "draggable": true
       }
     ],
-    edges: [
-      { id: 'e-node_1-node_2', source: 'node_1', target: 'node_2', animated: true },
-      { id: 'e-node_2-node_3', source: 'node_2', target: 'node_3', animated: true },
-      { id: 'e-node_3-node_4', source: 'node_3', target: 'node_4', animated: true }
+    "edges": [
+      {
+        "id": "e-in-1",
+        "source": "1",
+        "target": "2",
+        "sourceHandle": "right-source",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      },
+      {
+        "id": "e-in-2",
+        "source": "2",
+        "target": "3",
+        "sourceHandle": "right-source",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      },
+      {
+        "id": "e-in-3",
+        "source": "3",
+        "target": "4",
+        "sourceHandle": "cond-source-0",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      },
+      {
+        "id": "e-in-4",
+        "source": "3",
+        "target": "5",
+        "sourceHandle": "cond-source-else",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      },
+      {
+        "id": "e-in-5",
+        "source": "4",
+        "target": "6",
+        "sourceHandle": "right-source",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      },
+      {
+        "id": "e-in-6",
+        "source": "5",
+        "target": "6",
+        "sourceHandle": "right-source",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      },
+      {
+        "id": "e-in-7",
+        "source": "6",
+        "target": "7",
+        "sourceHandle": "right-source",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      },
+      {
+        "id": "e-in-8",
+        "source": "7",
+        "target": "8",
+        "sourceHandle": "right-source",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      },
+      {
+        "id": "e-in-9",
+        "source": "8",
+        "target": "9",
+        "sourceHandle": "right-source",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      },
+      {
+        "id": "e-in-10",
+        "source": "8",
+        "target": "10",
+        "sourceHandle": "right-source",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      },
+      {
+        "id": "e-in-11",
+        "source": "9",
+        "target": "11",
+        "sourceHandle": "right-source",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      },
+      {
+        "id": "e-in-12",
+        "source": "10",
+        "target": "11",
+        "sourceHandle": "right-source",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      }
     ]
   },
-  { 
-    id: 'mock3', 
-    name: 'FAQ Automático', 
-    channel: 'telegram', 
-    isActive: true, 
-    nodeCount: 3,
-    nodes: [
+  {
+    "id": "mock3",
+    "name": "FAQ Automático (TikTok)",
+    "channel": "whatsapp_qr",
+    "isActive": true,
+    "nodeCount": 12,
+    "nodes": [
       {
-        id: 'node_1',
-        type: 'contextNode',
-        position: { x: 250, y: 50 },
-        data: { context: 'Você é o FAQ do suporte técnico da MassFlow. Responda dúvidas sobre integração de WhatsApp e taxas de envio.' }
+        "id": "1",
+        "type": "message",
+        "position": {
+          "x": 100,
+          "y": 150
+        },
+        "data": {
+          "label": "TikTok Início #1Boas-vindas",
+          "content": "Fala parceiro! Se liga nessa oportunidade única. 🚀\nIdentificamos que você tem interesse em escalar seus resultados com robôs de disparo e automação.\n\nQuer ter acesso imediato ao nosso Script VIP de Vendas Completo 100% grátis?",
+          "buttons": [
+            {
+              "text": "Quero Acesso VIP"
+            },
+            {
+              "text": "Quero Saber Mais"
+            }
+          ]
+        },
+        "draggable": true
       },
       {
-        id: 'node_2',
-        type: 'messageNode',
-        position: { x: 250, y: 220 },
-        data: { useAi: true, message: 'Olá! Sou o assistente de suporte da MassFlow. 🤖\nComo posso ajudar você hoje?' }
+        "id": "2",
+        "type": "question",
+        "position": {
+          "x": 450,
+          "y": 150
+        },
+        "data": {
+          "label": "Nome Lead #2",
+          "questionText": "Excelente escolha! Para personalizar seu atendimento, qual é o seu primeiro nome?"
+        },
+        "draggable": true
       },
       {
-        id: 'node_3',
-        type: 'pollNode',
-        position: { x: 250, y: 420 },
-        data: { question: 'Qual o principal assunto da sua dúvida?', options: ['Como conectar WhatsApp', 'Preços e Planos', 'Outros assuntos'] }
+        "id": "3",
+        "type": "question",
+        "position": {
+          "x": 800,
+          "y": 150
+        },
+        "data": {
+          "label": "Email Corporativo #3",
+          "questionText": "Obrigado! E qual é o seu melhor e-mail profissional para enviarmos o material de suporte VIP?",
+          "fields": [
+            {
+              "type": "email",
+              "label": "E-mail profissional"
+            }
+          ]
+        },
+        "draggable": true
+      },
+      {
+        "id": "4",
+        "type": "action",
+        "position": {
+          "x": 1150,
+          "y": 150
+        },
+        "data": {
+          "label": "Tag Origem TikTok #4",
+          "actions": [
+            {
+              "type": "tag_add",
+              "value": "TikTok_Lead_Frio"
+            },
+            {
+              "type": "tag_add",
+              "value": "Aguardando_Aprovacao"
+            }
+          ]
+        },
+        "draggable": true
+      },
+      {
+        "id": "5",
+        "type": "split",
+        "position": {
+          "x": 1500,
+          "y": 150
+        },
+        "data": {
+          "label": "Divisor Teste A/B #5",
+          "splitPercent": 50,
+          "labelA": "Copy Emocional (A)",
+          "labelB": "Copy Técnica (B)"
+        },
+        "draggable": true
+      },
+      {
+        "id": "6",
+        "type": "message",
+        "position": {
+          "x": 1850,
+          "y": 50
+        },
+        "data": {
+          "label": "Oferta Emocional A #6",
+          "content": "Parabéns! Você acaba de garantir 50% de desconto imediato. 🎉\n\nEssa é a sua chance de mudar de vida, automatizar sua operação inteira e finalmente ter a liberdade geográfica e de tempo que sempre sonhou!",
+          "buttons": [
+            {
+              "text": "Garantir Vaga 50%"
+            }
+          ]
+        },
+        "draggable": true
+      },
+      {
+        "id": "7",
+        "type": "message",
+        "position": {
+          "x": 1850,
+          "y": 280
+        },
+        "data": {
+          "label": "Oferta Técnica B #7",
+          "content": "Parabéns! Liberamos o Frete Grátis e um Super Bônus de Integração API VIP. ⚙️\n\nAcelere suas integrações em menos de 5 minutos com nossa documentação robusta, webhooks ilimitados e estabilidade garantida de 99.9% uptime!",
+          "buttons": [
+            {
+              "text": "Garantir Bônus VIP"
+            }
+          ]
+        },
+        "draggable": true
+      },
+      {
+        "id": "8",
+        "type": "delay",
+        "position": {
+          "x": 2200,
+          "y": 150
+        },
+        "data": {
+          "label": "Atraso Inteligente #8",
+          "time": "10 minutos"
+        },
+        "draggable": true
+      },
+      {
+        "id": "9",
+        "type": "condition",
+        "position": {
+          "x": 2550,
+          "y": 150
+        },
+        "data": {
+          "label": "Validador Nível Lead #9",
+          "conditions": [
+            {
+              "value": "Nicho é marketing"
+            }
+          ]
+        },
+        "draggable": true
+      },
+      {
+        "id": "10",
+        "type": "email",
+        "position": {
+          "x": 2900,
+          "y": 50
+        },
+        "data": {
+          "label": "Script VIP Comercial #10",
+          "subject": "✨ Aqui está seu Script VIP de Vendas PDF Completo!",
+          "body": "Olá {{lead_name}},\n\nComo prometido no TikTok, aqui está o seu Script VIP completo para turbinar suas conversões nas primeiras 24 horas!\n\nUse com moderação."
+        },
+        "draggable": true
+      },
+      {
+        "id": "11",
+        "type": "message",
+        "position": {
+          "x": 2900,
+          "y": 280
+        },
+        "data": {
+          "label": "WhatsApp Redirecionamento #11",
+          "content": "Notamos que seu nicho não é marketing direto. Quer falar com nosso gerente comercial para adaptarmos a ferramenta?",
+          "buttons": [
+            {
+              "text": "Chamar Gerente"
+            }
+          ]
+        },
+        "draggable": true
+      },
+      {
+        "id": "12",
+        "type": "goto",
+        "position": {
+          "x": 3250,
+          "y": 150
+        },
+        "data": {
+          "label": "Loop Central #12",
+          "targetNodeId": "1"
+        },
+        "draggable": true
       }
     ],
-    edges: [
-      { id: 'e-node_1-node_2', source: 'node_1', target: 'node_2', animated: true },
-      { id: 'e-node_2-node_3', source: 'node_2', target: 'node_3', animated: true }
+    "edges": [
+      {
+        "id": "e-tk-1",
+        "source": "1",
+        "target": "2",
+        "sourceHandle": "right-source",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      },
+      {
+        "id": "e-tk-2",
+        "source": "2",
+        "target": "3",
+        "sourceHandle": "right-source",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      },
+      {
+        "id": "e-tk-3",
+        "source": "3",
+        "target": "4",
+        "sourceHandle": "right-source",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      },
+      {
+        "id": "e-tk-4",
+        "source": "4",
+        "target": "5",
+        "sourceHandle": "right-source",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      },
+      {
+        "id": "e-tk-5",
+        "source": "5",
+        "target": "6",
+        "sourceHandle": "right-source",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      },
+      {
+        "id": "e-tk-6",
+        "source": "5",
+        "target": "7",
+        "sourceHandle": "right-source",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      },
+      {
+        "id": "e-tk-7",
+        "source": "6",
+        "target": "8",
+        "sourceHandle": "right-source",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      },
+      {
+        "id": "e-tk-8",
+        "source": "7",
+        "target": "8",
+        "sourceHandle": "right-source",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      },
+      {
+        "id": "e-tk-9",
+        "source": "8",
+        "target": "9",
+        "sourceHandle": "right-source",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      },
+      {
+        "id": "e-tk-10",
+        "source": "9",
+        "target": "10",
+        "sourceHandle": "cond-source-0",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      },
+      {
+        "id": "e-tk-11",
+        "source": "9",
+        "target": "11",
+        "sourceHandle": "cond-source-else",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      },
+      {
+        "id": "e-tk-12",
+        "source": "10",
+        "target": "12",
+        "sourceHandle": "right-source",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      },
+      {
+        "id": "e-tk-13",
+        "source": "11",
+        "target": "12",
+        "sourceHandle": "right-source",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      }
+    ]
+  },
+  {
+    "id": "mock4",
+    "name": "Prospecção B2B (LinkedIn)",
+    "channel": "whatsapp_qr",
+    "isActive": true,
+    "nodeCount": 11,
+    "nodes": [
+      {
+        "id": "1",
+        "type": "message",
+        "position": {
+          "x": 100,
+          "y": 150
+        },
+        "data": {
+          "label": "Conexão Inicial LinkedIn #1",
+          "content": "Olá! Agradeço por aceitar minha conexão no LinkedIn. 💼\n\nVi seu perfil e achei super alinhado com nossa solução corporativa de vendas corporativas. Gostaria de receber nossa apresentação?",
+          "buttons": [
+            {
+              "text": "Ver Apresentação B2B"
+            }
+          ]
+        },
+        "draggable": true
+      },
+      {
+        "id": "2",
+        "type": "question",
+        "position": {
+          "x": 450,
+          "y": 150
+        },
+        "data": {
+          "label": "Cargo & Segmento #2",
+          "questionText": "Excelente! Qual é o seu cargo atual e o segmento principal da sua empresa?"
+        },
+        "draggable": true
+      },
+      {
+        "id": "3",
+        "type": "condition",
+        "position": {
+          "x": 800,
+          "y": 150
+        },
+        "data": {
+          "label": "Filtro Decisor Cargo #3",
+          "conditions": [
+            {
+              "value": "Cargo contém \"Diretor\""
+            },
+            {
+              "value": "Cargo contém \"CEO\""
+            }
+          ]
+        },
+        "draggable": true
+      },
+      {
+        "id": "4",
+        "type": "action",
+        "position": {
+          "x": 1150,
+          "y": 50
+        },
+        "data": {
+          "label": "Marcar Decisor VIP #4",
+          "actions": [
+            {
+              "type": "tag_add",
+              "value": "LinkedIn_Decisor_B2B"
+            },
+            {
+              "type": "tag_add",
+              "value": "Alta_Prioridade"
+            }
+          ]
+        },
+        "draggable": true
+      },
+      {
+        "id": "5",
+        "type": "action",
+        "position": {
+          "x": 1150,
+          "y": 280
+        },
+        "data": {
+          "label": "Marcar Lead Geral #5",
+          "actions": [
+            {
+              "type": "tag_add",
+              "value": "LinkedIn_Lead_Geral"
+            }
+          ]
+        },
+        "draggable": true
+      },
+      {
+        "id": "6",
+        "type": "delay",
+        "position": {
+          "x": 1500,
+          "y": 150
+        },
+        "data": {
+          "label": "Atraso Proposta #6",
+          "time": "1 hora"
+        },
+        "draggable": true
+      },
+      {
+        "id": "7",
+        "type": "message",
+        "position": {
+          "x": 1850,
+          "y": 150
+        },
+        "data": {
+          "label": "Envio Apresentação PDF #7",
+          "content": "Aqui está nossa proposta e apresentação completa em formato PDF para análise de custos!",
+          "buttons": [
+            {
+              "text": "Baixar PDF Corporativo"
+            }
+          ]
+        },
+        "draggable": true
+      },
+      {
+        "id": "8",
+        "type": "split",
+        "position": {
+          "x": 2200,
+          "y": 150
+        },
+        "data": {
+          "label": "Split Teste Reunião A/B #8",
+          "splitPercent": 50,
+          "labelA": "Reunião Direta Zoom",
+          "labelB": "WhatsApp Gerente"
+        },
+        "draggable": true
+      },
+      {
+        "id": "9",
+        "type": "message",
+        "position": {
+          "x": 2550,
+          "y": 50
+        },
+        "data": {
+          "label": "Convite Reunião Zoom #9",
+          "content": "Que tal marcarmos uma demonstração rápida de 15 minutos pelo Zoom para avaliarmos sua demanda?",
+          "buttons": [
+            {
+              "text": "Agendar pelo Calendly"
+            }
+          ]
+        },
+        "draggable": true
+      },
+      {
+        "id": "10",
+        "type": "message",
+        "position": {
+          "x": 2550,
+          "y": 280
+        },
+        "data": {
+          "label": "WhatsApp Gerente B2B #10",
+          "content": "Prefere tirar dúvidas pelo WhatsApp corporativo rápido? Fale diretamente com nosso gerente abaixo:",
+          "buttons": [
+            {
+              "text": "Chamar no WhatsApp B2B"
+            }
+          ]
+        },
+        "draggable": true
+      },
+      {
+        "id": "11",
+        "type": "goto",
+        "position": {
+          "x": 2900,
+          "y": 150
+        },
+        "data": {
+          "label": "Fim Funil LinkedIn #11",
+          "targetNodeId": "1"
+        },
+        "draggable": true
+      }
+    ],
+    "edges": [
+      {
+        "id": "e-li-1",
+        "source": "1",
+        "target": "2",
+        "sourceHandle": "right-source",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      },
+      {
+        "id": "e-li-2",
+        "source": "2",
+        "target": "3",
+        "sourceHandle": "right-source",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      },
+      {
+        "id": "e-li-3",
+        "source": "3",
+        "target": "4",
+        "sourceHandle": "cond-source-0",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      },
+      {
+        "id": "e-li-4",
+        "source": "3",
+        "target": "5",
+        "sourceHandle": "cond-source-else",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      },
+      {
+        "id": "e-li-5",
+        "source": "4",
+        "target": "6",
+        "sourceHandle": "right-source",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      },
+      {
+        "id": "e-li-6",
+        "source": "5",
+        "target": "6",
+        "sourceHandle": "right-source",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      },
+      {
+        "id": "e-li-7",
+        "source": "6",
+        "target": "7",
+        "sourceHandle": "right-source",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      },
+      {
+        "id": "e-li-8",
+        "source": "7",
+        "target": "8",
+        "sourceHandle": "right-source",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      },
+      {
+        "id": "e-li-9",
+        "source": "8",
+        "target": "9",
+        "sourceHandle": "right-source",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      },
+      {
+        "id": "e-li-10",
+        "source": "8",
+        "target": "10",
+        "sourceHandle": "right-source",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      },
+      {
+        "id": "e-li-11",
+        "source": "9",
+        "target": "11",
+        "sourceHandle": "right-source",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      },
+      {
+        "id": "e-li-12",
+        "source": "10",
+        "target": "11",
+        "sourceHandle": "right-source",
+        "targetHandle": "left-target",
+        "animated": true,
+        "style": {
+          "stroke": "#a855f7",
+          "strokeWidth": 2
+        }
+      }
     ]
   }
 ];
